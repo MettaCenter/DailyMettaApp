@@ -27,13 +27,13 @@ See commit notes
 
 Software requirement specification (SRS) for Daily Metta App version 1.0
 
-Deals with the **Android** platform which is what this whole project is about. (This document and project is not about iOS or the web platforms)
+Deals with the Android platform which is what this whole project is about. (This document and project is not about iOS or the web platforms)
 
 ### 1.2 Document Conventions
 <Describe any standards or typographical conventions that were followed when writing this SRS, such as fonts or highlighting that have special significance. For example, state whether priorities  for higher-level requirements are assumed to be inherited by detailed requirements, or whether every requirement statement is to have its own priority.>
 
 * If a future version is discussed this will be explicitly mentioned in this document. Otherwise version 1.0 is implicitly assumed
-* This document assumes that we are using the Android platform (not iOS or the web) unless specifically mentioned otherwise
+* This document assumes that we are using the Android platform
 
 
 ### 1.3 Intended Audience and Reading Suggestions
@@ -72,6 +72,7 @@ In the future we wish to build a web app for the [Metta Center Roadmap](http://m
 **Data structure:**
 
 * Date
+* Wisdom teacher
 * Link to the article on the web
 * Article text
   * Title
