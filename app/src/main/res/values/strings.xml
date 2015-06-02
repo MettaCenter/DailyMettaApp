@@ -1,6 +1,15 @@
 <resources>
-    <string name="app_name">DailyMettaApp</string>
+    <string name="app_name">Daily Metta</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_text_search">Search</string>
+    <string name="action_choose_date">Choose date</string>
+    <string name="action_share">Share</string>
+    <string name="action_open_in_browser">Open in browser</string>
+
+    <string name="title_search_activity">-</string>
+    <string name="search_hint">search hint</string>
+
+
 </resources>
