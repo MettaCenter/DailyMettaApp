@@ -25,7 +25,7 @@ Please use [this template](../ways-of-working/templates/bug-report.md).
 
 ### Decision process
 
-* Overall design and architecture is determined by the people at the Metta Center for Nonviolence. We are using a so-called "benevolent dictatorship" structure
+* Overall design and architecture is determined by the people at the Metta Center for Nonviolence. We are using a so-called "benevolent dictatorship" structure where Stephanie and Michael have the final say, but we try to build concensus
 * We want discussions about all decisions to be very open in the project and therefore, conversations that have started out as private can be made public without asking the participants (unless of course the conversation has been of a very personal nature)
 
 People:
