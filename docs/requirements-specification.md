@@ -86,14 +86,14 @@ In the future we wish to build a web app for the [Metta Center Roadmap](http://m
 
 We want the user to be able to:
 * Have offline access to Daily Metta articles
-* Accessing the article on the web
 * Get notifications for new Daily Mettas
-* Find Daily Mettas by date
 * Find Daily Mettas by doing text searches
 * Share Daily Metta articles with other users
+* Accessing the article on the web (by simply having a weblink)
 
 <
 Low prio features for Android:
+* Find Daily Mettas by date
 * Getting a random Daily Metta by pressing a Button
 * Random Daily Metta in a widget
 * Latest Daily Metta in a widget
