@@ -88,21 +88,21 @@ We want the user to be able to:
 * Have offline access to Daily Metta articles
 * Get notifications for new Daily Mettas
 * Find Daily Mettas by doing text searches
+* Find Daily Mettas by date
 * Share Daily Metta articles with other users
 * Accessing the article on the web (by simply having a weblink)
 
 <
 Low prio features for Android:
-* Find Daily Mettas by date
-* Getting a random Daily Metta by pressing a Button
-* Random Daily Metta in a widget
-* Latest Daily Metta in a widget
-* Tags downloaded from the web
+Getting a random Daily Metta by pressing a Button
+Random Daily Metta in a widget
+Latest Daily Metta in a widget
+Tags downloaded from the web
 
 Features that are better for a web app:
-* Mark as favorite
-* Marking an experiment in nonviolence as started (committed to doing)
-* Marking an experiment in nonviolence as done
+Mark as favorite
+Marking an experiment in nonviolence as started (committed to doing)
+Marking an experiment in nonviolence as done
 >
 
 
@@ -188,12 +188,12 @@ A user needs an internet connection so that the articles can be downloaded, but 
 
 Description: Automatic downloading of Daily Metta articles, **excluding any media (images, videos)**, in other words downloading the text
 
-Priority: High
+Priority: Medium
 
 ##### Stimulus/Response Sequences
 <List the sequences of user actions and system responses that stimulate the behavior defined for this feature. These will correspond to the dialog elements associated with use cases.>
 
-Stimulus: Trigger in the app which occurs many times each day (for example once per hour)
+Stimulus: Trigger in the app which occurs many times each day (for example once per hour). Alternatively using push notifications
 
 Response: The app connects to the server and downloads the text
 
@@ -228,7 +228,7 @@ Response: An Android system notification is show to the user
 
 <Each requirement should be uniquely identified with a sequence number or a meaningful tag of some kind.>
 
-* **NTN-1:** App shows the user a notification
+* **NTN-1:** App displays a notification for the user
 
 
 #### 4.3 Search by date
@@ -239,7 +239,7 @@ Response: An Android system notification is show to the user
 
 Description: The user can search through Daily Metta's by changing the date
 
-Priority: High
+Priority: Medium
 
 ##### Stimulus/Response Sequences
 <List the sequences of user actions and system responses that stimulate the behavior defined for this feature. These will correspond to the dialog elements associated with use cases.>
@@ -275,7 +275,7 @@ Priority: High
 
 * **SCH-3:** The app stores all the text of the Daily Mettas
 * **SCH-4:** The app presents the user with an interface for searching by entering text and pressing enter
-* Optional: **SCH-5:** The app presents the user with an interface for searching where the results are dynamically updated
+
 
 
 #### 4.5 Link to the article on the web
@@ -340,7 +340,26 @@ Priority: Medium
 ### 5.4 Software Quality Attributes
 <Specify any additional quality characteristics for the product that will be important to either the customers or the developers. Some to consider are: adaptability, availability, correctness, flexibility, interoperability, maintainability, portability, reliability, reusability, robustness, testability, and usability. Write these to be specific, quantitative, and verifiable when possible. At the least, clarify the relative preferences for various attributes, such as ease of use over ease of learning.>
 
-TODO
+#### ..for the users
+
+##### Usability
+* **USY-1:** The app is intuitive enough that the ordinary user does not need any help using the app
+
+##### Reliability
+* **REL-1:** The number of automatically reported crashes (in the google dev console) of the app is less than 0.1 / user / year
+
+#### ..for the designers
+
+##### Portability
+* **POY-1:** The design of the app - with the exception of the action bar - is portable to the iOS platform
+
+#### ..for the developers
+
+##### Interoperability
+* **IOY-1:** The app is able to change towards future writing using a RESTful API (for example when marking favorites)
+
+##### Reusability
+* **REU-1:** The app tech architechture uses whenever possible standard solutions to avoid future problems for developers
 
 
 ### 5.5 Business Rules
@@ -351,8 +370,6 @@ TODO
 ### 5.6 Other Requirements
 <Define any other requirements not covered elsewhere in the SRS. This might include database requirements, internationalization requirements, legal requirements, reuse objectives for the project, and so on. Add any new sections that are pertinent to the project.>
 
-
-In the future we may want to be able to connect this app to the roadmap app __________________
 
 
 ### Appendix A: Glossary
