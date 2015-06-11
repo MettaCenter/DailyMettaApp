@@ -1,7 +1,7 @@
 Reviewed by:
 * Tord
 
-***Not approved***
+***Approved by Stephanie 2015-06-10***
 
 
 The idea behind the Daily Metta App comes from Stephanie and the Metta Center for Nonviolence which is a non-profit organization.
