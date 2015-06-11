@@ -1,7 +1,8 @@
 Reviewed by:
 * Tord
+* Stephanie
 
-***Not approved***
+***Approved by Stephanie 2015-06-10***
 
 
 *For a more general ("high-level") understanding of where the information below fits into the requirements analysis and the software development process in general, please see [this article](http://en.wikipedia.org/wiki/Requirements_analysis)*.
