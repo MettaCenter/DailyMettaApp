@@ -4,7 +4,7 @@
 
 Hi!
 
-The Metta Center for Nonviolence is looking for software development volunteers who want to be a part of a *free open source software* app project
+The Metta Center for Nonviolence is looking for a programmer and a designer who want to be a part of a *free open source software* app project
 
 
 ### What the app does
