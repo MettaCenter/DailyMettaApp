@@ -50,7 +50,7 @@ The Daily Metta App is free (and open-source) software. The license used is GPLv
 * The issue manager asks someone who doesn't have an issue to pick one
 * Alternatively, people simply pick issues themselves using [this guide](../ways-of-working/howto/finding-an-issue-to-work-on.md)
 * [This directory](../ways-of-working) contains ways of working for programmers and other project roles
-
+* All code commits are buildable
 
 ### Open conversation policy
 
