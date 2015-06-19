@@ -33,8 +33,11 @@ public class ArticleActivityC extends ActionBarActivity {
             return true;
         }
         if (id == R.id.action_text_search) {
+            new FetchArticlesTask().execute();
+
             // Showing the search dialog
             onSearchRequested();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
