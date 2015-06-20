@@ -99,6 +99,8 @@ Getting a random Daily Metta by pressing a Button
 Random Daily Metta in a widget
 Latest Daily Metta in a widget
 Tags downloaded from the web
+Bookmarklets for commenting on parts of an article (Prashanth)
+Access to videos/images that are seen in the articles
 
 Features that are better for a web app:
 Mark as favorite
