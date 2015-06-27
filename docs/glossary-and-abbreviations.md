@@ -4,6 +4,8 @@ Reviewed by:
 
 Abbreviation | Word | Explanation
 --- | --- | ---
+GH | GitHub
+DM | Daily Metta
 DMA | Daily Metta App
 ICS | Ice Cream Sandwich | A version of the Android OS
 SO | [*stackoverflow*](http://stackoverflow.com/) | Site with questions and answers about programming
