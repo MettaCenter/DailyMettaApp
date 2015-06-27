@@ -1,5 +1,7 @@
 package org.mettacenter.dailymetta;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -16,7 +18,8 @@ import java.net.URL;
  */
 public class UtilitiesU {
 
-    static final String TAG = "TAG";
+    static final String TAG = "daily_metta_app";
+    public static final String EMPTY_STRING = "";
 
     public static String getUrlString(String iUrlSg) throws IOException {
 
@@ -55,8 +58,9 @@ public class UtilitiesU {
 
     }
 
-    public static void parseArticle(XmlPullParser iXmlPullParser)
-            throws XmlPullParserException, IOException{
+
+    public static void parseArticle(XmlPullParser iXmlPullParser, Context iContext)
+            throws XmlPullParserException, IOException {
 
         int iEventType = iXmlPullParser.next();
 
@@ -73,21 +77,26 @@ public class UtilitiesU {
 
                 tIsInsideContentTag = true;
 
+
+
                 // xml:base
                 String tLinkUrlSg = iXmlPullParser.getAttributeValue(null, "xml:base");
                 Log.i(UtilitiesU.TAG, "tLinkUrlSg = " + tLinkUrlSg);
+
+                ContentValues tInsertContentValues = new ContentValues();
+                tInsertContentValues.put(ArticleTableM.COLUMN_LINK, tLinkUrlSg);
+                iContext.getContentResolver().insert(ContentProviderM.ARTICLE_CONTENT_URI,
+                        tInsertContentValues);
+
+
 
                 // text
                 String tArticleContentSg = iXmlPullParser.nextText();
                 //String tArticleContentSg = iXmlPullParser.getText();
                 Log.i(UtilitiesU.TAG, "tArticleContentSg = " + tArticleContentSg);
 
-            }else if(iEventType == XmlPullParser.TEXT){
-                /*
-                // text
-                String tArticleContentSg = iXmlPullParser.getText();
-                Log.i(UtilitiesU.TAG, "tArticleContentSg = " + tArticleContentSg);
-                */
+            }else{
+                //empty
             }
 
             iXmlPullParser.next();

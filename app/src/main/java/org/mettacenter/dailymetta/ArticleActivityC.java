@@ -1,9 +1,17 @@
 package org.mettacenter.dailymetta;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 
 public class ArticleActivityC extends ActionBarActivity {
 
@@ -33,7 +41,7 @@ public class ArticleActivityC extends ActionBarActivity {
             return true;
         }
         if (id == R.id.action_text_search) {
-            new FetchArticlesTask().execute();
+            new FetchArticlesTaskC(this).execute();
 
             // Showing the search dialog
             onSearchRequested();
@@ -42,4 +50,9 @@ public class ArticleActivityC extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
+
 }
