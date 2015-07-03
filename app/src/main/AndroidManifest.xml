@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.mettacenter.dailymetta" >
-
     <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/metta_center_wheel"
@@ -29,15 +27,10 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-
-
         <provider
             android:authorities="org.mettacenter.dailymetta"
             android:name=".ContentProviderM"
             android:exported = "true">
-
         </provider>
-
-
     </application>
 </manifest>

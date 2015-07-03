@@ -9,11 +9,16 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DbHelperM extends SQLiteOpenHelper {
 
-    private static final int VERSION = 1;
+    private static final int DB_VERSION = 1;
     private static final String DB_NAME = "articles.sqlite";
 
     private static DbHelperM sDbHelper;
 
+    /**
+     * Singleton access method, creates a new static instance if one has not already been created
+     * @param iContext
+     * @return An instance (the instance, since there can be only one) of this class
+     */
     public static DbHelperM get(Context iContext){
         if(sDbHelper == null){
             sDbHelper = new DbHelperM(iContext.getApplicationContext());
@@ -21,12 +26,12 @@ public class DbHelperM extends SQLiteOpenHelper {
         return sDbHelper;
     }
 
-    public DbHelperM(Context iContext) {
-        super(iContext, DB_NAME, null, VERSION);
+    private DbHelperM(Context iContext){
+        super(iContext, DB_NAME, null, DB_VERSION);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase iDb) {
+    public void onCreate(SQLiteDatabase iDb){
         ArticleTableM.createTable(iDb);
     }
 

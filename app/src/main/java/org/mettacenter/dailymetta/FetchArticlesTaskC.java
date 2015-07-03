@@ -14,7 +14,8 @@ import java.io.StringReader;
 import static org.mettacenter.dailymetta.ArticleActivityC.*;
 
 /**
- * Created by sunyata on 2015-06-19.
+ * Contains the @link doInBackground method which calls other methods for downloading and parsing
+ * article data. All this is done on a thread separate from the UI thread
  */
 public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
 
@@ -23,27 +24,23 @@ public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
         mContext = iContext;
     }
 
+    private static final String ATOM_FEEL_URL = "http://mettacenter.org/category/daily-metta/feed/atom/";
+
     @Override
     protected Void doInBackground(Void... params) {
-
         try{
-
-            String tResult = UtilitiesU.getUrlString("http://mettacenter.org/category/daily-metta/feed/atom/");
-            //Log.i(UtilitiesU.TAG, "Result: " + tResult);
+            String tResult = UtilitiesU.getUrlString(ATOM_FEEL_URL);
 
             XmlPullParserFactory tParserFactory = XmlPullParserFactory.newInstance();
             XmlPullParser tParser = tParserFactory.newPullParser();
             tParser.setInput(new StringReader(tResult));
 
             UtilitiesU.parseArticle(tParser, mContext);
-
-
         }catch(IOException ioe){
             Log.e(UtilitiesU.TAG, ioe.getMessage());
         }catch(XmlPullParserException xppe){
             Log.e(UtilitiesU.TAG, xppe.getMessage());
         }
-
         return null;
     }
 }

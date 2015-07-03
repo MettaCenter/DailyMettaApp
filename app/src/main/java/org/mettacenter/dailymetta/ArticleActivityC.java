@@ -13,6 +13,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+/**
+ * Main activity for the application
+ */
 public class ArticleActivityC extends ActionBarActivity {
 
     @Override
@@ -23,9 +26,9 @@ public class ArticleActivityC extends ActionBarActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_article, menu);
+    public boolean onCreateOptionsMenu(Menu iMenu) {
+        //Inflating the menu (which added itemts to the action bar)
+        getMenuInflater().inflate(R.menu.menu_article, iMenu);
         return true;
     }
 
@@ -35,24 +38,16 @@ public class ArticleActivityC extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id){
+            case R.id.action_settings:
+                new FetchArticlesTaskC(this).execute(); //-NOTE: Only experimental to show what can be done, will not be here in the final version
+            case R.id.action_text_search:
+                //Displaying the search dialog
+                onSearchRequested();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        if (id == R.id.action_text_search) {
-            new FetchArticlesTaskC(this).execute();
-
-            // Showing the search dialog
-            onSearchRequested();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
-
-
-
-
 
 }

@@ -9,7 +9,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.SearchView;
 
-
+/**
+ * Activity for displaying the list of search results. UNUSED as of this writing
+ */
 public class SearchActivityC extends ActionBarActivity {
 
     @Override

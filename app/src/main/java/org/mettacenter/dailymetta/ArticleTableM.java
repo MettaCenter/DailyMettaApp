@@ -5,12 +5,9 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 /**
- * Created by sunyata on 2015-06-23.
+ * SQLite table for storing article data
  */
 public class ArticleTableM {
-
-
-
     public static final String TABLE_ARTICLE = "article";
     //public static final String COLUMN_ID = BaseColumns._ID;
     public static final String COLUMN_TIME = "time"; //-saved as an integer in unix time
@@ -32,11 +29,11 @@ public class ArticleTableM {
 
     public static void createTable(SQLiteDatabase iDb){
         iDb.execSQL(CREATE_TABLE);
-        Log.i(UtilitiesU.TAG, "Table " + TABLE_ARTICLE + " created! Database version = " + iDb.getVersion());
+        Log.i(UtilitiesU.TAG, "Table " + TABLE_ARTICLE + " created! Database version = "
+                + iDb.getVersion());
     }
 
     public static void upgradeTable(SQLiteDatabase iDb, int iOldVer, int iNewVer){
-
         if(false){
             //empty for now
         }else{
@@ -45,6 +42,5 @@ public class ArticleTableM {
             iDb.execSQL("DROP TABLE IF EXISTS " + TABLE_ARTICLE);
             createTable(iDb);
         }
-
     }
 }

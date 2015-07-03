@@ -14,94 +14,110 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by sunyata on 2015-06-19.
+ * Contains various static helper methods for the entire application
  */
 public class UtilitiesU {
 
-    static final String TAG = "daily_metta_app";
+    public static final String TAG = "daily_metta_app";
     public static final String EMPTY_STRING = "";
 
-    public static String getUrlString(String iUrlSg) throws IOException {
+    private static final int READ_BUFFER_SIZE = 1024;
+    private static final String CONTENT_XML_TAG = "content";
 
-        return new String(getUrlBytes(iUrlSg));
-
-    }
-
+    /**
+     * Establishes a connection to the provided url and returns the data available there as a
+     * byte array.
+     * @param iUrlSg The url to read from
+     * @return An array of bytes that have been read
+     * @throws IOException
+     */
     public static byte[] getUrlBytes(String iUrlSg) throws IOException {
         URL tUrl = new URL(iUrlSg);
         HttpURLConnection tConnection = (HttpURLConnection)tUrl.openConnection();
 
         try {
-
-
-
-            ByteArrayOutputStream tOut = new ByteArrayOutputStream();
-            InputStream tIn = tConnection.getInputStream();
-
             if(tConnection.getResponseCode() != HttpURLConnection.HTTP_OK){
                 return null;
             }
 
-            int tBytesRead = 0;
-            int READ_BUFFER_SIZE = 1024;
+            ByteArrayOutputStream tOut = new ByteArrayOutputStream();
+            InputStream tIn = tConnection.getInputStream();
+
+            int tNrOfBytesRead = 0;
             byte[] tReadBuffer = new byte[READ_BUFFER_SIZE];
-            while((tBytesRead = tIn.read(tReadBuffer)) > 0){
-                tOut.write(tReadBuffer, 0, tBytesRead);
+            for(tNrOfBytesRead = tIn.read(tReadBuffer); tNrOfBytesRead > 0;){
+                tOut.write(tReadBuffer, 0, tNrOfBytesRead);
             }
 
             tOut.close();
             return tOut.toByteArray();
-
         } finally {
             tConnection.disconnect();
         }
-
     }
 
+    /**
+     * Uses @ref getUrlBytes to read data from a URL, then tranforms this byte data to a String
+     * @param iUrlSg The URL forwarded to @ref getUrlBytes
+     * @return A text String with the data read
+     * @throws IOException
+     */
+    public static String getUrlString(String iUrlSg) throws IOException {
+        return new String(getUrlBytes(iUrlSg));
+    }
 
+    /**
+     * Given an XmlPullParser with multiple articles as the content, parses the XML data and writes
+     * to the database
+     * @param iXmlPullParser
+     * @param iContext
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
     public static void parseArticle(XmlPullParser iXmlPullParser, Context iContext)
             throws XmlPullParserException, IOException {
 
         int iEventType = iXmlPullParser.next();
 
-        String CONTENT_TAG = "content";
-
-        boolean tIsInsideContentTag = false;
-
         while(iEventType != XmlPullParser.END_DOCUMENT){
             if(iEventType == XmlPullParser.END_TAG){
-                tIsInsideContentTag = false;
-                Log.i(UtilitiesU.TAG, "===== END TAG =====");
-            }else if(iEventType == XmlPullParser.START_TAG
-                    && CONTENT_TAG.equals(iXmlPullParser.getName())){
+                Log.d(UtilitiesU.TAG, "===== END TAG =====");
+            }else if(iEventType == XmlPullParser.START_TAG){
+                Log.d(UtilitiesU.TAG, "===== START TAG =====");
+                if(CONTENT_XML_TAG.equals(iXmlPullParser.getName())){
+                    //Reading from the XML and Writing to the db..
+                    ContentValues tInsertValues = new ContentValues();
 
-                tIsInsideContentTag = true;
+                    //..for the article URL
+                    String tLinkUrlSg = iXmlPullParser.getAttributeValue(null, "xml:base");
+                    Log.d(UtilitiesU.TAG, "tLinkUrlSg = " + tLinkUrlSg);
+                    tInsertValues.put(ArticleTableM.COLUMN_LINK, tLinkUrlSg);
+                    iContext.getContentResolver().insert(ContentProviderM.ARTICLE_CONTENT_URI,
+                            tInsertValues);
+                    /*
+                     *-using this direct call the insert method for now, perhaps later we will
+                     * change to using intents for insertion
+                     */
 
+                    tInsertValues.clear();
 
-
-                // xml:base
-                String tLinkUrlSg = iXmlPullParser.getAttributeValue(null, "xml:base");
-                Log.i(UtilitiesU.TAG, "tLinkUrlSg = " + tLinkUrlSg);
-
-                ContentValues tInsertContentValues = new ContentValues();
-                tInsertContentValues.put(ArticleTableM.COLUMN_LINK, tLinkUrlSg);
-                iContext.getContentResolver().insert(ContentProviderM.ARTICLE_CONTENT_URI,
-                        tInsertContentValues);
-
-
-
-                // text
-                String tArticleContentSg = iXmlPullParser.nextText();
-                //String tArticleContentSg = iXmlPullParser.getText();
-                Log.i(UtilitiesU.TAG, "tArticleContentSg = " + tArticleContentSg);
+                    //..for the article text
+                    String tArticleContentSg = iXmlPullParser.nextText();
+                    Log.d(UtilitiesU.TAG, "tArticleContentSg = " + tArticleContentSg);
+                    tInsertValues.put(ArticleTableM.COLUMN_TEXT, tArticleContentSg);
+                    iContext.getContentResolver().insert(ContentProviderM.ARTICLE_CONTENT_URI,
+                            tInsertValues);
+                }
 
             }else{
-                //empty
+                //intentionally left empty
             }
 
             iXmlPullParser.next();
         }
 
     }
+
+
 
 }

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 
 /**
- * A placeholder fragment containing a simple view.
+ * A placeholder fragment containing a simple view. UNUSED as of this writing
  */
 public class ArticleFragmentC extends Fragment {
 
