@@ -18,10 +18,9 @@ This is where the "formal discussions" take place and where important decisions 
 https://mettacenter.slack.com
 
 
-
 ### How to report bugs
 
-Please use [this template](../ways-of-working/templates/bug-report.md).
+Please use [this template](https://github.com/MettaCenter/DailyMettaApp/blob/master/docs/bug-report-template.md).
 
 
 ### Decision process
@@ -45,12 +44,21 @@ No responsibility for any damage.
 The Daily Metta App is free (and open-source) software. The license used is GPLv3.
 
 
+### How to get an overview of the project
+
+* See our Waffle board [https://waffle.io/MettaCenter/DailyMettaApp]
+* Go to [our wiki's Home page](https://github.com/MettaCenter/DailyMettaApp/wiki)
+* Read the [advertisement](advertisement-for-devs.md) for new people
+* Read the [readme file](../../README.md)
+* For more details, please see the [Requirements specification](../requirements-spec.md)
+
+
 ### How development is done
 
-* The issue manager asks someone who doesn't have an issue to pick one
-* Alternatively, people simply pick issues themselves using [this guide](../ways-of-working/howto/finding-an-issue-to-work-on.md)
-* [This directory](../ways-of-working) contains ways of working for programmers and other project roles
+* To start working, simply take [one of issues with the "ready" tag](https://github.com/MettaCenter/DailyMettaApp/labels/ready)
 * All code commits are buildable
+* We use [Android Studio and the Android SDK](https://developer.android.com/sdk/index.html) for development
+
 
 ### Open conversation policy
 
@@ -62,7 +70,7 @@ Unless conversations are clearly of a private nature, we can choose to share the
 
 #### References
 
-* Book "Producing open-source software"
+* Book: "Producing open-source software"
   * http://producingoss.com/en/getting-started.html#developer-guidelines
   * http://producingoss.com/en/social-infrastructure.html
 
