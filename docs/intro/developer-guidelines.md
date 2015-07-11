@@ -45,7 +45,7 @@ The Daily Metta App is free (and open-source) software. The license used is GPLv
 
 ### How to get an overview of the project
 
-* See our Waffle board [https://waffle.io/MettaCenter/DailyMettaApp]
+* See our [Waffle board](https://waffle.io/MettaCenter/DailyMettaApp)
 * Go to [our wiki's Home page](https://github.com/MettaCenter/DailyMettaApp/wiki)
 * Read the [advertisement](advertisement-for-devs.md) for new people
 * Read the [readme file](../../README.md)
@@ -62,6 +62,7 @@ The Daily Metta App is free (and open-source) software. The license used is GPLv
 
 * We can assign issues to each other if we think the issue is suitable for the other person
 * If we see little or no progress on an assigned issue we can send an email to the person who has the issue and ask if we can take it, and if the person doesn't respond within 48 hours we can take the issue
+* We have an open conversation policy (see below) so that we don't need to ask each other about sharing emails with the whole group
 
 
 ### Open conversation policy
