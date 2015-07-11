@@ -59,6 +59,11 @@ The Daily Metta App is free (and open-source) software. The license used is GPLv
 * All code commits are buildable
 * We use [Android Studio and the Android SDK](https://developer.android.com/sdk/index.html) for development
 
+### To speed up development
+
+* We can assign issues to each other if we think the issue is suitable for the other person
+* If we see little or no progress on an assigned issue we can send an email to the person who has the issue and ask if we can take it, and if the person doesn't respond within 48 hours we can take the issue
+
 
 ### Open conversation policy
 
