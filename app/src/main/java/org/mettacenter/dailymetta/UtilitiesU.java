@@ -45,7 +45,7 @@ public class UtilitiesU {
 
             int tNrOfBytesRead = 0;
             byte[] tReadBuffer = new byte[READ_BUFFER_SIZE];
-            for(tNrOfBytesRead = tIn.read(tReadBuffer); tNrOfBytesRead > 0;){
+            while( ( tNrOfBytesRead = tIn.read(tReadBuffer) ) > 0 ){
                 tOut.write(tReadBuffer, 0, tNrOfBytesRead);
             }
 
@@ -79,45 +79,63 @@ public class UtilitiesU {
 
         int iEventType = iXmlPullParser.next();
 
-        while(iEventType != XmlPullParser.END_DOCUMENT){
-            if(iEventType == XmlPullParser.END_TAG){
-                Log.d(UtilitiesU.TAG, "===== END TAG =====");
-            }else if(iEventType == XmlPullParser.START_TAG){
-                Log.d(UtilitiesU.TAG, "===== START TAG =====");
-                if(CONTENT_XML_TAG.equals(iXmlPullParser.getName())){
-                    //Reading from the XML and Writing to the db..
-                    ContentValues tInsertValues = new ContentValues();
+        boolean tIsParsingContent = false;
 
-                    //..for the article URL
-                    String tLinkUrlSg = iXmlPullParser.getAttributeValue(null, "xml:base");
-                    Log.d(UtilitiesU.TAG, "tLinkUrlSg = " + tLinkUrlSg);
-                    tInsertValues.put(ArticleTableM.COLUMN_LINK, tLinkUrlSg);
-                    iContext.getContentResolver().insert(ContentProviderM.ARTICLE_CONTENT_URI,
-                            tInsertValues);
-                    /*
+        ContentValues tInsertValues = new ContentValues();
+
+        while(iEventType != XmlPullParser.END_DOCUMENT){
+
+            switch(iEventType){
+                case XmlPullParser.START_TAG:
+                    Log.d(UtilitiesU.TAG, "===== START TAG =====");
+                    if(CONTENT_XML_TAG.equals(iXmlPullParser.getName())){
+                        tIsParsingContent = true;
+
+                        //Reading from the XML and Writing to the db..
+
+                        //..for the article URL
+                        String tLinkUrlSg = iXmlPullParser.getAttributeValue(null, "xml:base");
+                        Log.d(UtilitiesU.TAG, "tLinkUrlSg = " + tLinkUrlSg);
+                        tInsertValues.put(ArticleTableM.COLUMN_LINK, tLinkUrlSg);
+
+                    }
+
+                    break;
+                case XmlPullParser.TEXT:
+                    Log.d(UtilitiesU.TAG, "===== TEXT =====");
+                    if(tIsParsingContent == true){
+
+                        //..for the article text
+                        String tArticleContentSg = iXmlPullParser.getText();
+                        Log.d(UtilitiesU.TAG, "tArticleContentSg = " + tArticleContentSg);
+                        tInsertValues.put(ArticleTableM.COLUMN_TEXT, tArticleContentSg);
+
+                    }
+
+                    break;
+                case XmlPullParser.END_TAG:
+                    Log.d(UtilitiesU.TAG, "===== END TAG =====");
+                    if(tIsParsingContent == true){
+                        //Inserting all of the values into the db
+                        iContext.getContentResolver().insert(ContentProviderM.ARTICLE_CONTENT_URI,
+                                tInsertValues);
+                      /*
                      *-using this direct call the insert method for now, perhaps later we will
                      * change to using intents for insertion
                      */
+                        tInsertValues.clear();
+                    }
 
-                    tInsertValues.clear();
+                    tIsParsingContent = false;
 
-                    //..for the article text
-                    String tArticleContentSg = iXmlPullParser.nextText();
-                    Log.d(UtilitiesU.TAG, "tArticleContentSg = " + tArticleContentSg);
-                    tInsertValues.put(ArticleTableM.COLUMN_TEXT, tArticleContentSg);
-                    iContext.getContentResolver().insert(ContentProviderM.ARTICLE_CONTENT_URI,
-                            tInsertValues);
-                }
-
-            }else{
-                //intentionally left empty
+                    break;
+                default:
+                    //intentionally left empty
             }
 
-            iXmlPullParser.next();
+            iEventType = iXmlPullParser.next();
         }
 
     }
-
-
 
 }

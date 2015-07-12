@@ -17,17 +17,20 @@ import static org.mettacenter.dailymetta.ArticleActivityC.*;
  * Contains the @link doInBackground method which calls other methods for downloading and parsing
  * article data. All this is done on a thread separate from the UI thread
  */
-public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
+public class FetchArticlesTaskC extends AsyncTask<Void, Void, ArticleActivityC.MyCallbackClass> {
 
     Context mContext = null;
-    public FetchArticlesTaskC(Context iContext){
+    ArticleActivityC.MyCallbackClass mCallback;
+
+    public FetchArticlesTaskC(Context iContext, ArticleActivityC.MyCallbackClass iCallback){
+        mCallback = iCallback;
         mContext = iContext;
     }
 
     private static final String ATOM_FEEL_URL = "http://mettacenter.org/category/daily-metta/feed/atom/";
 
     @Override
-    protected Void doInBackground(Void... params) {
+    protected ArticleActivityC.MyCallbackClass doInBackground(Void... params) {
         try{
             String tResult = UtilitiesU.getUrlString(ATOM_FEEL_URL);
 
@@ -42,5 +45,11 @@ public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
             Log.e(UtilitiesU.TAG, xppe.getMessage());
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(ArticleActivityC.MyCallbackClass iRefCb){
+        //return null;
+        mCallback.adapterSetupCallback();
     }
 }

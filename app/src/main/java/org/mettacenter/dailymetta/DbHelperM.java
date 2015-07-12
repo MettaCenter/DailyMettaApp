@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelperM extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 1;
-    private static final String DB_NAME = "articles.sqlite";
+    public static final String DB_NAME = "articles.sqlite";
 
     private static DbHelperM sDbHelper;
 
@@ -44,4 +44,5 @@ public class DbHelperM extends SQLiteOpenHelper {
             ArticleTableM.upgradeTable(iDb, iOldVer, iNewVer);
         }
     }
+
 }
