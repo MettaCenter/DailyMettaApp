@@ -11,6 +11,7 @@ public class ArticleTableM {
     public static final String TABLE_ARTICLE = "article";
     //public static final String COLUMN_ID = BaseColumns._ID;
     public static final String COLUMN_TIME = "time"; //-saved as an integer in unix time
+    public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_TEXT = "text";
     public static final String COLUMN_LINK = "link";
     public static final String COLUMN_CATEGORY = "category";
@@ -23,6 +24,7 @@ public class ArticleTableM {
             + "(" + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT"
             + ", " + COLUMN_TIME + " INTEGER NOT NULL DEFAULT '" + TIME_NOT_SET + "'"
             + ", " + COLUMN_TEXT + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
+            + ", " + COLUMN_TITLE + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
             + ", " + COLUMN_LINK + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
             + ", " + COLUMN_CATEGORY + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
             + ");";

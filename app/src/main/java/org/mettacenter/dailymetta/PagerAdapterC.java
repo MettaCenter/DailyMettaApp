@@ -62,7 +62,11 @@ public class PagerAdapterC extends FragmentStatePagerAdapter {
 
         ///String tText =  "" + (iPos + 1);
 
-        tArgs.putString(ArticleFragmentC.ARG_OBJ, tLinkText + "+++++" + tArticleText);
+
+        tArgs.putString(ArticleFragmentC.ARG_ARTICLE, tArticleText);
+        tArgs.putString(ArticleFragmentC.ARG_LINK, tLinkText);
+
+
         tFragment.setArguments(tArgs);
         return tFragment;
     }

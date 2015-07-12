@@ -1,8 +1,29 @@
-<!-- Using 'android:id="@android:id/text1"' means that we will extend the existing text1 -->
-<TextView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="32dp"
-    />
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- Using 'android:id="@android:id/text1"' below means that we will extend the existing text1 -->
+        <TextView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@android:id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="32dp"
+            />
+        <TextView
+            android:id="@+id/link_to_article"
+            android:autoLink="web"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:paddingBottom="32dp"
+            android:paddingTop="0dp"
+            />
+    </LinearLayout>
+</ScrollView>
