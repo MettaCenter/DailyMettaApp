@@ -9,10 +9,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 /**
- * Created by sunyata on 2015-07-11.
+ * Maps the data in the db to the Fragments in the ArticleActivityC
  *
- * Inspiration: http://tumble.mlcastle.net/post/25875136857/bridging-cursorloaders-and-viewpagers-on-android
- *
+ * Documentation:
+ * * http://tumble.mlcastle.net/post/25875136857/bridging-cursorloaders-and-viewpagers-on-android
+ * * http://developer.android.com/training/implementing-navigation/lateral.html
+ * * http://developer.android.com/reference/android/support/v4/app/FragmentStatePagerAdapter.html
  */
 public class PagerAdapterC extends FragmentStatePagerAdapter {
 
@@ -28,12 +30,8 @@ public class PagerAdapterC extends FragmentStatePagerAdapter {
         Fragment tFragment = new ArticleFragmentC();
         Bundle tArgs = new Bundle();
 
-
-
-
-
-        String tLinkText = "empty_link";
-        String tArticleText = "empty_text";
+        String tLinkText = "no link found";
+        String tArticleText = "no article text found";
         int tLinkIndex = mCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_LINK);
         int tArticleIndex = mCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_TEXT);
         try{
@@ -42,30 +40,12 @@ public class PagerAdapterC extends FragmentStatePagerAdapter {
             tLinkText = mCursor.getString(tLinkIndex);
             tArticleText = mCursor.getString(tArticleIndex);
 
-            /*
-            if(mCursor != null){
-                for(mCursor.moveToFirst(); mCursor.isAfterLast() == false; mCursor.moveToNext()){
-                    tArticleText = mCursor.getString(tIndex);
-                }
-            }
-            */
         }catch(Exception e){
-            //Log.e(UtilitiesU.TAG, e.getMessage());
-        }finally{
-            //mCursor.close();
-            //TODO: Close the cursor in the ondestroy method
+            Log.e(UtilitiesU.TAG, e.getMessage());
         }
-
-
-
-
-
-        ///String tText =  "" + (iPos + 1);
-
 
         tArgs.putString(ArticleFragmentC.ARG_ARTICLE, tArticleText);
         tArgs.putString(ArticleFragmentC.ARG_LINK, tLinkText);
-
 
         tFragment.setArguments(tArgs);
         return tFragment;
@@ -74,10 +54,5 @@ public class PagerAdapterC extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return mCursor.getCount();
-    }
-
-    @Override
-    public CharSequence getPageTitle(int iPos) {
-        return "Fragment object nr " + (iPos + 1);
     }
 }

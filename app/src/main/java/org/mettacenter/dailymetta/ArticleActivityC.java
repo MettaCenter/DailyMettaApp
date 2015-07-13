@@ -29,6 +29,8 @@ import java.io.IOException;
 
 /**
  * Main activity for the application
+ *
+ * AppCompatActivity extends ActionbarActivity
  */
 public class ArticleActivityC extends AppCompatActivity {
 
@@ -36,52 +38,47 @@ public class ArticleActivityC extends AppCompatActivity {
     PagerAdapter mPagerAdapter;
     ViewPager mViewPager;
 
-
+    protected Cursor pCursor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
 
-
         //Setting up the data..
         //..clearing the db
         getApplicationContext().deleteDatabase(DbHelperM.DB_NAME);
 
-
         //..fetching all the articles
         new FetchArticlesTaskC(this, new MyCallbackClass()).execute();
 
-
-
+        //..setup will continue in the class below after a callback from FetchArticlesTaskC
     }
 
     public class MyCallbackClass{
         public void adapterSetupCallback(){
 
-            Cursor tCr = null;
             try{
-                tCr = getContentResolver().query(ContentProviderM.ARTICLE_CONTENT_URI, null, null, null, null);
-                mPagerAdapter = new PagerAdapterC(getSupportFragmentManager(), tCr);
+                ArticleActivityC.this.pCursor = getContentResolver().query(
+                        ContentProviderM.ARTICLE_CONTENT_URI, null, null, null, null);
+                mPagerAdapter = new PagerAdapterC(getSupportFragmentManager(), pCursor);
             }catch(Exception e){
                 Log.e(UtilitiesU.TAG, e.getMessage());
-            }finally{
-                //tCr.close();
             }
-
 
             mViewPager = (ViewPager)findViewById(R.id.pager);
             mViewPager.setAdapter(mPagerAdapter);
 
-
-
-            //Redrawing the views in all the fragments
-            ///ArticleActivityC.this.getWindow().getDecorView().findViewById(android.R.id.content);
+            //Redrawing all fragments
             mPagerAdapter.notifyDataSetChanged();
-            //mViewPager.noti
         }
     }
 
+    @Override
+    protected void onDestroy(){
+        pCursor.close();
+        pCursor = null;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu iMenu) {
@@ -98,10 +95,7 @@ public class ArticleActivityC extends AppCompatActivity {
         int id = item.getItemId();
         switch(id){
             case R.id.action_settings:
-                ///new FetchArticlesTaskC(this).execute(); //-NOTE: Only experimental to show what can be done, will not be here in the final version
             case R.id.action_text_search:
-                //Displaying the search dialog
-                ///new FetchArticlesTaskC(this).execute(); //-NOTE: Only experimental to show what can be done, will not be here in the final version
                 onSearchRequested();
                 return true;
             default:

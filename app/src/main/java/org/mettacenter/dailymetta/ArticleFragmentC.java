@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 
 /**
- * A placeholder fragment containing a simple view. UNUSED as of this writing
+ * Holds a Daily Metta article
  */
 public class ArticleFragmentC extends Fragment {
 
