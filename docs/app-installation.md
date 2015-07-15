@@ -9,7 +9,6 @@ This is usually the best option. The app will automatically be updated when a ne
 1. Make sure your gmail address is part of our google group and log in to this gmail account (if you are not already logged in)
 
 2. Go to https://play.google.com/apps/testing/org.mettacenter.dailymetta and click on "Become a tester"
-
 ![becoming a tester](_img/becoming_a_tester.png)
 
 3. Go to https://play.google.com/store/apps/details?id=org.mettacenter.dailymetta and install the app
