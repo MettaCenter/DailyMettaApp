@@ -9,8 +9,7 @@
         android:layout_height="match_parent">
         <!-- Using 'android:id="@android:id/text1"' below means that we will extend the existing text1 and therefore inherit the formatting from it -->
         <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@android:id/text1"
+            android:id="@+id/article"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="32dp"

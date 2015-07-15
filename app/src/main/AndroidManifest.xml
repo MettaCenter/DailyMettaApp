@@ -14,6 +14,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!--
+            Below Differs from what we see here:
+            http://developer.android.com/training/search/setup.html
+            TODO: Investigate why
+            -->
             <meta-data android:name="android.app.default_searchable"
                 android:value=".SearchActivityC" />
         </activity>
