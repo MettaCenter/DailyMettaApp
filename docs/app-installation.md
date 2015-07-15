@@ -10,6 +10,8 @@ This is usually the best option. The app will automatically be updated when a ne
 
 2. Go to https://play.google.com/apps/testing/org.mettacenter.dailymetta and click on "Become a tester"
 
+![becoming a tester](_img/becoming_a_tester.png)
+
 3. Go to https://play.google.com/store/apps/details?id=org.mettacenter.dailymetta and install the app
 
 
