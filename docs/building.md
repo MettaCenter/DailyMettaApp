@@ -1,5 +1,15 @@
 
 
+### Setting the version
+
+```
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.mettacenter.dailymetta"
+    android:versionCode="1"
+    android:versionName="0.1.0">
+```
+
+
 ### Signing the app..
 ..so that it can be published on google play
 
