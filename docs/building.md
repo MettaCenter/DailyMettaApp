@@ -20,11 +20,10 @@
 *Please note that the passwordfor the keystore and for the key itself are different!*
 
 
-#### Signing automatically in Android Studio
+#### Signing manually in Android Studio
 
-(There is another way to sign automatically as well - using gradle - which is not covered here)
+(There ways to sign automatically as well - which is not covered here since it can create difficulties)
 
-To automatically sign in Android Studio follow the instruction under "Automatically Signing Your App" here:
 http://developer.android.com/tools/publishing/app-signing.html
 
 
