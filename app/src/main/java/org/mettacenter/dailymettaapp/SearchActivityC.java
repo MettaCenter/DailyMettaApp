@@ -1,4 +1,4 @@
-package org.mettacenter.dailymetta;
+package org.mettacenter.dailymettaapp;
 
 import android.app.SearchManager;
 import android.content.Context;

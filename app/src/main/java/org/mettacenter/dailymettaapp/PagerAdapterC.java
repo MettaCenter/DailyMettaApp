@@ -1,6 +1,5 @@
-package org.mettacenter.dailymetta;
+package org.mettacenter.dailymettaapp;
 
-import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

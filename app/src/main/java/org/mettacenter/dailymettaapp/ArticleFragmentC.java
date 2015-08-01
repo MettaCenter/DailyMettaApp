@@ -1,4 +1,4 @@
-package org.mettacenter.dailymetta;
+package org.mettacenter.dailymettaapp;
 
 import android.content.ContentResolver;
 import android.content.Context;

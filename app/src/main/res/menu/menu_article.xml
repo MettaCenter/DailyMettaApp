@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="org.mettacenter.dailymetta.ArticleActivityC">
+    tools:context="org.mettacenter.dailymettaapp.ArticleActivityC">
     <item android:id="@+id/action_text_search"
         android:title="@string/action_text_search"
         android:orderInCategory="1"

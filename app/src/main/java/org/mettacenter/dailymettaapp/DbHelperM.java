@@ -1,4 +1,4 @@
-package org.mettacenter.dailymetta;
+package org.mettacenter.dailymettaapp;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

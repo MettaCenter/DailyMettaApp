@@ -1,4 +1,4 @@
-package org.mettacenter.dailymetta;
+package org.mettacenter.dailymettaapp;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -9,15 +9,13 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import java.util.HashSet;
-
 /**
  * ContentProvider for our application, works as an interface/connection between the SQLite
  * database and the UI with methods for inserting and reading data etc
  */
 public class ContentProviderM extends ContentProvider{
 
-    static final String AUTHORITY = "org.mettacenter.dailymetta";
+    static final String AUTHORITY = "org.mettacenter.dailymettaapp";
     public static final Uri ARTICLE_CONTENT_URI =
             Uri.parse("content://" + AUTHORITY + "/" + ArticleTableM.TABLE_ARTICLE);
 
