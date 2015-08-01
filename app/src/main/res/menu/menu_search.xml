@@ -11,11 +11,18 @@
         android:orderInCategory="100" app:showAsAction="ifRoom" />
     -->
 
+    <!--
     <item android:id="@+id/search"
         android:title="@string/action_text_search"
-        android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
-        yourapp:showAsAction="always|collapseActionView"
-        yourapp:actionViewClass="android.support.v7.widget.SearchView" />
+        android:icon="@android:drawable/ic_menu_search"
+        yourapp:showAsAction="ifRoom"
+        yourapp:actionViewClass="android.widget.SearchView" />
+    -->
 
+    <!--
+    "@drawable/abc_ic_search_api_mtrl_alpha"
+    support.v7
+    always|collapseActionView
+    -->
 
 </menu>

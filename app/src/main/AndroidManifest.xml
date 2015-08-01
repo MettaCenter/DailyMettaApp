@@ -25,8 +25,7 @@
                 android:value=".SearchActivityC" />
         </activity>
         <activity
-            android:name="org.mettacenter.dailymettaapp.SearchActivityC"
-            android:label="@string/title_search_activity" >
+            android:name="org.mettacenter.dailymettaapp.SearchActivityC" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

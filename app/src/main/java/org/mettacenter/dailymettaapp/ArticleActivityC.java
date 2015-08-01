@@ -84,6 +84,4 @@ public class ArticleActivityC extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }
-
