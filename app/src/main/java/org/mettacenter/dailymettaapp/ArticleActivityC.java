@@ -1,5 +1,6 @@
 package org.mettacenter.dailymettaapp;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -22,6 +23,9 @@ public class ArticleActivityC extends AppCompatActivity {
 
     protected Cursor pCursor = null;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +40,15 @@ public class ArticleActivityC extends AppCompatActivity {
 
         //..setup will continue in the class below after a callback from FetchArticlesTaskC
     }
+
+
+    /////Experimental/////
+    @Override
+    public void onNewIntent(Intent iIntent){
+        super.onNewIntent(iIntent);
+        setIntent(iIntent);
+    }
+
 
     public class MyCallbackClass{
         public void adapterSetupCallback(){
@@ -53,11 +66,21 @@ public class ArticleActivityC extends AppCompatActivity {
 
             //Redrawing all fragments
             mPagerAdapter.notifyDataSetChanged();
+
+
+
+
+            //Choosing the fragment to display
+            int tPositionIt = (int)getIntent().getLongExtra(SearchActivityC.EXTRA_ARTICLE_POS_ID, 0);
+
+            mViewPager.setCurrentItem(tPositionIt);
+
         }
     }
 
     @Override
     protected void onDestroy(){
+        super.onDestroy();
         pCursor.close();
         pCursor = null;
     }

@@ -13,8 +13,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 /**
  * Activity for displaying the list of search results. UNUSED as of this writing
@@ -26,7 +29,9 @@ public class SearchActivityC extends ListActivity
 
     String mQuery = null;
 
-    private static final String SEARCH_COL = ArticleTableM.COLUMN_LINK;
+    private static final String SEARCH_COL = ArticleTableM.COLUMN_TEXT;
+
+    public static final String EXTRA_ARTICLE_POS_ID = "ARTICLE_POS_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,10 @@ public class SearchActivityC extends ListActivity
         int[] tToGuiIt = new int[]{R.id.search_row_text}; //-contained in the layout
 
         mAdapter = new SimpleCursorAdapter(this, R.layout.element_search_row, null, tFromColumnsSg, tToGuiIt, 0);
+
+
+        mAdapter.setViewBinder(new SearchViewBinderM());
+
 
         //..add it to the listview contained within this activity
         setListAdapter(mAdapter);
@@ -105,35 +114,43 @@ public class SearchActivityC extends ListActivity
     }
 
 
+    /**
+     * Please note that the id for the list items starts at 1, while the ViewPager positions
+     * start at 0, therefore we subtract 1 from the id that we receive in this method
+     */
+    @Override
+    public void onListItemClick(ListView iListView, View iView, int iPos, long iId){
+        super.onListItemClick(iListView, iView, iPos, iId);
+        //-TODO: Experiment with removing this
+
+
+        Log.i(UtilitiesU.TAG, "onListItemClick, iId = " + iId);
+
+
+        //Starting a new article activity with the fragment for the chosen article
+
+        /////Uri tUri = Uri.parse(ContentProviderM.ARTICLE_CONTENT_URI + "/" + iId);
+
+        Intent tIntent = new Intent(SearchActivityC.this, ArticleActivityC.class);
+
+        tIntent.putExtra(EXTRA_ARTICLE_POS_ID, iId - 1); /////iId temporarily used, removed "tUri.toString()"
+
+        SearchActivityC.this.startActivityForResult(tIntent, 0);
+        //-Calling ArticleActivityC
+
+    }
+
+
     @Override
     public Loader<Cursor> onCreateLoader(int iIdUnused, Bundle iArgumentsUnused) {
 
         String[] tProj = {BaseColumns._ID, SEARCH_COL};
         String tSel = SEARCH_COL + " LIKE ?";
         String[] tSelArgs = {"%"+mQuery+"%"};
+        String tSortOrderSg = "DESC";
 
-        CursorLoader rLoader = new CursorLoader(this, ContentProviderM.ARTICLE_CONTENT_URI, tProj, tSel, tSelArgs, "ASC");
-
-        /*
-
-
-        		//Setup of variables used for selecting the database colums of rows
-		String[] tmpProjection = {ItemTableM.COLUMN_ID, ItemTableM.COLUMN_NAME,
-				ItemTableM.COLUMN_ACTIVE, ItemTableM.COLUMN_KINDSORT_VALUE, ItemTableM.COLUMN_ACTIONS};
-		//-kindsortvalue only needed here when used for debug purposes
-		String tmpSelection = ItemTableM.COLUMN_LIST_TYPE + "=?";
-		String[] tmpSelectionArguments = {String.valueOf(refListType)};
-
-		//Creating the CursorLoader
-		CursorLoader retCursorLoader = new CursorLoader(
-				getActivity(), ContentProviderM.ITEM_CONTENT_URI,
-				tmpProjection, tmpSelection, tmpSelectionArguments, ContentProviderM.sSortType);
-		return retCursorLoader;
-
-
-         */
-
-
+        CursorLoader rLoader = new CursorLoader(
+                this, ContentProviderM.ARTICLE_CONTENT_URI, tProj, tSel, tSelArgs, tSortOrderSg);
 
         return rLoader;
     }
@@ -145,4 +162,29 @@ public class SearchActivityC extends ListActivity
     public void onLoaderReset(Loader<Cursor> iCursorUnused) {
         mAdapter.swapCursor(null);
     }
+
+
+
+    private static class SearchViewBinderM implements SimpleCursorAdapter.ViewBinder{
+
+        public boolean setViewValue(View iView, Cursor iCursor, int iColIndex){
+
+            int tSearchColIndex = iCursor.getColumnIndexOrThrow(SEARCH_COL);
+
+            if(iColIndex == tSearchColIndex){
+
+                TextView tTextView = (TextView)iView.findViewById(R.id.search_row_text);
+
+                String tFormattedText = iCursor.getString(tSearchColIndex).substring(0, 170);
+
+                tTextView.setText(tFormattedText);
+
+                return true;
+
+            }
+
+            return false; //-default
+        }
+    }
+
 }
