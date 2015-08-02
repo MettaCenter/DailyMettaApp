@@ -10,6 +10,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,11 +28,13 @@ public class SearchActivityC extends ListActivity
 
     SimpleCursorAdapter mAdapter = null;
 
-    String mQuery = null;
+    String mSearchStringSg = null;
 
     private static final String SEARCH_COL = ArticleTableM.COLUMN_TEXT;
 
     public static final String EXTRA_ARTICLE_POS_ID = "ARTICLE_POS_ID";
+
+    private static final int TEXT_CONTEXT_PADDING = 40;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +47,10 @@ public class SearchActivityC extends ListActivity
         Intent tIntent = getIntent();
 
         if(Intent.ACTION_SEARCH.equals(tIntent.getAction())){
-            mQuery = tIntent.getStringExtra(SearchManager.QUERY);
+            mSearchStringSg = tIntent.getStringExtra(SearchManager.QUERY);
             //-this data will be used when the loader is initiated
 
-            Log.i(UtilitiesU.TAG, "mQuery = " + mQuery);
+            Log.i(UtilitiesU.TAG, "mSearchStringSg = " + mSearchStringSg);
 
             //doMySearch(tQuery);
             //-it seems we don't need this since the query takes place in the onCreateLoader method
@@ -146,7 +149,7 @@ public class SearchActivityC extends ListActivity
 
         String[] tProj = {BaseColumns._ID, SEARCH_COL};
         String tSel = SEARCH_COL + " LIKE ?";
-        String[] tSelArgs = {"%"+mQuery+"%"};
+        String[] tSelArgs = {"%"+ mSearchStringSg +"%"};
         String tSortOrderSg = "DESC";
 
         CursorLoader rLoader = new CursorLoader(
@@ -165,7 +168,7 @@ public class SearchActivityC extends ListActivity
 
 
 
-    private static class SearchViewBinderM implements SimpleCursorAdapter.ViewBinder{
+    private class SearchViewBinderM implements SimpleCursorAdapter.ViewBinder{
 
         public boolean setViewValue(View iView, Cursor iCursor, int iColIndex){
 
@@ -175,9 +178,32 @@ public class SearchActivityC extends ListActivity
 
                 TextView tTextView = (TextView)iView.findViewById(R.id.search_row_text);
 
-                String tFormattedText = iCursor.getString(tSearchColIndex).substring(0, 170);
 
-                tTextView.setText(tFormattedText);
+                String tArticleTextSg = iCursor.getString(tSearchColIndex);
+
+                Log.i(UtilitiesU.TAG, "tArticleTextSg.length() = " + tArticleTextSg.length());
+
+                //Finding the first instance of the searched for string
+
+                int tFirstMatchingPosition = tArticleTextSg.indexOf(mSearchStringSg, 0);
+                //-TODO: Do we want to change the index where the search is started (now set to 0)?
+
+                Log.i(UtilitiesU.TAG, "tFirstMatchingPosition = " + tFirstMatchingPosition);
+
+
+                int tStart = tFirstMatchingPosition - TEXT_CONTEXT_PADDING;
+                if(tStart < 0){tStart = 0;}
+                int tEnd = tFirstMatchingPosition + mSearchStringSg.length() + TEXT_CONTEXT_PADDING;
+                if(tEnd > tArticleTextSg.length()){tEnd = tArticleTextSg.length();}
+
+                String tPreviewTextSubString = iCursor.getString(tSearchColIndex).substring(tStart, tEnd);
+
+                /*
+                If we want the searched for word in bold we can check this link:
+                http://stackoverflow.com/questions/14371092/how-to-make-a-specific-text-on-textview-bold
+                 */
+
+                tTextView.setText(tPreviewTextSubString);
 
                 return true;
 
