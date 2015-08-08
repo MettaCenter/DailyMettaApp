@@ -2,6 +2,8 @@ package org.mettacenter.dailymettaapp;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -33,10 +36,11 @@ public class ArticleFragmentC extends Fragment {
 
         Bundle tArgs = getArguments();
 
-        TextView tArticleTv = ((TextView) rRootView.findViewById(R.id.article));
+        TextView tArticleTv = (TextView)rRootView.findViewById(R.id.article);
         android.text.Spanned tArticleHtmlFormatted = Html.fromHtml(tArgs.getString(ARG_ARTICLE)
                 .replaceAll("<img.+/(img)*>", ""));
         tArticleTv.setText(tArticleHtmlFormatted); // + tArticleText
+
 
         /*
         Linking to the web. Please note that we need to avoid using android:autoLink="web" here
@@ -49,6 +53,28 @@ public class ArticleFragmentC extends Fragment {
         tLinkTv.setText(tLinkHtmlFormatted);
         tLinkTv.setMovementMethod(LinkMovementMethod.getInstance());
 
+
+        //Sharing
+        ImageButton tShareImageButton = (ImageButton)rRootView.findViewById(R.id.share_button);
+        tShareImageButton.setOnClickListener(new ShareOnClickListener());
+
+
+
         return rRootView;
     }
+
+    private class ShareOnClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+
+            Bundle tArgs = getArguments(); //TODO: Only call this in onCreateView?
+
+            Intent tShareIntent = new Intent();
+            tShareIntent.setAction(Intent.ACTION_SEND);
+            tShareIntent.setType("text/plain");
+            tShareIntent.putExtra(Intent.EXTRA_TEXT, tArgs.getString(ARG_ARTICLE));
+            startActivity(tShareIntent);
+        }
+    }
+
 }
