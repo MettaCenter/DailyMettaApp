@@ -11,9 +11,11 @@
         />
     <item android:id="@+id/action_choose_date"
         android:title="@string/action_choose_date"
+        android:icon="@android:drawable/ic_menu_today"
         android:orderInCategory="2"
         app:showAsAction="ifRoom"
         />
+    <!--^TODO: Find another icon for the date-->
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
 

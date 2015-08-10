@@ -1,22 +1,14 @@
 package org.mettacenter.dailymettaapp;
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 
@@ -25,7 +17,8 @@ import android.widget.TextView;
  */
 public class ArticleFragmentC extends Fragment {
 
-    public static final String ARG_ARTICLE = "article";
+    public static final String ARG_TITLE = "title";
+    public static final String ARG_TEXT = "text";
     public static final String ARG_LINK = "link";
 
     @Override
@@ -36,19 +29,26 @@ public class ArticleFragmentC extends Fragment {
 
         Bundle tArgs = getArguments();
 
-        TextView tArticleTv = (TextView)rRootView.findViewById(R.id.article);
-        android.text.Spanned tArticleHtmlFormatted = Html.fromHtml(tArgs.getString(ARG_ARTICLE)
+
+        //Title
+        TextView tTitleTv = (TextView)rRootView.findViewById(R.id.article_title);
+        android.text.Spanned tTitleHtmlFormatted = Html.fromHtml(tArgs.getString(ARG_TITLE));
+        tTitleTv.setText(tTitleHtmlFormatted);
+
+
+        //Main text
+        TextView tArticleTv = (TextView)rRootView.findViewById(R.id.article_text);
+        android.text.Spanned tArticleHtmlFormatted = Html.fromHtml(tArgs.getString(ARG_TEXT)
                 .replaceAll("<img.+/(img)*>", ""));
         tArticleTv.setText(tArticleHtmlFormatted); // + tArticleText
 
 
-        /*
-        Linking to the web. Please note that we need to avoid using android:autoLink="web" here
-        which is for plain text links and not links inside <a> tags
-         */
+        //Linking to the web
+        /*Please note that we need to avoid using android:autoLink="web" here
+        which is for plain text links and not links inside <a> tags*/
         tArticleTv.setMovementMethod(LinkMovementMethod.getInstance());
 
-        TextView tLinkTv = ((TextView) rRootView.findViewById(R.id.link_to_article));
+        TextView tLinkTv = ((TextView) rRootView.findViewById(R.id.article_link));
         android.text.Spanned tLinkHtmlFormatted = Html.fromHtml(tArgs.getString(ARG_LINK));
         tLinkTv.setText(tLinkHtmlFormatted);
         tLinkTv.setMovementMethod(LinkMovementMethod.getInstance());
@@ -57,7 +57,6 @@ public class ArticleFragmentC extends Fragment {
         //Sharing
         ImageButton tShareImageButton = (ImageButton)rRootView.findViewById(R.id.share_button);
         tShareImageButton.setOnClickListener(new ShareOnClickListener());
-
 
 
         return rRootView;
@@ -72,9 +71,8 @@ public class ArticleFragmentC extends Fragment {
             Intent tShareIntent = new Intent();
             tShareIntent.setAction(Intent.ACTION_SEND);
             tShareIntent.setType("text/plain");
-            tShareIntent.putExtra(Intent.EXTRA_TEXT, tArgs.getString(ARG_ARTICLE));
+            tShareIntent.putExtra(Intent.EXTRA_TEXT, tArgs.getString(ARG_TEXT));
             startActivity(tShareIntent);
         }
     }
-
 }

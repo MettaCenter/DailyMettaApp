@@ -45,5 +45,4 @@ public class ArticleTableM {
             createTable(iDb);
         }
     }
-
 }

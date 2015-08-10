@@ -31,7 +31,7 @@ public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
     ///private static final String PUBLISHED_XML_TAG = "published";
     //private static final String CATEGORY_XML_TAG = "category"; //TODO: Determine if we are going to use this (if so we will need to add a new table)
 
-    public interface TagParsedAtPresent{
+    public interface TagPresentlyParsed{
         int NONE = 0;
         int CONTENT = 1;
         int TITLE = 2;
@@ -40,9 +40,9 @@ public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
     }
 
     Context mContext;
-    ArticleActivityC.MyCallbackClass mCallback;
+    ArticleActivityC.AppSetupCallbackClass mCallback;
 
-    public FetchArticlesTaskC(Context iContext, ArticleActivityC.MyCallbackClass iCallback){
+    public FetchArticlesTaskC(Context iContext, ArticleActivityC.AppSetupCallbackClass iCallback){
         mCallback = iCallback;
         mContext = iContext;
     }
@@ -70,9 +70,8 @@ public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void v){
         //Completing the setup
-        mCallback.adapterSetupCallback();
+        mCallback.setupCallback();
     }
-
 
 
     /**
@@ -129,7 +128,7 @@ public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
     public static void parseArticle(XmlPullParser iXmlPullParser, Context iContext)
             throws XmlPullParserException, IOException {
         int iEventType = iXmlPullParser.next();
-        int tEnumTagParsedAtPresent = TagParsedAtPresent.NONE;
+        int tEnumTagParsedAtPresent = TagPresentlyParsed.NONE;
         ContentValues tInsertValues = new ContentValues();
 
         while(iEventType != XmlPullParser.END_DOCUMENT){
@@ -138,35 +137,35 @@ public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
                 case XmlPullParser.START_TAG:
                     Log.d(UtilitiesU.TAG, "===== START TAG =====");
                     if(CONTENT_XML_TAG.equals(iXmlPullParser.getName())){
-                        tEnumTagParsedAtPresent = TagParsedAtPresent.CONTENT;
+                        tEnumTagParsedAtPresent = TagPresentlyParsed.CONTENT;
                     }else if(TITLE_XML_TAG.equals(iXmlPullParser.getName())){
-                        tEnumTagParsedAtPresent = TagParsedAtPresent.TITLE;
+                        tEnumTagParsedAtPresent = TagPresentlyParsed.TITLE;
                     }else if(ID_XML_TAG.equals(iXmlPullParser.getName())){
-                        tEnumTagParsedAtPresent = TagParsedAtPresent.ID;
+                        tEnumTagParsedAtPresent = TagPresentlyParsed.ID;
                     }else if(PUBLISHED_XML_TAG.equals(iXmlPullParser.getName())){
-                        tEnumTagParsedAtPresent = TagParsedAtPresent.PUBLISHED;
+                        tEnumTagParsedAtPresent = TagPresentlyParsed.PUBLISHED;
                     }
                     break;
                 case XmlPullParser.TEXT:
                     Log.d(UtilitiesU.TAG, "===== TEXT =====");
                     switch(tEnumTagParsedAtPresent){
 
-                        case TagParsedAtPresent.CONTENT:
+                        case TagPresentlyParsed.CONTENT:
                             String tArticleContentSg = iXmlPullParser.getText();
                             Log.d(UtilitiesU.TAG, "tArticleContentSg = " + tArticleContentSg);
                             tInsertValues.put(ArticleTableM.COLUMN_TEXT, tArticleContentSg);
                             break;
-                        case TagParsedAtPresent.ID:
+                        case TagPresentlyParsed.ID:
                             String tArticleLinkSg = iXmlPullParser.getText();
                             Log.d(UtilitiesU.TAG, "tArticleLinkSg = " + tArticleLinkSg);
                             tInsertValues.put(ArticleTableM.COLUMN_LINK, tArticleLinkSg);
                             break;
-                        case TagParsedAtPresent.TITLE:
+                        case TagPresentlyParsed.TITLE:
                             String tArticleTitleSg = iXmlPullParser.getText();
                             Log.d(UtilitiesU.TAG, "tArticleTitleSg = " + tArticleTitleSg);
                             tInsertValues.put(ArticleTableM.COLUMN_TITLE, tArticleTitleSg);
                             break;
-                        case TagParsedAtPresent.PUBLISHED:
+                        case TagPresentlyParsed.PUBLISHED:
                             String tArticleTimeSg = iXmlPullParser.getText();
                             Log.d(UtilitiesU.TAG, "tArticleTimeSg = " + tArticleTimeSg);
                             //long tDate = ___;
@@ -191,13 +190,12 @@ public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
                         tInsertValues.clear();
                     }
 
-                    tEnumTagParsedAtPresent = TagParsedAtPresent.NONE;
+                    tEnumTagParsedAtPresent = TagPresentlyParsed.NONE;
 
                     break;
                 default:
                     //intentionally left empty
             }
-
             iEventType = iXmlPullParser.next();
         }
     }

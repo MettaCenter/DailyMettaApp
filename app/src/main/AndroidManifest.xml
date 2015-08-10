@@ -21,10 +21,10 @@
             TODO: Investigate why
             -->
             <meta-data android:name="android.app.default_searchable"
-                android:value=".SearchActivityC" />
+                android:value=".SearchResultsActivityC" />
         </activity>
         <activity
-            android:name="org.mettacenter.dailymettaapp.SearchActivityC" >
+            android:name=".SearchResultsActivityC" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

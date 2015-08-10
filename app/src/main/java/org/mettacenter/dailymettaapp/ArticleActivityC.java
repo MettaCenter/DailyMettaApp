@@ -1,6 +1,5 @@
 package org.mettacenter.dailymettaapp;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -18,13 +17,10 @@ import android.view.MenuItem;
 public class ArticleActivityC extends AppCompatActivity {
 
     //Adapter and pager for side swipe
-    PagerAdapter mPagerAdapter;
-    ViewPager mViewPager;
+    private PagerAdapter mPagerAdapter;
+    private ViewPager mViewPager;
 
-    protected Cursor pCursor = null;
-
-
-
+    private Cursor mCursor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,30 +29,36 @@ public class ArticleActivityC extends AppCompatActivity {
 
         //Setting up the data..
         //..clearing the db
-        getApplicationContext().deleteDatabase(DbHelperM.DB_NAME);
+        getApplicationContext().deleteDatabase(DbHelperM.DB_NAME); //TODO: Remove
 
         //..fetching all the articles
-        new FetchArticlesTaskC(this, new MyCallbackClass()).execute();
+        new FetchArticlesTaskC(this, new AppSetupCallbackClass()).execute();
 
-        //..setup will continue in the class below after a callback from FetchArticlesTaskC
+        //..setup continues in AppSetupCallbackClass below after a callback from FetchArticlesTaskC
     }
 
 
-    /////Experimental/////
+    /*
+    The override below does not seem to be needed, but please keep in mind that "getIntent" does
+    not get the latest intent, but rather the intent that was used to start the activity
+
     @Override
     public void onNewIntent(Intent iIntent){
         super.onNewIntent(iIntent);
         setIntent(iIntent);
     }
+    */
 
 
-    public class MyCallbackClass{
-        public void adapterSetupCallback(){
-
+    /**
+     * Used for setting up after data has been fetched from the server
+     */
+    public class AppSetupCallbackClass {
+        public void setupCallback(){
             try{
-                ArticleActivityC.this.pCursor = getContentResolver().query(
+                mCursor = getContentResolver().query(
                         ContentProviderM.ARTICLE_CONTENT_URI, null, null, null, null);
-                mPagerAdapter = new PagerAdapterC(getSupportFragmentManager(), pCursor);
+                mPagerAdapter = new PagerAdapterC(getSupportFragmentManager(), mCursor);
             }catch(Exception e){
                 Log.e(UtilitiesU.TAG, e.getMessage());
             }
@@ -67,22 +69,19 @@ public class ArticleActivityC extends AppCompatActivity {
             //Redrawing all fragments
             mPagerAdapter.notifyDataSetChanged();
 
-
-
-
-            //Choosing the fragment to display
-            int tPositionIt = (int)getIntent().getLongExtra(SearchActivityC.EXTRA_ARTICLE_POS_ID, 0);
-
+            //Choosing the fragment to display. 0 (the latest article) is the default
+            //Casting is done from long to int
+            int tPositionIt = (int)getIntent().getLongExtra(
+                    SearchResultsActivityC.EXTRA_ARTICLE_POS_ID, 0);
             mViewPager.setCurrentItem(tPositionIt);
-
         }
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        pCursor.close();
-        pCursor = null;
+        mCursor.close();
+        mCursor = null;
     }
 
     @Override
@@ -99,10 +98,11 @@ public class ArticleActivityC extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch(id){
-            case R.id.action_settings:
             case R.id.action_text_search:
                 onSearchRequested();
                 return true;
+            case R.id.action_choose_date:
+            case R.id.action_settings:
             default:
                 return super.onOptionsItemSelected(item);
         }
