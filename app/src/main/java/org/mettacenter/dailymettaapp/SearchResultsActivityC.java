@@ -25,8 +25,6 @@ import android.widget.TextView;
 public class SearchResultsActivityC extends ListActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final String EXTRA_ARTICLE_POS_ID = "ARTICLE_POS_ID";
-
     private SimpleCursorAdapter mAdapter = null;
     private String mSearchStringSg = null;
     private static final String SEARCH_COL = ArticleTableM.COLUMN_TEXT;
@@ -99,7 +97,7 @@ public class SearchResultsActivityC extends ListActivity
         //Starting a new article activity with the fragment for the chosen article
         /////Uri tUri = Uri.parse(ContentProviderM.ARTICLE_CONTENT_URI + "/" + iId);
         Intent tIntent = new Intent(SearchResultsActivityC.this, ArticleActivityC.class);
-        tIntent.putExtra(EXTRA_ARTICLE_POS_ID, iId - 1); /////iId temporarily used, removed "tUri.toString()"
+        tIntent.putExtra(UtilitiesU.EXTRA_ARTICLE_POS_ID, iId - 1); /////iId temporarily used, removed "tUri.toString()"
         SearchResultsActivityC.this.startActivityForResult(tIntent, 0);
     }
 

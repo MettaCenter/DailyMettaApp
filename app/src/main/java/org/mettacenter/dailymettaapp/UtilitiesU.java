@@ -23,4 +23,7 @@ public class UtilitiesU {
     public static final String EMPTY_STRING = "";
 
 
+    public static final String TIMEZONE = "GMT-7";
+
+    public static final String EXTRA_ARTICLE_POS_ID = "ARTICLE_POS_ID";
 }

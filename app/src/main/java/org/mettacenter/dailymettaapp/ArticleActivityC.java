@@ -1,5 +1,6 @@
 package org.mettacenter.dailymettaapp;
 
+import android.app.DialogFragment;
 import android.database.Cursor;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -69,11 +70,21 @@ public class ArticleActivityC extends AppCompatActivity {
             //Redrawing all fragments
             mPagerAdapter.notifyDataSetChanged();
 
-            //Choosing the fragment to display. 0 (the latest article) is the default
-            //Casting is done from long to int
-            int tPositionIt = (int)getIntent().getLongExtra(
-                    SearchResultsActivityC.EXTRA_ARTICLE_POS_ID, 0);
-            mViewPager.setCurrentItem(tPositionIt);
+
+
+            ///if(getIntent().hasExtra(SearchResultsActivityC.EXTRA_ARTICLE_POS_ID) == true){
+                //Choosing the fragment to display. 0 (the latest article) is the default
+                //Casting is done from long to int
+                int tPositionIt = (int)getIntent().getLongExtra(
+                        UtilitiesU.EXTRA_ARTICLE_POS_ID, 0);
+                mViewPager.setCurrentItem(tPositionIt);
+                getIntent().removeExtra(UtilitiesU.EXTRA_ARTICLE_POS_ID);
+            ///}else if(getIntent().hasExtra(DatePickerFragmentC.EXTRA_ARTICLE_TIME) == true){
+
+
+            ///}else{
+                //intentionally left empty
+            ///}
         }
     }
 
@@ -102,7 +113,16 @@ public class ArticleActivityC extends AppCompatActivity {
                 onSearchRequested();
                 return true;
             case R.id.action_choose_date:
+
+
+                DialogFragment tDatePickerFragment = new DatePickerFragmentC();
+                tDatePickerFragment.show(this.getFragmentManager(), "DatePicker");
+
+
+                return true;
             case R.id.action_settings:
+
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

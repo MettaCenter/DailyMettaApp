@@ -3,6 +3,7 @@ package org.mettacenter.dailymettaapp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -15,6 +16,11 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Contains the @link doInBackground method which calls other methods for downloading and parsing
@@ -27,8 +33,7 @@ public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
     private static final String CONTENT_XML_TAG = "content"; //-Corresponds to COLUMN_TEXT
     private static final String TITLE_XML_TAG = "title"; //-Corresponds to COLUMN_TITLE
     private static final String ID_XML_TAG = "id"; //-Corresponds to COLUMN_LINK
-    private static final String PUBLISHED_XML_TAG = "id"; //-Corresponds to COLUMN_TIME
-    ///private static final String PUBLISHED_XML_TAG = "published";
+    private static final String PUBLISHED_XML_TAG = "published"; //-Corresponds to COLUMN_TIME
     //private static final String CATEGORY_XML_TAG = "category"; //TODO: Determine if we are going to use this (if so we will need to add a new table)
 
     public interface TagPresentlyParsed{
@@ -166,10 +171,29 @@ public class FetchArticlesTaskC extends AsyncTask<Void, Void, Void> {
                             tInsertValues.put(ArticleTableM.COLUMN_TITLE, tArticleTitleSg);
                             break;
                         case TagPresentlyParsed.PUBLISHED:
-                            String tArticleTimeSg = iXmlPullParser.getText();
+
+                            String tArticleTimeSg = iXmlPullParser.getText()
+                                    .replace("T", " ")
+                                    .replace("Z", "");
+                            //-TODO: Check with Sky if these replacements are a future-safe thing to do
                             Log.d(UtilitiesU.TAG, "tArticleTimeSg = " + tArticleTimeSg);
-                            //long tDate = ___;
-                            //tInsertValues.put(ArticleTableM.COLUMN_TITLE, tArticleTimeSg);
+
+                            Date tDate;
+                            long tTimeInMilliSecondsLg = -1;
+                            SimpleDateFormat tAtomXmlDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            tAtomXmlDateFormat.setTimeZone(TimeZone.getTimeZone(UtilitiesU.TIMEZONE));
+                            try {
+                                tDate = tAtomXmlDateFormat.parse(tArticleTimeSg);
+                                tTimeInMilliSecondsLg  = tDate.getTime();
+                                //-This is a Java long, but there is no problem for SQLite because
+                                //it's Integer is variable in length and can be up to 8 bytes
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            Log.d(UtilitiesU.TAG, "tTimeInMilliSecondsLg = " + tTimeInMilliSecondsLg);
+
+                            tInsertValues.put(ArticleTableM.COLUMN_TIME, tTimeInMilliSecondsLg);
                             break;
                         default:
                             //intentionally left empty

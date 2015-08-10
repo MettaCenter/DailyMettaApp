@@ -65,7 +65,6 @@ public class ArticleFragmentC extends Fragment {
     private class ShareOnClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
-
             Bundle tArgs = getArguments(); //TODO: Only call this in onCreateView?
 
             Intent tShareIntent = new Intent();
