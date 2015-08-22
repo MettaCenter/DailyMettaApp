@@ -59,11 +59,12 @@ The Daily Metta App is free (and open-source) software. The license used is GPLv
 * We use [Android Studio and the Android SDK](https://developer.android.com/sdk/index.html) for development
 
 
-### Project groups
+### [Metta Center tech teams](https://github.com/orgs/MettaCenter/teams)
 
-We have an "observers" (with read-only access) group for people either
+We have an "observers" (with read-only access) team here on GitHub for people either
 * new to the project or
 * not involved week-to-week
+
 People in the observers group can still very much participate by - for example - forking the project and then do a pull reqest
 
 
