@@ -58,6 +58,15 @@ The Daily Metta App is free (and open-source) software. The license used is GPLv
 * All code commits are buildable
 * We use [Android Studio and the Android SDK](https://developer.android.com/sdk/index.html) for development
 
+
+### Project groups
+
+We have an "observers" (with read-only access) group for people either
+* new to the project or
+* not involved week-to-week
+People in the observers group can still very much participate by - for example - forking the project and then do a pull reqest
+
+
 ### To speed up development
 
 * We can assign issues to each other if we think the issue is suitable for the other person
@@ -78,4 +87,3 @@ Unless conversations are clearly of a private nature, we can choose to share the
 * Book: "Producing open-source software"
   * http://producingoss.com/en/getting-started.html#developer-guidelines
   * http://producingoss.com/en/social-infrastructure.html
-
