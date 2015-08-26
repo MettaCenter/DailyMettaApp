@@ -137,7 +137,7 @@ public class SearchResultsActivityC
             }else if(iColIndex == tTimeColIndex){
                 TextView tTextView = (TextView)iView.findViewById(R.id.search_row_date);
 
-                long tArticleTimeInMillisLg = iCursor.getLong(tTitleColIndex);
+                long tArticleTimeInMillisLg = iCursor.getLong(tTimeColIndex);
 
                 Calendar c = Calendar.getInstance();
                 c.setTimeInMillis(tArticleTimeInMillisLg);
