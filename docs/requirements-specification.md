@@ -363,6 +363,7 @@ Priority: Medium
 
 ##### Reusability
 * **REU-1:** The app tech architechture uses whenever possible standard solutions to avoid future problems for developers
+* **REU-2:** The app is designed with the awareness that we may want to reuse parts for later Android projects, more specifically parts that have to do with downloading of data is documented so that they can be reused more easily in the future
 
 
 ### 5.5 Business Rules
