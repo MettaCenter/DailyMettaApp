@@ -13,7 +13,8 @@ import android.provider.BaseColumns;
  * ContentProvider for our application, works as an interface/connection between the SQLite
  * database and the UI with methods for inserting and reading data etc
  */
-public class ContentProviderM extends ContentProvider{
+public class ContentProviderM
+        extends ContentProvider{
 
     static final String AUTHORITY = "org.mettacenter.dailymettaapp";
     public static final Uri ARTICLE_CONTENT_URI =
@@ -46,8 +47,8 @@ public class ContentProviderM extends ContentProvider{
         //verifyColumns(iUri, iProjectionAy);
         SQLiteQueryBuilder tQueryBuilder = new SQLiteQueryBuilder();
         SQLiteDatabase tDb = mDbHelper.getWritableDatabase();
-        String tTable = UtilitiesU.EMPTY_STRING;
-        String tKeyColumn = UtilitiesU.EMPTY_STRING;
+        String tTable = ConstsU.EMPTY_STRING;
+        String tKeyColumn = ConstsU.EMPTY_STRING;
 
         switch(sUriMatcher.match(iUri)){
             case ARTICLE_SINGLE_ROW:
@@ -61,7 +62,7 @@ public class ContentProviderM extends ContentProvider{
 
         Cursor rCr = null;
         tQueryBuilder.setTables(tTable);
-        if(tKeyColumn.equals(UtilitiesU.EMPTY_STRING) == false){
+        if(tKeyColumn.equals(ConstsU.EMPTY_STRING) == false){
             tQueryBuilder.appendWhere(tKeyColumn + "=" + iUri.getLastPathSegment());
         }
         rCr = tQueryBuilder.query(tDb, iProjectionAy, iSelectionSg, iSelectionArgsAy,
@@ -81,7 +82,7 @@ public class ContentProviderM extends ContentProvider{
         long tInsertRowIdLg = 0; //-the row numer where the inserted data is placed
         Uri rUriSg = null;
         SQLiteDatabase tDb = mDbHelper.getWritableDatabase();
-        String tTable = UtilitiesU.EMPTY_STRING;
+        String tTable = ConstsU.EMPTY_STRING;
 
         Uri tContentUri = null;
 
@@ -94,7 +95,7 @@ public class ContentProviderM extends ContentProvider{
                 throw new IllegalArgumentException("Unknown URI: " + iUri);
         }
 
-        if(tTable.equals(UtilitiesU.EMPTY_STRING) == false && tContentUri != null){
+        if(tTable.equals(ConstsU.EMPTY_STRING) == false && tContentUri != null){
             tInsertRowIdLg = tDb.insert(tTable, null, iContentValues);
             rUriSg = Uri.parse(tContentUri + "/" + tInsertRowIdLg);
         }

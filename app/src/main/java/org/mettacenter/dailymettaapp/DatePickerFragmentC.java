@@ -13,17 +13,16 @@ import android.util.Log;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * Created by sunyata on 2015-08-10.
+ * 1. Shows a calendar to the user for picking a date
+ * 2. Calculates the ViewPager position corresponding to this date (Please be aware of leap day!)
+ * 3. Sends that ViewPager position back to the article activity
  */
 public class DatePickerFragmentC
         extends DialogFragment
         implements DatePickerDialog.OnDateSetListener{
-
-    //public static final String EXTRA_ARTICLE_TIME = "ARTICLE_TIME";
 
     @Override
     public Dialog onCreateDialog(Bundle iSavedInstanceState) {
@@ -41,44 +40,44 @@ public class DatePickerFragmentC
      */
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
 
-        /////Log.i(UtilitiesU.TAG, "onListItemClick, iId = " + iId);
+        c.set(year, monthOfYear, dayOfMonth, 0, 0);
+        c.setTimeZone(TimeZone.getTimeZone(ConstsU.SERVER_TIMEZONE));
+        long tChosenDateInMilliSecondsStartLg = c.getTime().getTime();
+        //-please note that the two methods called "getTime" return different types
+        Log.d(ConstsU.TAG, "tChosenDateInMilliSecondsStartLg = " + tChosenDateInMilliSecondsStartLg);
 
-        Calendar c1 = Calendar.getInstance();
-        c1.set(year, monthOfYear, dayOfMonth, 0, 0);
-        c1.setTimeZone(TimeZone.getTimeZone(UtilitiesU.TIMEZONE));
-        long tChosenDateInMilliSecondsStartLg = c1.getTime().getTime();
-        //-please note that the methods called "getTime" return different types
-        Log.i(UtilitiesU.TAG, "tChosenDateInMilliSecondsStartLg = " + tChosenDateInMilliSecondsStartLg);
-
-        Calendar c2 = Calendar.getInstance();
-        c2.set(year, monthOfYear, dayOfMonth, 23, 59);
-        c2.setTimeZone(TimeZone.getTimeZone(UtilitiesU.TIMEZONE));
-        long tChosenDateInMilliSecondsEndLg = c2.getTime().getTime();
-        Log.i(UtilitiesU.TAG, "tChosenDateInMilliSecondsEndLg = " + tChosenDateInMilliSecondsEndLg);
+        c.set(year, monthOfYear, dayOfMonth, 23, 59);
+        c.setTimeZone(TimeZone.getTimeZone(ConstsU.SERVER_TIMEZONE));
+        long tChosenDateInMilliSecondsEndLg = c.getTime().getTime();
+        Log.d(ConstsU.TAG, "tChosenDateInMilliSecondsEndLg = " + tChosenDateInMilliSecondsEndLg);
 
         String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TIME};
         String tSel = ArticleTableM.COLUMN_TIME + " BETWEEN " + tChosenDateInMilliSecondsStartLg + " AND " + tChosenDateInMilliSecondsEndLg;
-        //-Please note that "BETWEEN" suprisingly includes results that are "on the edge" in the comparison
+        //-Please note that "BETWEEN" surprisingly includes results that are "on the edge" in the comparison
         String tSortOrderSg = "DESC";
 
         Cursor tCursor = getActivity().getContentResolver().query(
                 ContentProviderM.ARTICLE_CONTENT_URI, tProj, tSel, null, tSortOrderSg);
-        long tDataBaseIdLg = 0; //TODO: Handle the 0 case
         if(tCursor != null && tCursor.getCount() > 0){
             tCursor.moveToFirst();
-            tDataBaseIdLg = tCursor.getLong(tCursor.getColumnIndexOrThrow(BaseColumns._ID));
+            long tDataBaseIdLg = tCursor.getLong(tCursor.getColumnIndexOrThrow(BaseColumns._ID));
 
             //Starting a new article activity with the fragment for the chosen article
             Intent tIntent = new Intent(getActivity(), ArticleActivityC.class);
-            tIntent.putExtra(UtilitiesU.EXTRA_ARTICLE_POS_ID, tDataBaseIdLg - 1);
-            //-One is subtracted here because the position in the ViewPager starts differently
-            startActivityForResult(tIntent, 0); ///getActivity().
-
+            tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, tDataBaseIdLg - 1);
+            /*
+            -One is subtracted here because the position in the ViewPager starts at zero
+            while the SQLite db starts at 1. From the SQLite documentation:
+            "Rows are assigned contiguously ascending rowid values, starting with 1[...]"
+            https://www.sqlite.org/lang_createtable.html
+            Another reason this simple conversion works is that we drop the database and then
+            write new values to it
+            */
+            startActivityForResult(tIntent, 0);
         }else{
-            //TODO: 1. Dialog: No article found for this date. 2. Go to today
             AlertDialog tAlertDialog = new AlertDialog.Builder(getActivity()).create();
-            //tAlertDialog.setTitle("");
             tAlertDialog.setMessage("No article found for this date");
             tAlertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                     new DialogInterface.OnClickListener() {

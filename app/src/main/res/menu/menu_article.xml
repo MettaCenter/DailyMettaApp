@@ -4,20 +4,22 @@
     tools:context="org.mettacenter.dailymettaapp.ArticleActivityC">
     <item android:id="@+id/action_text_search"
         android:title="@string/action_text_search"
-        android:orderInCategory="1"
         app:showAsAction="ifRoom"
+        android:orderInCategory="1"
         android:icon="@android:drawable/ic_menu_search"
         android:actionViewClass="android.widget.SearchView"
         />
     <item android:id="@+id/action_choose_date"
         android:title="@string/action_choose_date"
-        android:icon="@android:drawable/ic_menu_today"
-        android:orderInCategory="2"
         app:showAsAction="ifRoom"
+        android:orderInCategory="2"
+        android:icon="@android:drawable/ic_menu_today"
         />
     <!--^TODO: Find another icon for the date-->
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never"
+        android:orderInCategory="100" />
 
     <!--
     <item android:id="@+id/action_share" android:title="@string/action_share"

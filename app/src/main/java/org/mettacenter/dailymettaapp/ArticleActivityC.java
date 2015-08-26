@@ -1,6 +1,8 @@
 package org.mettacenter.dailymettaapp;
 
 import android.app.DialogFragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -10,12 +12,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
 /**
- * Main activity for the application
+ * Main activity for the application shown when the user starts the app
  *
- * AppCompatActivity extends ActionbarActivity
+ * Please note: AppCompatActivity extends ActionbarActivity
  */
-public class ArticleActivityC extends AppCompatActivity {
+public class ArticleActivityC
+        extends AppCompatActivity {
 
     //Adapter and pager for side swipe
     private PagerAdapter mPagerAdapter;
@@ -28,64 +34,62 @@ public class ArticleActivityC extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
 
+        SharedPreferences tSharedPreferences = getSharedPreferences(
+                ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        long tLastUpdateInMillisLg = tSharedPreferences.getLong(
+                ConstsU.PREF_LAST_UPDATE_TIME, ConstsU.DB_NEVER_UPDATED);
+        long tUpdateIntervalInMillisLg = TimeUnit.MINUTES.toMillis(ConstsU.UPDATE_INTERVAL_IN_MINUTES); //-TODO: Change to days
+        boolean tIsUpdateIntervalReachedBl =
+                Calendar.getInstance().getTimeInMillis() - tLastUpdateInMillisLg
+                >= tUpdateIntervalInMillisLg;
+        Log.d(ConstsU.TAG, "tIsUpdateIntervalReachedBl = " + tIsUpdateIntervalReachedBl);
+        Log.d(ConstsU.TAG, "tLastUpdateInMillisLg = " + tLastUpdateInMillisLg);
+        Log.d(ConstsU.TAG, "Calendar.getInstance().getTimeInMillis() = " + Calendar.getInstance().getTimeInMillis());
+        Log.d(ConstsU.TAG, "tUpdateIntervalInMillisLg = " + tUpdateIntervalInMillisLg);
+
+        //TODO: Do we want to do the update when a new app version is launched?
+
         //Setting up the data..
-        //..clearing the db
-        getApplicationContext().deleteDatabase(DbHelperM.DB_NAME); //TODO: Remove
+        if( tIsUpdateIntervalReachedBl == true || tLastUpdateInMillisLg == ConstsU.DB_NEVER_UPDATED){
+            //..clearing the db
+            getApplicationContext().deleteDatabase(DbHelperM.DB_NAME);
 
-        //..fetching all the articles
-        new FetchArticlesTaskC(this, new AppSetupCallbackClass()).execute();
+            //..fetching all the articles
+            new FetchArticlesTaskC(this, new AppSetupCallbackClass()).execute();
+        }else{
+            finishSetup();
+        }
 
-        //..setup continues in AppSetupCallbackClass below after a callback from FetchArticlesTaskC
+        /*..setup continues in AppSetupCallbackClass below after (1) a callback from
+        FetchArticlesTaskC (if we update the db) or (2) a direct call (if we don't update the db)
+        */
     }
 
-
-    /*
-    The override below does not seem to be needed, but please keep in mind that "getIntent" does
-    not get the latest intent, but rather the intent that was used to start the activity
-
-    @Override
-    public void onNewIntent(Intent iIntent){
-        super.onNewIntent(iIntent);
-        setIntent(iIntent);
-    }
-    */
-
-
-    /**
-     * Used for setting up after data has been fetched from the server
-     */
     public class AppSetupCallbackClass {
         public void setupCallback(){
-            try{
-                mCursor = getContentResolver().query(
-                        ContentProviderM.ARTICLE_CONTENT_URI, null, null, null, null);
-                mPagerAdapter = new PagerAdapterC(getSupportFragmentManager(), mCursor);
-            }catch(Exception e){
-                Log.e(UtilitiesU.TAG, e.getMessage());
-            }
-
-            mViewPager = (ViewPager)findViewById(R.id.pager);
-            mViewPager.setAdapter(mPagerAdapter);
-
-            //Redrawing all fragments
-            mPagerAdapter.notifyDataSetChanged();
-
-
-
-            ///if(getIntent().hasExtra(SearchResultsActivityC.EXTRA_ARTICLE_POS_ID) == true){
-                //Choosing the fragment to display. 0 (the latest article) is the default
-                //Casting is done from long to int
-                int tPositionIt = (int)getIntent().getLongExtra(
-                        UtilitiesU.EXTRA_ARTICLE_POS_ID, 0);
-                mViewPager.setCurrentItem(tPositionIt);
-                getIntent().removeExtra(UtilitiesU.EXTRA_ARTICLE_POS_ID);
-            ///}else if(getIntent().hasExtra(DatePickerFragmentC.EXTRA_ARTICLE_TIME) == true){
-
-
-            ///}else{
-                //intentionally left empty
-            ///}
+            ArticleActivityC.this.finishSetup();
         }
+    }
+
+    private void finishSetup(){
+        try{
+            mCursor = getContentResolver().query(
+                    ContentProviderM.ARTICLE_CONTENT_URI, null, null, null, null);
+            mPagerAdapter = new PagerAdapterC(getSupportFragmentManager(), mCursor);
+        }catch(Exception e){
+            Log.e(ConstsU.TAG, e.getMessage());
+        }
+
+        mViewPager = (ViewPager)findViewById(R.id.pager);
+        mViewPager.setAdapter(mPagerAdapter);
+
+        //Redrawing all fragments
+        mPagerAdapter.notifyDataSetChanged();
+
+        int tPositionIt = (int)getIntent().getLongExtra(ConstsU.EXTRA_ARTICLE_POS_ID,
+                ConstsU.LATEST_ARTICLE_VIEWPAGER_POSITION);
+        mViewPager.setCurrentItem(tPositionIt);
+        getIntent().removeExtra(ConstsU.EXTRA_ARTICLE_POS_ID);
     }
 
     @Override
@@ -97,34 +101,43 @@ public class ArticleActivityC extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu iMenu) {
-        //Inflating the menu (which added itemts to the action bar)
+        //Inflating the menu (which will add items to the action bar)
         getMenuInflater().inflate(R.menu.menu_article, iMenu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem iMenuItem) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        switch(id){
+        switch(iMenuItem.getItemId()){
             case R.id.action_text_search:
                 onSearchRequested();
+                /*
+                -Android OS method which will ask the OS to show a search bar positioned over
+                the action bar
+                */
                 return true;
             case R.id.action_choose_date:
-
-
                 DialogFragment tDatePickerFragment = new DatePickerFragmentC();
                 tDatePickerFragment.show(this.getFragmentManager(), "DatePicker");
-
-
                 return true;
             case R.id.action_settings:
-
                 return true;
             default:
-                return super.onOptionsItemSelected(item);
+                return super.onOptionsItemSelected(iMenuItem);
         }
     }
+
+    /*
+    The override below does not seem to be needed, but please keep in mind that "getIntent" does
+    not get the latest intent, but rather the intent that was used to start the activity
+
+    @Override
+    public void onNewIntent(Intent iIntent){
+        super.onNewIntent(iIntent);
+        setIntent(iIntent);
+    }
+    */
 }

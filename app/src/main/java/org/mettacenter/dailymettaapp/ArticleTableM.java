@@ -9,15 +9,18 @@ import android.util.Log;
  */
 public class ArticleTableM {
     public static final String TABLE_ARTICLE = "article";
-    //public static final String COLUMN_ID = BaseColumns._ID;
+    ///public static final String COLUMN_ID = BaseColumns._ID;
     public static final String COLUMN_TIME = "time"; //-saved as an integer in unix time
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_TEXT = "text";
     public static final String COLUMN_LINK = "link";
-    public static final String COLUMN_CATEGORY = "category";
+    public static final String COLUMN_CATEGORY = "category"; //-for the future
+    ///public static final String COLUMN_FAVORITE = "favorite"; //-for the future <--- Better to put this in another table
 
     public static final String NO_TEXT = "";
     public static final int TIME_NOT_SET = -1;
+    ///public static final int BOOL_AS_INT_FALSE = 0;
+    ///public static final int BOOL_AS_INT_TRUE = 1;
 
     private static final String CREATE_TABLE = "CREATE TABLE "
             + TABLE_ARTICLE
@@ -31,7 +34,7 @@ public class ArticleTableM {
 
     public static void createTable(SQLiteDatabase iDb){
         iDb.execSQL(CREATE_TABLE);
-        Log.i(UtilitiesU.TAG, "Table " + TABLE_ARTICLE + " created! Database version = "
+        Log.i(ConstsU.TAG, "Table " + TABLE_ARTICLE + " created! Database version = "
                 + iDb.getVersion());
     }
 
@@ -39,7 +42,7 @@ public class ArticleTableM {
         if(false){
             //empty for now
         }else{
-            Log.w(UtilitiesU.TAG, "Upgrade removed the old table and created a new one, "
+            Log.w(ConstsU.TAG, "Upgrade removed the old table and created a new one, "
                     + "all data in the old table was deleted");
             iDb.execSQL("DROP TABLE IF EXISTS " + TABLE_ARTICLE);
             createTable(iDb);
