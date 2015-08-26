@@ -73,7 +73,6 @@ In the future we wish to build a web app for the [Metta Center Roadmap](http://m
 **Data structure:**
 
 * Date
-* Wisdom teacher
 * Link to the article on the web
 * Article text
   * Title
@@ -101,11 +100,9 @@ Latest Daily Metta in a widget
 Tags downloaded from the web
 Bookmarklets for commenting on parts of an article (Prashanth)
 Access to videos/images that are seen in the articles
-
-Features that are better for a web app:
-Mark as favorite
-Marking an experiment in nonviolence as started (committed to doing)
-Marking an experiment in nonviolence as done
+Mark as favorite (better for a web app)
+Marking an experiment in nonviolence as started (committed to doing) (better for a web app)
+Marking an experiment in nonviolence as done (better for a web app)
 >
 
 
