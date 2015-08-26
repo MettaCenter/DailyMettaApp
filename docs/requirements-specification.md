@@ -127,6 +127,7 @@ Min Android version: 4.0.3 (Ice Cream Sandwich)
 <Describe any items or issues that will limit the options available to the developers. These might include: corporate or regulatory policies; hardware limitations (timing requirements, memory requirements); interfaces to other applications; specific technologies, tools, and databases to be used; parallel operations; language requirements; communications protocols; security considerations; design conventions or programming standards (for example, if the customer’s organization will be responsible for maintaining the delivered software).>
 
 
+
 ### 2.6 User Documentation
 <List the user documentation components (such as user manuals, on-line help, and tutorials) that will be delivered along with the software. Identify any known user documentation delivery formats or standards.>
 
@@ -140,6 +141,13 @@ Min Android version: 4.0.3 (Ice Cream Sandwich)
 Dependencies:
 * Communication system with the server for fetching the Daily Metta articles
 * Data structure of the Daily Metta articles
+  * there is a possibility to update the publication date
+
+Time zones:
+* Server/author
+* Client/user
+
+365 + 1 article (leap year)
 
 
 
