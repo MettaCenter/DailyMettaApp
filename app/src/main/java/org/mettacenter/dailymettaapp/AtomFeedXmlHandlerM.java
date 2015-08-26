@@ -9,6 +9,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -74,7 +75,13 @@ public class AtomFeedXmlHandlerM
             mInsertValues.put(ArticleTableM.COLUMN_LINK, mElementSb.toString());
         }else if(PUBLISHED_XML_TAG.equalsIgnoreCase(iLocalNameSg)){
             long tTimeInMilliSecondsLg = getArticleTimeInMilliSeconds(mElementSb.toString());
-            mInsertValues.put(ArticleTableM.COLUMN_TIME, tTimeInMilliSecondsLg);
+            /////mInsertValues.put(ArticleTableM.COLUMN_TIME, tTimeInMilliSecondsLg);
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(tTimeInMilliSecondsLg);
+            int tMonthAsInt = c.get(Calendar.MONTH);
+            int tDayOfMonthAsInt = c.get(Calendar.DAY_OF_MONTH);
+            mInsertValues.put(ArticleTableM.COLUMN_TIME_MONTH, tMonthAsInt);
+            mInsertValues.put(ArticleTableM.COLUMN_TIME_DAYOFMONTH, tDayOfMonthAsInt);
         }else if(ENTRY_XML_TAG.equalsIgnoreCase(iLocalNameSg)) {
             Log.d(ConstsU.TAG, "========== END ENTRY TAG ==========");
 

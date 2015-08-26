@@ -53,8 +53,11 @@ public class DatePickerFragmentC
         long tChosenDateInMilliSecondsEndLg = c.getTime().getTime();
         Log.d(ConstsU.TAG, "tChosenDateInMilliSecondsEndLg = " + tChosenDateInMilliSecondsEndLg);
 
-        String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TIME};
-        String tSel = ArticleTableM.COLUMN_TIME + " BETWEEN " + tChosenDateInMilliSecondsStartLg + " AND " + tChosenDateInMilliSecondsEndLg;
+        String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
+        String tSel =
+                ArticleTableM.COLUMN_TIME_MONTH + " = " + monthOfYear
+                + " AND "
+                + ArticleTableM.COLUMN_TIME_DAYOFMONTH + " = " + dayOfMonth;
         //-Please note that "BETWEEN" surprisingly includes results that are "on the edge" in the comparison
         String tSortOrderSg = "DESC";
 
