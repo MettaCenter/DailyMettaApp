@@ -13,13 +13,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="32dp"
+            android:textColor="#D65E28"
+            android:textSize="24sp"
+            android:textStyle="bold"
             />
+        <!--
+            android:shadowColor="#88000000"
+            android:shadowRadius="3.0"
+            android:shadowDx="2.0"
+            android:shadowDy="2.0"
+        -->
         <TextView
             android:id="@+id/article_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="32dp"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
             />
+        <!--
+        Added in api 23:
+        android:breakStrategy
+        android:drawableTint
+        -->
         <TextView
             android:id="@+id/article_link"
             android:autoLink="web"

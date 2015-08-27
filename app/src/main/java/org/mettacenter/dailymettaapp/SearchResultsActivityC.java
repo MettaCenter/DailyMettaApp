@@ -137,7 +137,7 @@ public class SearchResultsActivityC
                 TextView tTextView = (TextView)iView.findViewById(R.id.search_row_title);
                 String tTitleSg = UtilitiesU.getPartOfTitleInsideQuotes(iCursor.getString(tTitleColIndex));
                 tTextView.setText(Html.fromHtml(tTitleSg));
-                tTextView.setTypeface(null, Typeface.BOLD);
+                ///tTextView.setTypeface(null, Typeface.BOLD);
 
                 return true;
             }else if(iColIndex == tTimeMonthColIndex){
@@ -156,7 +156,7 @@ public class SearchResultsActivityC
 
                 String tMonthAndDaySg = tSimpleDateFormat.format(c.getTime());
                 tTextView.setText(tMonthAndDaySg);
-                tTextView.setTypeface(null, Typeface.ITALIC);
+                ///tTextView.setTypeface(null, Typeface.ITALIC);
                 */
 
                 return true;

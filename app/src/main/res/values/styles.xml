@@ -1,8 +1,27 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
+        <item name="actionBarStyle">@style/CustomActionBar</item>
     </style>
+
+    <style name="CustomActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="background">@drawable/actionbar_bg</item>
+        <item name="titleTextStyle">@style/CustomActionBarText</item>
+    </style>
+
+    <style name="CustomActionBarText" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    @android:style/
+    .AppCompat.ActionBar.Solid
+    <!--
+We may want to switch to a toolbar (which is the action bar replacement in api level __, but availalbe for all api levels because of its implementation
+http://android-developers.blogspot.it/2014/10/appcompat-v21-material-design-for-pre.html
+https://blog.xamarin.com/android-tips-hello-toolbar-goodbye-action-bar/
+    -->
 
 </resources>
