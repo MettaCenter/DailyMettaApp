@@ -3,7 +3,9 @@ package org.mettacenter.dailymettaapp;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -47,15 +49,44 @@ public class ArticleActivityC
         Log.d(ConstsU.TAG, "Calendar.getInstance().getTimeInMillis() = " + Calendar.getInstance().getTimeInMillis());
         Log.d(ConstsU.TAG, "tUpdateIntervalInMillisLg = " + tUpdateIntervalInMillisLg);
 
+
+
+
+        //Checking if this is the first time the app is started or if we are running a new version
+        int tOldVer = PreferenceManager.getDefaultSharedPreferences(this).getInt(
+                ConstsU.PREF_APP_VERSION_CODE, ConstsU.APP_NEVER_STARTED);
+        int tNewVer = 0;
+        try {
+            tNewVer = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.wtf(ConstsU.TAG, e.getMessage());
+            e.printStackTrace();
+            finish();
+        }
+
+
+
+
         //TODO: Do we want to do the update when a new app version is launched?
 
         //Setting up the data..
-        if( tIsUpdateIntervalReachedBl == true || tLastUpdateInMillisLg == ConstsU.DB_NEVER_UPDATED){
+        if(tIsUpdateIntervalReachedBl == true
+                || tLastUpdateInMillisLg == ConstsU.DB_NEVER_UPDATED
+                || tNewVer > tOldVer){
             //..clearing the db
             getApplicationContext().deleteDatabase(DbHelperM.DB_NAME);
 
             //..fetching all the articles
             new FetchArticlesTaskC(this, new AppSetupCallbackClass()).execute();
+
+            if(tNewVer > tOldVer){
+                //Writing the new version into the shared preferences
+                PreferenceManager.getDefaultSharedPreferences(this)
+                        .edit()
+                        .putInt(ConstsU.PREF_APP_VERSION_CODE, tNewVer)
+                        .commit();
+            }
+
         }else{
             finishSetup();
         }

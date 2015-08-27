@@ -21,4 +21,6 @@ public interface ConstsU {
     long DB_NEVER_UPDATED = -1;
     int UPDATE_INTERVAL_IN_DAYS = 1;
     int UPDATE_INTERVAL_IN_MINUTES = 180;
+    String PREF_APP_VERSION_CODE = "app_version_code";
+    int APP_NEVER_STARTED = -1;
 }

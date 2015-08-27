@@ -36,6 +36,9 @@ public class DbHelperM
         ArticleTableM.createTable(iDb);
     }
 
+    /**
+     * One way to upgrade the table is to simply drop it and then download all articles again
+     */
     @Override
     public void onUpgrade(SQLiteDatabase iDb, int iOldVer, int iNewVer) {
         if(false){
