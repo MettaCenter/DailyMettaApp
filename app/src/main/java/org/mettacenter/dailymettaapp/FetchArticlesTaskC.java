@@ -1,5 +1,6 @@
 package org.mettacenter.dailymettaapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -19,10 +20,19 @@ public class FetchArticlesTaskC
 
     private Context mrContext;
     private ArticleActivityC.AppSetupCallbackClass mArticleActivityCallback;
+    private ProgressDialog mProgressDialog;
+    private static final String DIALOG_MESSAGE = "Downloading articles";
 
     public FetchArticlesTaskC(Context irContext, ArticleActivityC.AppSetupCallbackClass iCallback){
         mArticleActivityCallback = iCallback;
         mrContext = irContext;
+        mProgressDialog = new ProgressDialog(irContext);
+    }
+
+    @Override
+    protected void onPreExecute(){
+        mProgressDialog.setMessage(DIALOG_MESSAGE);
+        mProgressDialog.show();
     }
 
     @Override
@@ -49,6 +59,10 @@ public class FetchArticlesTaskC
 
     @Override
     protected void onPostExecute(Void v){
+        if(mProgressDialog.isShowing() == true){
+            mProgressDialog.dismiss();
+        }
+
         //Completing the setup
         mArticleActivityCallback.setupCallback();
     }
