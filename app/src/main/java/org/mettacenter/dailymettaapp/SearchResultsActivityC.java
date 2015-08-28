@@ -105,10 +105,9 @@ public class SearchResultsActivityC
         String tSel = ArticleTableM.COLUMN_TEXT + " LIKE ?";
         //-LIKE is case insensitive
         String[] tSelArgs = {"%"+ mSearchStringSg +"%"};
-        String tSortOrderSg = "DESC"; //-starting with the latest
 
         CursorLoader rLoader = new CursorLoader(this, ContentProviderM.ARTICLE_CONTENT_URI,
-                tProj, tSel, tSelArgs, tSortOrderSg);
+                tProj, tSel, tSelArgs, ConstsU.SORT_ORDER);
 
         return rLoader;
     }

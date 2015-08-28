@@ -59,10 +59,9 @@ public class DatePickerFragmentC
                 + " AND "
                 + ArticleTableM.COLUMN_TIME_DAYOFMONTH + " = " + dayOfMonth;
         //-Please note that "BETWEEN" surprisingly includes results that are "on the edge" in the comparison
-        String tSortOrderSg = "DESC";
 
         Cursor tCursor = getActivity().getContentResolver().query(
-                ContentProviderM.ARTICLE_CONTENT_URI, tProj, tSel, null, tSortOrderSg);
+                ContentProviderM.ARTICLE_CONTENT_URI, tProj, tSel, null, ConstsU.SORT_ORDER);
         if(tCursor != null && tCursor.getCount() > 0){
             tCursor.moveToFirst();
             long tDataBaseIdLg = tCursor.getLong(tCursor.getColumnIndexOrThrow(BaseColumns._ID));

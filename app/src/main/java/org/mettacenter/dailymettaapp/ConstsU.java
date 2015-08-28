@@ -8,6 +8,8 @@ public interface ConstsU {
     String EMPTY_STRING = "";
     String EXTRA_ARTICLE_POS_ID = "ARTICLE_POS_ID";
     int LATEST_ARTICLE_VIEWPAGER_POSITION = 0;
+    String SORT_ORDER = ArticleTableM.COLUMN_TIME_MONTH + " DESC, "
+            + ArticleTableM.COLUMN_TIME_DAYOFMONTH + " DESC";
 
     //Server
     String SERVER_TIMEZONE = "GMT-7";

@@ -105,7 +105,7 @@ public class ArticleActivityC
     private void finishSetup(){
         try{
             mCursor = getContentResolver().query(
-                    ContentProviderM.ARTICLE_CONTENT_URI, null, null, null, null);
+                    ContentProviderM.ARTICLE_CONTENT_URI, null, null, null, ConstsU.SORT_ORDER);
             mPagerAdapter = new PagerAdapterC(getSupportFragmentManager(), mCursor);
         }catch(Exception e){
             Log.e(ConstsU.TAG, e.getMessage());

@@ -66,7 +66,7 @@ public class ContentProviderM
             tQueryBuilder.appendWhere(tKeyColumn + "=" + iUri.getLastPathSegment());
         }
         rCr = tQueryBuilder.query(tDb, iProjectionAy, iSelectionSg, iSelectionArgsAy,
-                null, null, null);
+                null, null, iSortOrderSg);
         rCr.setNotificationUri(getContext().getContentResolver(), iUri);
 
         return rCr;
