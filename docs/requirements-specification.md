@@ -4,6 +4,7 @@ Reviewed by:
 
 ***Approved by Stephanie 2015-06-10***
 
+***IMPORTANT UPDATE 2015-08-28: The current version of this document does not reflect the new info about the future of the daily metta articles which influences how we think about notifictions here. The daily metta articles will be written until the end of the year but not longer so having notifications for new articles may not be needed, or we may want to use notifications in a different way***
 
 *For a more general ("high-level") understanding of where the information below fits into the requirements analysis and the software development process in general, please see [this article](http://en.wikipedia.org/wiki/Requirements_analysis)*.
 
