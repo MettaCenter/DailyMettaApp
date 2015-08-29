@@ -7,7 +7,7 @@ This document covers two ways to install testing versions of the Daily Metta App
 This is usually the best option. The app will automatically be updated when a new verion is uploaded on google play
 
 1. Make sure you are logged in to the gmail account you want to use for installing the app
-2. Go to https://play.google.com/apps/testing/org.mettacenter.dailymettaapp and follow the instructions there
+2. Go to **https://play.google.com/apps/testing/org.mettacenter.dailymettaapp** and follow the instructions there
 
 
 ### {DRAFT, review needed} Option 2: Installing using ADB (only for devs)
