@@ -37,22 +37,11 @@ public class DatePickerFragmentC
     /**
      * This link can be useful when converting between milliseconds and dates:
      * http://www.fileformat.info/tip/java/date2millis.htm
+     *
+     * //Please note that we don't change the time zone here since we want to use the local time zone
      */
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        Calendar c = Calendar.getInstance();
-
-        c.set(year, monthOfYear, dayOfMonth, 0, 0);
-        c.setTimeZone(TimeZone.getTimeZone(ConstsU.SERVER_TIMEZONE));
-        long tChosenDateInMilliSecondsStartLg = c.getTime().getTime();
-        //-please note that the two methods called "getTime" return different types
-        Log.d(ConstsU.TAG, "tChosenDateInMilliSecondsStartLg = " + tChosenDateInMilliSecondsStartLg);
-
-        c.set(year, monthOfYear, dayOfMonth, 23, 59);
-        c.setTimeZone(TimeZone.getTimeZone(ConstsU.SERVER_TIMEZONE));
-        long tChosenDateInMilliSecondsEndLg = c.getTime().getTime();
-        Log.d(ConstsU.TAG, "tChosenDateInMilliSecondsEndLg = " + tChosenDateInMilliSecondsEndLg);
-
         String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
         String tSel =
                 ArticleTableM.COLUMN_TIME_MONTH + " = " + monthOfYear

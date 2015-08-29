@@ -74,50 +74,35 @@ public class AtomFeedXmlHandlerM
         }else if(ID_XML_TAG.equalsIgnoreCase(iLocalNameSg)){
             mInsertValues.put(ArticleTableM.COLUMN_LINK, mElementSb.toString());
         }else if(PUBLISHED_XML_TAG.equalsIgnoreCase(iLocalNameSg)){
-            long tTimeInMilliSecondsLg = getArticleTimeInMilliSeconds(mElementSb.toString());
-            /////mInsertValues.put(ArticleTableM.COLUMN_TIME, tTimeInMilliSecondsLg);
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(tTimeInMilliSecondsLg);
-            int tMonthAsInt = c.get(Calendar.MONTH);
-            int tDayOfMonthAsInt = c.get(Calendar.DAY_OF_MONTH);
-            mInsertValues.put(ArticleTableM.COLUMN_TIME_MONTH, tMonthAsInt);
-            mInsertValues.put(ArticleTableM.COLUMN_TIME_DAYOFMONTH, tDayOfMonthAsInt);
+            String tArticleTimeFeedTzSg = mElementSb.toString()
+                    .replace("T", " ")
+                    .replace("Z", "");
+
+            Date tArticleTimeFeedTzDe = null; //-TODO: Handle case when null
+            SimpleDateFormat tAtomXmlDateFormatFeedTz = new SimpleDateFormat(ConstsU.FEED_TIME_FORMAT);
+            tAtomXmlDateFormatFeedTz.setTimeZone(TimeZone.getTimeZone(ConstsU.FEED_TIME_ZONE));
+            try {
+                tArticleTimeFeedTzDe = tAtomXmlDateFormatFeedTz.parse(tArticleTimeFeedTzSg);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Calendar tCalServerTz = Calendar.getInstance();
+            tCalServerTz.setTimeZone(TimeZone.getTimeZone(ConstsU.SERVER_TIMEZONE));
+            tCalServerTz.setTime(tArticleTimeFeedTzDe);
+
+            int tMonthServerTzIt = tCalServerTz.get(Calendar.MONTH);
+            int tDayOfMonthServerTzIt = tCalServerTz.get(Calendar.DAY_OF_MONTH);
+            mInsertValues.put(ArticleTableM.COLUMN_TIME_MONTH, tMonthServerTzIt);
+            mInsertValues.put(ArticleTableM.COLUMN_TIME_DAYOFMONTH, tDayOfMonthServerTzIt);
         }else if(ENTRY_XML_TAG.equalsIgnoreCase(iLocalNameSg)) {
             Log.d(ConstsU.TAG, "========== END ENTRY TAG ==========");
 
-            //..write what we have to the db
+            //Write what we have to the db
             mrContext.getContentResolver().insert(
                     ContentProviderM.ARTICLE_CONTENT_URI,
                     mInsertValues);
-            //..clear the values so we can start anew on another row
+            //Clear the values so we can start anew on another row
             mInsertValues.clear();
-            //..update the counter for the number of articles that has been parsed
         }
-    }
-
-    private long getArticleTimeInMilliSeconds(String iRawArticleTimeSg){
-        long rArticleTimeInMilliSecondsLg = -1;
-
-        String tArticleTimeSg = iRawArticleTimeSg
-                .replace("T", " ")
-                .replace("Z", "");
-        //-TODO: Check with Sky if these replacements are a future-safe thing to do
-        Log.d(ConstsU.TAG, "tArticleTimeSg = " + tArticleTimeSg);
-
-        Date tDate;
-        SimpleDateFormat tAtomXmlDateFormat = new SimpleDateFormat(ConstsU.ATOM_FEED_TIME_FORMAT);
-        tAtomXmlDateFormat.setTimeZone(TimeZone.getTimeZone(ConstsU.SERVER_TIMEZONE));
-        try {
-            tDate = tAtomXmlDateFormat.parse(tArticleTimeSg);
-            rArticleTimeInMilliSecondsLg = tDate.getTime();
-            //-This is a Java long, but there is no problem for SQLite because
-            //it's Integer is variable in length and can be up to 8 bytes
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Log.d(ConstsU.TAG, "rTimeInMilliSecondsLg = " + rArticleTimeInMilliSecondsLg);
-
-        return rArticleTimeInMilliSecondsLg;
     }
 }

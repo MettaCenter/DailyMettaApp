@@ -13,7 +13,8 @@ public interface ConstsU {
 
     //Server
     String SERVER_TIMEZONE = "GMT-7";
-    String ATOM_FEED_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    String FEED_TIME_ZONE = "GMT";
+    String FEED_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     int MAX_NR_OF_ARTICLES_TO_READ = 400;
     String ATOM_FEEL_URL = "http://mettacenter.org/category/daily-metta/feed/atom/?n=" + MAX_NR_OF_ARTICLES_TO_READ;
 
