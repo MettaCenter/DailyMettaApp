@@ -1,5 +1,7 @@
 package org.mettacenter.dailymettaapp;
 
+//Hi Emmanuel!
+
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
