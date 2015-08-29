@@ -42,19 +42,9 @@ public class DatePickerFragmentC
      */
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
-        String tSel =
-                ArticleTableM.COLUMN_TIME_MONTH + " = " + monthOfYear
-                + " AND "
-                + ArticleTableM.COLUMN_TIME_DAYOFMONTH + " = " + dayOfMonth;
-        //-Please note that "BETWEEN" surprisingly includes results that are "on the edge" in the comparison
 
-        Cursor tCursor = getActivity().getContentResolver().query(
-                ContentProviderM.ARTICLE_CONTENT_URI, tProj, tSel, null, ConstsU.SORT_ORDER);
-        if(tCursor != null && tCursor.getCount() > 0){
-            tCursor.moveToFirst();
-            long tDataBaseIdLg = tCursor.getLong(tCursor.getColumnIndexOrThrow(BaseColumns._ID));
-
+        long tDataBaseIdLg = UtilitiesU.getArticlePositionFromDate(getActivity(), monthOfYear, dayOfMonth);
+        if(tDataBaseIdLg != -1){
             //Starting a new article activity with the fragment for the chosen article
             Intent tIntent = new Intent(getActivity(), ArticleActivityC.class);
             tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, tDataBaseIdLg - 1);

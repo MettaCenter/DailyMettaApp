@@ -48,7 +48,7 @@ public class FetchArticlesTaskC
             //Writing the time of this db update to the preferences
             SharedPreferences.Editor tEditor = mrContext.getSharedPreferences(
                     ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
-            tEditor.putLong(ConstsU.PREF_LAST_UPDATE_TIME,
+            tEditor.putLong(ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS,
                     Calendar.getInstance().getTimeInMillis());
             tEditor.commit();
         }catch (Exception e1){
