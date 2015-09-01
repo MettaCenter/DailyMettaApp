@@ -5,29 +5,34 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 /**
- * SQLite table for storing article data
+ * At the time of writing contains favorite column.
+ *
+ * The other columns are for referring back to the articles table (using two columns). The id
+ * column is kept since this is adventegeos in Android for things like CursorLoader (?)
+ * Can be used for storing more meta-data in the future like tags etc.
+ *
+ * The reason that this table is kept separate from the data itself is that the data is often
+ * recreated.
  */
-public class ArticleTableM {
-    public static final String TABLE_ARTICLE = "article";
-    ///public static final String COLUMN_ID = BaseColumns._ID;
-    //public static final String COLUMN_TIME = "time"; //-saved as an integer in unix time
+public class MetaDataTableM {
+
+    public static final String TABLE_ARTICLE = "meta_data";
     public static final String COLUMN_TIME_MONTH = "time_month";
     public static final String COLUMN_TIME_DAYOFMONTH = "time_dayofmonth";
-    public static final String COLUMN_TITLE = "title";
-    public static final String COLUMN_TEXT = "text";
-    public static final String COLUMN_LINK = "link";
+    public static final String COLUMN_FAVORITE = "favorite"; //-for the future <--- Better to put this in another table
 
     public static final String NO_TEXT = "";
     public static final int TIME_NOT_SET = -1;
+    public static final int BOOL_AS_INT_FALSE = 0;
+    public static final int BOOL_AS_INT_TRUE = 1;
 
     private static final String CREATE_TABLE = "CREATE TABLE "
             + TABLE_ARTICLE
             + "(" + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT"
             + ", " + COLUMN_TIME_MONTH + " INTEGER NOT NULL DEFAULT '" + TIME_NOT_SET + "'"
             + ", " + COLUMN_TIME_DAYOFMONTH + " INTEGER NOT NULL DEFAULT '" + TIME_NOT_SET + "'"
-            + ", " + COLUMN_TEXT + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
-            + ", " + COLUMN_TITLE + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
-            + ", " + COLUMN_LINK + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
+            + ", " + COLUMN_FAVORITE + " INTEGER NOT NULL DEFAULT '" + BOOL_AS_INT_FALSE + "'"
+            + ", " + " UNIQUE(" + COLUMN_TIME_MONTH + ", " + COLUMN_TIME_DAYOFMONTH + ")"
             + ");";
 
     public static void createTable(SQLiteDatabase iDb){
@@ -46,4 +51,5 @@ public class ArticleTableM {
             createTable(iDb);
         }
     }
+
 }

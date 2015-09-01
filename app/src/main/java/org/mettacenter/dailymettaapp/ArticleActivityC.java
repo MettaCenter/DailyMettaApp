@@ -3,6 +3,9 @@ package org.mettacenter.dailymettaapp;
 //Hi Emmanuel!
 
 import android.app.DialogFragment;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,10 +13,12 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +56,10 @@ public class ArticleActivityC
     protected void onStart() {
         super.onStart();
 
+        /*
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.mipmap.metta_center_wheel);
+        */
 
         setupStart();
     }
@@ -242,6 +251,16 @@ public class ArticleActivityC
     public boolean onCreateOptionsMenu(Menu iMenu) {
         //Inflating the menu (which will add items to the action bar)
         getMenuInflater().inflate(R.menu.menu_article, iMenu);
+
+/*
+        SearchManager tSearchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        SearchView tSearchView = (SearchView) iMenu.findItem(R.id.action_text_search).getActionView();
+        ComponentName tComponentName = this.getComponentName(); //SearchResultsActivityC.class.getComponentType()
+        tComponentName.
+        SearchableInfo tSearchableInfo = tSearchManager.getSearchableInfo(tComponentName);
+        tSearchView.setSearchableInfo(tSearchableInfo);
+        tSearchView.setIconifiedByDefault(false);
+*/
         return true;
     }
 
@@ -252,6 +271,7 @@ public class ArticleActivityC
         // as you specify a parent activity in AndroidManifest.xml.
         switch(iMenuItem.getItemId()){
             case R.id.action_text_search:
+                //MenuItemCompat.expandActionView(iMenuItem);
                 onSearchRequested();
                 /*
                 -Android OS method which will ask the OS to show a search bar positioned over

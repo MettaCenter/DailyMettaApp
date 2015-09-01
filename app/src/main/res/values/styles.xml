@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="Base.Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="actionBarStyle">@style/CustomActionBar</item>
+        <item name="searchViewStyle">@style/CustomSearchView</item>
     </style>
 
     <style name="CustomActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
@@ -16,8 +17,20 @@
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">normal</item>
     </style>
-    @android:style/
-    .AppCompat.ActionBar.Solid
+
+    <!-- The lines below doesn't seem to have any effect -->
+    <style name="CustomSearchView" parent="@style/Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/actionbar_bg</item>
+        <item name="closeIcon">@drawable/actionbar_bg</item>
+        <item name="height">64dp</item>
+        <item name="android:iconifiedByDefault">true</item>
+    </style>
+
+
+    <!--
+        @android:style/
+        .AppCompat.ActionBar.Solid
+        -->
     <!--
 We may want to switch to a toolbar (which is the action bar replacement in api level __, but availalbe for all api levels because of its implementation
 http://android-developers.blogspot.it/2014/10/appcompat-v21-material-design-for-pre.html

@@ -70,7 +70,7 @@ public class AtomFeedXmlHandlerM
         if(CONTENT_XML_TAG.equalsIgnoreCase(iLocalNameSg)){
             mInsertValues.put(ArticleTableM.COLUMN_TEXT, mElementSb.toString());
         }else if(TITLE_XML_TAG.equalsIgnoreCase(iLocalNameSg)){
-            mInsertValues.put(ArticleTableM.COLUMN_TITLE, mElementSb.toString());
+            mInsertValues.put(ArticleTableM.COLUMN_TITLE, UtilitiesU.getPartOfTitleInsideQuotes(mElementSb.toString()));
         }else if(ID_XML_TAG.equalsIgnoreCase(iLocalNameSg)){
             mInsertValues.put(ArticleTableM.COLUMN_LINK, mElementSb.toString());
         }else if(PUBLISHED_XML_TAG.equalsIgnoreCase(iLocalNameSg)){

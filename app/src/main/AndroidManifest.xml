@@ -25,7 +25,8 @@
                 android:value=".SearchResultsActivityC" />
         </activity>
         <activity
-            android:name=".SearchResultsActivityC" >
+            android:name=".SearchResultsActivityC"
+            > <!-- android:theme="@android:style/Widget.ActionBar" -->
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
