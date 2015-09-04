@@ -7,6 +7,7 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -140,24 +141,22 @@ public class ArticleActivityC
 
 
 
-        if(tIsConnectedToInternet == false && tLastUpdateInMillisLg == ConstsU.DB_NEVER_UPDATED){
+        if(tIsConnectedToInternet == false
+                && (tLastUpdateInMillisLg == ConstsU.DB_NEVER_UPDATED || tNewVer > tOldVer)){
+
             Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show();
 
             //TODO: Show this in the main window instead
             //TODO: And show a button that can be pressed for downloading the articles
 
-
             findViewById(R.id.empty_layout).setVisibility(View.VISIBLE);
             findViewById(R.id.pager).setVisibility(View.GONE);
-
-
 
         }else if(tIsUpdateIntervalReachedBl == true
                 || tLastUpdateInMillisLg == ConstsU.DB_NEVER_UPDATED
                 || tNewVer > tOldVer){
 
             downloadArticlesAndFinishSetup();
-
 
         }else{
             finishSetup();
@@ -283,6 +282,8 @@ public class ArticleActivityC
                 tDatePickerFragment.show(this.getFragmentManager(), "DatePicker");
                 return true;
             case R.id.action_settings:
+                Intent i = new Intent(this, SettingsActivityC.class);
+                startActivity(i);
                 return true;
             default:
                 return super.onOptionsItemSelected(iMenuItem);
