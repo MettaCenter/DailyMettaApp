@@ -138,6 +138,7 @@ Min Android version: 4.0.3 (Ice Cream Sandwich)
 
 Dependencies:
 * Communication system with the server for fetching the Daily Metta articles
+  * **Updates to articles are made between 1 and 12 times per year**
 * Data structure of the Daily Metta articles
   * there is a possibility to update the publication date
 
