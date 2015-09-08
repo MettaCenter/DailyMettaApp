@@ -6,14 +6,10 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.BaseColumns;
-import android.util.Log;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 
 /**
  * 1. Shows a calendar to the user for picking a date
@@ -43,11 +39,11 @@ public class DatePickerFragmentC
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-        long tDataBaseIdLg = UtilitiesU.getArticlePositionFromDate(getActivity(), monthOfYear, dayOfMonth);
-        if(tDataBaseIdLg != -1){
+        long tPosLg = UtilitiesU.getArticleFragmentPositionFromDate(getActivity(), monthOfYear, dayOfMonth);
+        if(tPosLg != -1){
             //Starting a new article activity with the fragment for the chosen article
             Intent tIntent = new Intent(getActivity(), ArticleActivityC.class);
-            tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, tDataBaseIdLg - 1);
+            tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, tPosLg); // - 1
             /*
             -One is subtracted here because the position in the ViewPager starts at zero
             while the SQLite db starts at 1. From the SQLite documentation:

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:text="Daily Metta app created by a team of volunteers at the Metta Center for Nonviolence"
+        />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:text="Software is free, libre and open source and licensed under the GPL, version 3: http://www.gnu.org/licenses/gpl-3.0.en.html The source code can be found here: https://github.com/MettaCenter/DailyMettaApp"
+        />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:text="All articles are written by Stephanie Van Hook"
+        />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:text="Find out more about the Metta Center for Nonviolence: http://mettacenter.org/"
+        />
+
+</LinearLayout>

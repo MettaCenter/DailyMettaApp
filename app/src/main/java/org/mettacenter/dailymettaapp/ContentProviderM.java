@@ -19,6 +19,7 @@ public class ContentProviderM
     static final String AUTHORITY = "org.mettacenter.dailymettaapp";
     public static final Uri ARTICLE_CONTENT_URI =
             Uri.parse("content://" + AUTHORITY + "/" + ArticleTableM.TABLE_ARTICLE);
+    ///public static final Uri FAVORITE_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + FavoriteTableM.TABLE_FAVORITE);
 
     /**
      * When the first two arguments that is seen in the "addURI" method  below matches the input
@@ -27,10 +28,14 @@ public class ContentProviderM
      */
     private static final int ARTICLE = 11;
     private static final int ARTICLE_SINGLE_ROW = 12;
+    private static final int FAVORITE = 21;
+    private static final int FAVORITE_SINGLE_ROW = 22;
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static{
         sUriMatcher.addURI(AUTHORITY, ArticleTableM.TABLE_ARTICLE, ARTICLE);
         sUriMatcher.addURI(AUTHORITY, ArticleTableM.TABLE_ARTICLE + "/#", ARTICLE_SINGLE_ROW);
+        ///sUriMatcher.addURI(AUTHORITY, FavoriteTableM.TABLE_FAVORITE, FAVORITE);
+        ///sUriMatcher.addURI(AUTHORITY, FavoriteTableM.TABLE_FAVORITE + "/#", FAVORITE_SINGLE_ROW);
     }
 
     private DbHelperM mDbHelper;
@@ -112,8 +117,29 @@ public class ContentProviderM
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        //TODO
-        return 0;
+    public int update(Uri iUri, ContentValues iContentValues, String iSelection, String[] iSelectionArgs) {
+        int tNumberOfRowsUpdated = 0;
+        SQLiteDatabase tDb = mDbHelper.getWritableDatabase();
+
+        Uri tContentUri = null;
+        String tTable = ConstsU.EMPTY_STRING;
+
+        switch(sUriMatcher.match(iUri)){
+            case ARTICLE_SINGLE_ROW:
+            case ARTICLE:
+                tTable = ArticleTableM.TABLE_ARTICLE;
+                tContentUri = ARTICLE_CONTENT_URI;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI: " + iUri);
+        }
+
+        if(tTable.equals(ConstsU.EMPTY_STRING) == false && tContentUri != null){
+            tNumberOfRowsUpdated = tDb.update(tTable, iContentValues, iSelection, iSelectionArgs);
+        }
+
+        getContext().getContentResolver().notifyChange(iUri, null);
+
+        return tNumberOfRowsUpdated;
     }
 }

@@ -38,6 +38,7 @@ public class FetchArticlesTaskC
     @Override
     protected Void doInBackground(Void... params) {
 
+        boolean tUpdateHasBeenDone = false;
         try{
             SAXParserFactory tSAXParserFactory = SAXParserFactory.newInstance();
             SAXParser tSAXParser = tSAXParserFactory.newSAXParser();
@@ -45,15 +46,26 @@ public class FetchArticlesTaskC
             AtomFeedXmlHandlerM tAtomFeedXmlHandler = new AtomFeedXmlHandlerM(mrContext);
             tSAXParser.parse(ConstsU.ATOM_FEEL_URL, tAtomFeedXmlHandler);
 
+            tUpdateHasBeenDone = true;
+
+        }catch (TerminateSAXParsingException e1){
+            //Continuing, this exception does not indicate an error
+            tUpdateHasBeenDone = false;
+        }catch (Exception e2){
+            Log.e(ConstsU.TAG, e2.getMessage());
+        }
+
+        if(tUpdateHasBeenDone == true) {
+
             //Writing the time of this db update to the preferences
             SharedPreferences.Editor tEditor = mrContext.getSharedPreferences(
                     ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
-            tEditor.putLong(ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS,
+            tEditor.putLong(ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS_TZ_FEED,
                     Calendar.getInstance().getTimeInMillis());
             tEditor.commit();
-        }catch (Exception e1){
-            Log.e(ConstsU.TAG, e1.getMessage());
+
         }
+
         return null;
     }
 
@@ -66,4 +78,6 @@ public class FetchArticlesTaskC
         //Completing the setup
         mArticleActivityCallback.setupCallback();
     }
+
+
 }

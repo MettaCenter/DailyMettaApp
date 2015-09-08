@@ -3,9 +3,6 @@ package org.mettacenter.dailymettaapp;
 //Hi Emmanuel!
 
 import android.app.DialogFragment;
-import android.app.SearchManager;
-import android.app.SearchableInfo;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,21 +11,19 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -124,14 +119,16 @@ public class ArticleActivityC
         }
 
 
-        long tLastUpdateInMillisLg = tSharedPreferences.getLong(
-                ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS, ConstsU.DB_NEVER_UPDATED);
+        long tLastUpdateInMsTzFeedLg = tSharedPreferences.getLong(
+                ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS_TZ_FEED, ConstsU.DB_NEVER_UPDATED);
         long tUpdateIntervalInMillisLg = TimeUnit.MINUTES.toMillis(ConstsU.UPDATE_INTERVAL_IN_MINUTES); //-TODO: Change to days
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone(ConstsU.FEED_TIME_ZONE));
         boolean tIsUpdateIntervalReachedBl =
-                Calendar.getInstance().getTimeInMillis() - tLastUpdateInMillisLg
+                c.getTimeInMillis() - tLastUpdateInMsTzFeedLg
                 >= tUpdateIntervalInMillisLg;
         Log.d(ConstsU.TAG, "tIsUpdateIntervalReachedBl = " + tIsUpdateIntervalReachedBl);
-        Log.d(ConstsU.TAG, "tLastUpdateInMillisLg = " + tLastUpdateInMillisLg);
+        Log.d(ConstsU.TAG, "tLastUpdateInMsTzFeedLg = " + tLastUpdateInMsTzFeedLg);
         Log.d(ConstsU.TAG, "Calendar.getInstance().getTimeInMillis() = " + Calendar.getInstance().getTimeInMillis());
         Log.d(ConstsU.TAG, "tUpdateIntervalInMillisLg = " + tUpdateIntervalInMillisLg);
 
@@ -142,7 +139,7 @@ public class ArticleActivityC
 
 
         if(tIsConnectedToInternet == false
-                && (tLastUpdateInMillisLg == ConstsU.DB_NEVER_UPDATED || tNewVer > tOldVer)){
+                && (tLastUpdateInMsTzFeedLg == ConstsU.DB_NEVER_UPDATED || tNewVer > tOldVer)){
 
             Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show();
 
@@ -153,7 +150,7 @@ public class ArticleActivityC
             findViewById(R.id.pager).setVisibility(View.GONE);
 
         }else if(tIsUpdateIntervalReachedBl == true
-                || tLastUpdateInMillisLg == ConstsU.DB_NEVER_UPDATED
+                || tLastUpdateInMsTzFeedLg == ConstsU.DB_NEVER_UPDATED
                 || tNewVer > tOldVer){
 
             downloadArticlesAndFinishSetup();
@@ -189,8 +186,8 @@ public class ArticleActivityC
 
         //Setting up the data..
 
-        //..clearing the db
-        getApplicationContext().deleteDatabase(DbHelperM.DB_NAME);
+        //..clearing the db --- REMOVED, now we instead write over the previous values
+        //getApplicationContext().deleteDatabase(DbHelperM.DB_NAME);
 
         //..fetching all the articles
         new FetchArticlesTaskC(this, new AppSetupCallbackClass())
@@ -220,20 +217,19 @@ public class ArticleActivityC
         mPagerAdapter.notifyDataSetChanged();
 
 
-        //Setting the position of the viewpager..
-
-        //..in case we are starting up the app
+        //Setting the position of the viewpager
         Calendar c = Calendar.getInstance();
-        long tArticleForTodayOrPrevious = UtilitiesU.getArticlePositionFromDate(
-                this, c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
-        if(tArticleForTodayOrPrevious == -1){
-            tArticleForTodayOrPrevious = 0; //-use the latest article if no article was found for the date
+        long tArticleIdForTodayOrPrevious = -1;
+        tArticleIdForTodayOrPrevious = UtilitiesU.getArticleFragmentPositionFromId(
+                this, getIntent().getLongExtra(ConstsU.EXTRA_ARTICLE_POS_ID, -1));
+        if(tArticleIdForTodayOrPrevious == -1){
+            tArticleIdForTodayOrPrevious = UtilitiesU.getArticleFragmentPositionFromDate(
+                    this, c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         }
-
-        //..in case we are using the date picker calendar
-        int tPositionIt = (int)getIntent().getLongExtra(ConstsU.EXTRA_ARTICLE_POS_ID,
-                tArticleForTodayOrPrevious);
-        mViewPager.setCurrentItem(tPositionIt);
+        if(tArticleIdForTodayOrPrevious == -1){
+            tArticleIdForTodayOrPrevious = 0; //-use the latest article if no article was found for the date
+        }
+        mViewPager.setCurrentItem((int)tArticleIdForTodayOrPrevious);
         getIntent().removeExtra(ConstsU.EXTRA_ARTICLE_POS_ID);
     }
 
@@ -284,6 +280,12 @@ public class ArticleActivityC
             case R.id.action_settings:
                 Intent i = new Intent(this, SettingsActivityC.class);
                 startActivity(i);
+                return true;
+            case R.id.action_favorites:
+                startActivity(new Intent(this, FavoritesActivityC.class));
+                return true;
+            case R.id.action_about:
+                startActivity(new Intent(this, AboutActivityC.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(iMenuItem);

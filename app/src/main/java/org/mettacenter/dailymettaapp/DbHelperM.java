@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelperM
         extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     public static final String DB_NAME = "articles.sqlite";
 
     private static DbHelperM sDbHelper;
@@ -34,6 +34,7 @@ public class DbHelperM
     @Override
     public void onCreate(SQLiteDatabase iDb){
         ArticleTableM.createTable(iDb);
+        ///FavoriteTableM.createTable(iDb);
     }
 
     /**
@@ -46,6 +47,7 @@ public class DbHelperM
         }else{
             //PLEASE NOTE: When we reach this else clause, we'll simply drop the tables
             ArticleTableM.upgradeTable(iDb, iOldVer, iNewVer);
+            ///FavoriteTableM.upgradeTable(iDb, iOldVer, iNewVer);
         }
     }
 }

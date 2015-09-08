@@ -17,16 +17,19 @@
         android:orderInCategory="2"
         android:icon="@android:drawable/ic_menu_today"
         />
-    <!--^TODO: Find another icon for the date-->
-    <item android:id="@+id/share_app"
-        android:title="Share this app with a friend!"
+    <item android:id="@+id/action_favorites"
+        android:title="Favorites"
         app:showAsAction="never"
-        android:orderInCategory="90" />
+        android:orderInCategory="50" />
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         app:showAsAction="never"
         android:orderInCategory="100" />
-    <item android:id="@+id/about"
+    <item android:id="@+id/share_app"
+        android:title="Share this app with a friend!"
+        app:showAsAction="never"
+        android:orderInCategory="90" />
+    <item android:id="@+id/action_about"
         android:title="About"
         app:showAsAction="never"
         android:orderInCategory="200" />

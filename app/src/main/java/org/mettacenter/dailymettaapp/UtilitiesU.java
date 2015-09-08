@@ -10,10 +10,8 @@ import android.util.Log;
  */
 public class UtilitiesU {
 
-
     private static final String START_QUOTE = "&#8220;";
     private static final String END_QUOTE = "&#8221;";
-
 
     public static String getPartOfTitleInsideQuotes(String iTitleSg){
         //Example: <title type="html"><![CDATA[&#8220;Love of Humanity&#8221;- Daily Metta]]></title>
@@ -29,22 +27,55 @@ public class UtilitiesU {
         }
     }
 
-
-    public static long getArticlePositionFromDate(Context iContext, int monthOfYear, int dayOfMonth){
-        long tDataBaseIdLg = -1;
+    public static long getArticleFragmentPositionFromDate(Context iContext, int iMonthOfYear, int iDayOfMonth){
+        long tPosLg = -1;
         String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
-        String tSel =
-                ArticleTableM.COLUMN_TIME_MONTH + " = " + monthOfYear
-                        + " AND "
-                        + ArticleTableM.COLUMN_TIME_DAYOFMONTH + " = " + dayOfMonth;
 
         Cursor tCursor = iContext.getContentResolver().query(
-                ContentProviderM.ARTICLE_CONTENT_URI, tProj, tSel, null, ConstsU.SORT_ORDER);
+                ContentProviderM.ARTICLE_CONTENT_URI, tProj, null, null, ConstsU.SORT_ORDER);
         if(tCursor != null && tCursor.getCount() > 0) {
             tCursor.moveToFirst();
-            tDataBaseIdLg = tCursor.getLong(tCursor.getColumnIndexOrThrow(BaseColumns._ID));
+            int i=0;
+            long tMonthLg;
+            long tDayOfMonthLg;
+            do{
+                tMonthLg = tCursor.getLong(tCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_TIME_MONTH));
+                tDayOfMonthLg = tCursor.getLong(tCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_TIME_DAYOFMONTH));
+                if(tMonthLg == iMonthOfYear && tDayOfMonthLg == iDayOfMonth){
+                    tPosLg = i;
+                }
+                i++;
+            }while(tCursor.moveToNext() == true);
+            tCursor.close();
         }
-        return tDataBaseIdLg;
+
+        return tPosLg;
     }
+
+
+
+    public static long getArticleFragmentPositionFromId(Context iContext, long iIdLg){
+        long tPosLg = -1;
+        String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
+
+        Cursor tCursor = iContext.getContentResolver().query(
+                ContentProviderM.ARTICLE_CONTENT_URI, tProj, null, null, ConstsU.SORT_ORDER);
+        if(tCursor != null && tCursor.getCount() > 0) {
+            tCursor.moveToFirst();
+            int i=0;
+            long tIdLg;
+            do{
+                tIdLg = tCursor.getLong(tCursor.getColumnIndexOrThrow(BaseColumns._ID));
+                if(tIdLg == iIdLg){
+                    tPosLg = i;
+                }
+                i++;
+            }while(tCursor.moveToNext() == true);
+            tCursor.close();
+        }
+
+        return tPosLg;
+    }
+
 
 }

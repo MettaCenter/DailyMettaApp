@@ -20,7 +20,7 @@ public interface ConstsU {
 
     //Preferences
     String GLOBAL_SHARED_PREFERENCES = "preferences";
-    String PREF_LAST_UPDATE_TIME_IN_MILLIS = "last_update_time"; //-Local time zone
+    String PREF_LAST_UPDATE_TIME_IN_MILLIS_TZ_FEED = "last_update_time"; //-Local time zone
     long DB_NEVER_UPDATED = -1;
     int UPDATE_INTERVAL_IN_DAYS = 1;
     int UPDATE_INTERVAL_IN_MINUTES = 60;

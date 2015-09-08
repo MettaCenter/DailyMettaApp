@@ -1,6 +1,10 @@
 package org.mettacenter.dailymettaapp;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Html;
@@ -11,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 
 /**
  * Holds a Daily Metta article
@@ -18,6 +24,7 @@ import android.widget.TextView;
 public class ArticleFragmentC
         extends Fragment {
 
+    public static final String ARG_ID = "id";
     public static final String ARG_TITLE = "title";
     public static final String ARG_TEXT = "html_text";
     public static final String ARG_LINK = "link";
@@ -57,6 +64,11 @@ public class ArticleFragmentC
         ImageButton tShareImageButton = (ImageButton)rRootView.findViewById(R.id.share_button);
         tShareImageButton.setOnClickListener(new ShareOnClickListener());
 
+        //Favorite
+        ImageButton tFavoriteImageButton = (ImageButton)rRootView.findViewById(R.id.favorite_button);
+        tFavoriteImageButton.setOnClickListener(new FavoriteOnClickListener());
+
+
         return rRootView;
     }
 
@@ -73,6 +85,34 @@ public class ArticleFragmentC
                     + System.getProperty("line.separator")
                     + mLinkHtmlFormatted.toString());
             startActivity(tShareIntent);
+        }
+    }
+
+    private class FavoriteOnClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            ContentValues tContentValues = new ContentValues();
+
+            //String[] tProj = {ArticleTableM.COLUMN_INTERNAL_FAVORITE_WITH_TIME};
+            String tSel = BaseColumns._ID + "=" + getArguments().getLong(ARG_ID);
+            Cursor tCr = getActivity().getContentResolver().query(
+                    ContentProviderM.ARTICLE_CONTENT_URI,
+                    null, tSel, null, ConstsU.SORT_ORDER);
+
+
+            if(tCr != null && tCr.getCount() > 0){
+                tCr.moveToFirst();
+
+                DatabaseUtils.cursorRowToContentValues(tCr, tContentValues);
+                //-ContentValues are updated
+
+                tContentValues.put(ArticleTableM.COLUMN_INTERNAL_FAVORITE_WITH_TIME,
+                        Calendar.getInstance().getTimeInMillis());
+                getActivity().getContentResolver().update(
+                        ContentProviderM.ARTICLE_CONTENT_URI,
+                        tContentValues, tSel, null);
+                tCr.close();
+            }
         }
     }
 }

@@ -16,19 +16,28 @@ public class ArticleTableM {
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_TEXT = "text";
     public static final String COLUMN_LINK = "link";
+    public static final String COLUMN_INTERNAL_FAVORITE_WITH_TIME = "favorite_with_time";
 
     public static final String NO_TEXT = "";
     public static final int TIME_NOT_SET = -1;
+    public static final int NOT_FAVORITE = -1;
 
     private static final String CREATE_TABLE = "CREATE TABLE "
             + TABLE_ARTICLE
-            + "(" + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT"
+            + "(" + BaseColumns._ID + " INTEGER PRIMARY KEY"
             + ", " + COLUMN_TIME_MONTH + " INTEGER NOT NULL DEFAULT '" + TIME_NOT_SET + "'"
             + ", " + COLUMN_TIME_DAYOFMONTH + " INTEGER NOT NULL DEFAULT '" + TIME_NOT_SET + "'"
             + ", " + COLUMN_TEXT + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
             + ", " + COLUMN_TITLE + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
             + ", " + COLUMN_LINK + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
+            + ", " + COLUMN_INTERNAL_FAVORITE_WITH_TIME + " INTEGER NOT NULL DEFAULT '" + NOT_FAVORITE + "'"
             + ");";
+    /*
+    -Please note that AUTOINCREMENT is not used and this is not needed for CursorAdapter, see
+    this page for details:
+    http://stackoverflow.com/questions/27681391/what-is-the-use-of-basecolumnss-id-primary-key-in-android
+     */
+
 
     public static void createTable(SQLiteDatabase iDb){
         iDb.execSQL(CREATE_TABLE);
