@@ -138,6 +138,8 @@ public class AtomFeedXmlHandlerM
                     long tFavoriteWithTimeLg = tCr.getColumnIndexOrThrow(ArticleTableM.COLUMN_INTERNAL_FAVORITE_WITH_TIME);
                     mInsertValues.put(ArticleTableM.COLUMN_INTERNAL_FAVORITE_WITH_TIME, tFavoriteWithTimeLg);
                 }
+                tCr.close();
+                tCr = null;
 
                 //Write what we have to the db
                 mrContext.getContentResolver().insert(

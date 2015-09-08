@@ -25,5 +25,8 @@ public interface ConstsU {
     int UPDATE_INTERVAL_IN_DAYS = 1;
     int UPDATE_INTERVAL_IN_MINUTES = 60;
     String PREF_APP_VERSION_CODE = "app_version_code";
+    String PREF_NOTIFICATION_HOUR = "notification_hour";
+    String PREF_NOTIFICATION_MINUTE = "notification_minute";
+    int NOTIFICATION_NOT_SET = -1;
     int APP_NEVER_STARTED = -1;
 }

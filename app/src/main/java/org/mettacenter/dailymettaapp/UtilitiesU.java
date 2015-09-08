@@ -46,8 +46,10 @@ public class UtilitiesU {
                 }
                 i++;
             }while(tCursor.moveToNext() == true);
-            tCursor.close();
         }
+
+        tCursor.close();
+        tCursor = null;
 
         return tPosLg;
     }
@@ -71,8 +73,10 @@ public class UtilitiesU {
                 }
                 i++;
             }while(tCursor.moveToNext() == true);
-            tCursor.close();
         }
+
+        tCursor.close();
+        tCursor = null;
 
         return tPosLg;
     }

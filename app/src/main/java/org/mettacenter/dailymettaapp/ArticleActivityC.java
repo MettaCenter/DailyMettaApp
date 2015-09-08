@@ -229,8 +229,18 @@ public class ArticleActivityC
         if(tArticleIdForTodayOrPrevious == -1){
             tArticleIdForTodayOrPrevious = 0; //-use the latest article if no article was found for the date
         }
-        mViewPager.setCurrentItem((int)tArticleIdForTodayOrPrevious);
+        mViewPager.setCurrentItem((int) tArticleIdForTodayOrPrevious);
         getIntent().removeExtra(ConstsU.EXTRA_ARTICLE_POS_ID);
+
+
+
+
+
+
+
+
+
+        NotificationServiceC.setServiceNotification(this);
     }
 
 
