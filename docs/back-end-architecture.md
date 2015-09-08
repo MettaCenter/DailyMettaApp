@@ -28,3 +28,10 @@ Questions:
 There's an <updated> tag in the heading that we can use (please note that there also is another type of <updated> tag inside each content piece)
 
 
+
+## Server side
+
+Yoast SEO can add text at the end of the articles *when they appear in the atom/rss feed*. In the WordPress admin interface: Yoast SEO -> Advanced -> RSS
+
+
+
