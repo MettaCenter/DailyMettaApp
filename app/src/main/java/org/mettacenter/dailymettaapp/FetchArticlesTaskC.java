@@ -19,7 +19,7 @@ public class FetchArticlesTaskC
         extends AsyncTask<Void, Void, Void> {
 
     private Context mrContext;
-    private ArticleActivityC.AppSetupCallbackClass mArticleActivityCallback;
+    private ArticleActivityC.AppSetupCallbackClass mArticleActivityCallback = null;
     private ProgressDialog mProgressDialog;
     private static final String DIALOG_MESSAGE = "Downloading articles";
 
@@ -38,33 +38,7 @@ public class FetchArticlesTaskC
     @Override
     protected Void doInBackground(Void... params) {
 
-        boolean tUpdateHasBeenDone = false;
-        try{
-            SAXParserFactory tSAXParserFactory = SAXParserFactory.newInstance();
-            SAXParser tSAXParser = tSAXParserFactory.newSAXParser();
-
-            AtomFeedXmlHandlerM tAtomFeedXmlHandler = new AtomFeedXmlHandlerM(mrContext);
-            tSAXParser.parse(ConstsU.ATOM_FEEL_URL, tAtomFeedXmlHandler);
-
-            tUpdateHasBeenDone = true;
-
-        }catch (TerminateSAXParsingException e1){
-            //Continuing, this exception does not indicate an error
-            tUpdateHasBeenDone = false;
-        }catch (Exception e2){
-            Log.e(ConstsU.TAG, e2.getMessage());
-        }
-
-        if(tUpdateHasBeenDone == true) {
-
-            //Writing the time of this db update to the preferences
-            SharedPreferences.Editor tEditor = mrContext.getSharedPreferences(
-                    ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
-            tEditor.putLong(ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS_TZ_FEED,
-                    Calendar.getInstance().getTimeInMillis());
-            tEditor.commit();
-
-        }
+        UtilitiesU.downloadArticles(mrContext);
 
         return null;
     }
@@ -76,7 +50,10 @@ public class FetchArticlesTaskC
         }
 
         //Completing the setup
-        mArticleActivityCallback.setupCallback();
+        //-(only works when FetchArticles has been called from ArticleActivityC)
+        if(mArticleActivityCallback != null){
+            mArticleActivityCallback.setupCallback();
+        }
     }
 
 

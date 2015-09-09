@@ -12,7 +12,6 @@ import android.content.Intent;
 public class BootReceiverC
         extends BroadcastReceiver {
 
-
     @Override
     public void onReceive(Context iContext, Intent iIntent) {
 
@@ -29,11 +28,9 @@ public class BootReceiverC
 
 
 
-            //..checking for feed updates
-
-
+            //..feed updates
+            BackgroundDownloadServiceC.setService(iContext);
 
         }
-
     }
 }

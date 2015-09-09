@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.provider.SyncStateContract;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -34,10 +35,9 @@ import java.util.concurrent.TimeUnit;
 public class ArticleActivityC
         extends AppCompatActivity {
 
-    //Adapter and pager for side swipe
+    //Adapter, pager and cursor for side swipe
     private PagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
-
     private Cursor mCursor = null;
 
     @Override
@@ -88,77 +88,25 @@ public class ArticleActivityC
      *
      */
     private void setupStart() {
-        SharedPreferences tSharedPreferences = getSharedPreferences(
-                ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
+        UtilitiesU.DownloadActionEnum tDownloadActionEnum = UtilitiesU.downloadLogic(this);
 
-        ConnectivityManager cm = (ConnectivityManager)this.getSystemService(
-                Context.CONNECTIVITY_SERVICE);
-        NetworkInfo tActiveNetworkInfo = cm.getActiveNetworkInfo();
-        boolean tIsConnectedToInternet = tActiveNetworkInfo != null
-                && tActiveNetworkInfo.isConnectedOrConnecting();
-
-
-        //Checking if this is the first time the app is started or if we are running a new version
-        int tOldVer = PreferenceManager.getDefaultSharedPreferences(this).getInt(
-                ConstsU.PREF_APP_VERSION_CODE, ConstsU.APP_NEVER_STARTED);
-        int tNewVer = 0;
-        try {
-            tNewVer = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.wtf(ConstsU.TAG, e.getMessage());
-            e.printStackTrace();
-            finish();
-        }
-        if(tNewVer > tOldVer){
-            //Writing the new version into the shared preferences
-            PreferenceManager.getDefaultSharedPreferences(this)
-                    .edit()
-                    .putInt(ConstsU.PREF_APP_VERSION_CODE, tNewVer)
-                    .commit();
-        }
-
-
-        long tLastUpdateInMsTzFeedLg = tSharedPreferences.getLong(
-                ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS_TZ_FEED, ConstsU.DB_NEVER_UPDATED);
-        long tUpdateIntervalInMillisLg = TimeUnit.MINUTES.toMillis(ConstsU.UPDATE_INTERVAL_IN_MINUTES); //-TODO: Change to days
-        Calendar c = Calendar.getInstance();
-        c.setTimeZone(TimeZone.getTimeZone(ConstsU.FEED_TIME_ZONE));
-        boolean tIsUpdateIntervalReachedBl =
-                c.getTimeInMillis() - tLastUpdateInMsTzFeedLg
-                >= tUpdateIntervalInMillisLg;
-        Log.d(ConstsU.TAG, "tIsUpdateIntervalReachedBl = " + tIsUpdateIntervalReachedBl);
-        Log.d(ConstsU.TAG, "tLastUpdateInMsTzFeedLg = " + tLastUpdateInMsTzFeedLg);
-        Log.d(ConstsU.TAG, "Calendar.getInstance().getTimeInMillis() = " + Calendar.getInstance().getTimeInMillis());
-        Log.d(ConstsU.TAG, "tUpdateIntervalInMillisLg = " + tUpdateIntervalInMillisLg);
-
-
-        //TODO: Do we want to do the update when a new app version is launched?
-
-
-
-
-        if(tIsConnectedToInternet == false
-                && (tLastUpdateInMsTzFeedLg == ConstsU.DB_NEVER_UPDATED || tNewVer > tOldVer)){
-
-            Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show();
-
-            //TODO: Show this in the main window instead
-            //TODO: And show a button that can be pressed for downloading the articles
+        if(tDownloadActionEnum == UtilitiesU.DownloadActionEnum.DISPLAY_MANUAL_DOWNLOAD_BUTTON){
 
             findViewById(R.id.empty_layout).setVisibility(View.VISIBLE);
             findViewById(R.id.pager).setVisibility(View.GONE);
 
-        }else if(tIsUpdateIntervalReachedBl == true
-                || tLastUpdateInMsTzFeedLg == ConstsU.DB_NEVER_UPDATED
-                || tNewVer > tOldVer){
+        }else if(tDownloadActionEnum == UtilitiesU.DownloadActionEnum.DOWNLOAD_ARTICLES){
 
             downloadArticlesAndFinishSetup();
 
-        }else{
-            finishSetup();
-        }
+        }else if(tDownloadActionEnum == UtilitiesU.DownloadActionEnum.USE_ALREADY_DOWNLOADED_ARTICLES){
 
+            finishSetup();
+
+        }else{
+            Log.wtf(ConstsU.TAG, "Case not covered");
+        }
 
 
 
@@ -170,7 +118,6 @@ public class ArticleActivityC
                 downloadArticlesAndFinishSetup();
             }
         });
-
 
 
 
@@ -241,6 +188,7 @@ public class ArticleActivityC
 
 
         NotificationServiceC.setServiceNotification(this);
+        BackgroundDownloadServiceC.setService(this);
     }
 
 

@@ -1,9 +1,22 @@
 package org.mettacenter.dailymettaapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.view.View;
+
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
  * Created by sunyata on 2015-08-26.
@@ -81,5 +94,108 @@ public class UtilitiesU {
         return tPosLg;
     }
 
+
+    public enum DownloadActionEnum {
+        DOWNLOAD_ARTICLES,
+        USE_ALREADY_DOWNLOADED_ARTICLES,
+        DISPLAY_MANUAL_DOWNLOAD_BUTTON;
+    }
+
+    public static DownloadActionEnum downloadLogic(Context iContext){
+
+
+        ConnectivityManager cm = (ConnectivityManager)iContext.getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+        NetworkInfo tActiveNetworkInfo = cm.getActiveNetworkInfo();
+        boolean tIsConnectedToInternet = tActiveNetworkInfo != null
+                && tActiveNetworkInfo.isConnectedOrConnecting();
+
+
+        //Checking if this is the first time the app is started or if we are running a new version
+        int tOldVer = PreferenceManager.getDefaultSharedPreferences(iContext).getInt(
+                ConstsU.PREF_APP_VERSION_CODE, ConstsU.APP_NEVER_STARTED);
+        int tNewVer = 0;
+        try {
+            tNewVer = iContext.getPackageManager().getPackageInfo(iContext.getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.wtf(ConstsU.TAG, e.getMessage());
+            e.printStackTrace();
+        }
+        if(tNewVer > tOldVer){
+            //Writing the new version into the shared preferences
+            PreferenceManager.getDefaultSharedPreferences(iContext)
+                    .edit()
+                    .putInt(ConstsU.PREF_APP_VERSION_CODE, tNewVer)
+                    .commit();
+        }
+
+        SharedPreferences tSharedPreferences = iContext.getSharedPreferences(
+                ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        long tLastUpdateInMsFeedTzLg = tSharedPreferences.getLong(
+                ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS_FEED_TZ, ConstsU.DB_NEVER_UPDATED);
+        long tUpdateIntervalInMillisLg = TimeUnit.HOURS.toMillis(ConstsU.UPDATE_INTERVAL_IN_HOURS);
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone(ConstsU.FEED_TIME_ZONE));
+        boolean tIsUpdateIntervalReachedBl =
+                c.getTimeInMillis() - tLastUpdateInMsFeedTzLg
+                        >= tUpdateIntervalInMillisLg;
+        Log.d(ConstsU.TAG, "tIsUpdateIntervalReachedBl = " + tIsUpdateIntervalReachedBl);
+        Log.d(ConstsU.TAG, "tLastUpdateInMsFeedTzLg = " + tLastUpdateInMsFeedTzLg);
+        Log.d(ConstsU.TAG, "Calendar.getInstance().getTimeInMillis() = " + Calendar.getInstance().getTimeInMillis());
+        Log.d(ConstsU.TAG, "tUpdateIntervalInMillisLg = " + tUpdateIntervalInMillisLg);
+
+
+        //TODO: Do we want to do the update when a new app version is launched?
+
+
+        if(tIsConnectedToInternet == false
+                && (tLastUpdateInMsFeedTzLg == ConstsU.DB_NEVER_UPDATED || tNewVer > tOldVer)){
+
+            return DownloadActionEnum.DISPLAY_MANUAL_DOWNLOAD_BUTTON;
+
+        }else if(tIsUpdateIntervalReachedBl == true
+                || tLastUpdateInMsFeedTzLg == ConstsU.DB_NEVER_UPDATED
+                || tNewVer > tOldVer){
+
+            return DownloadActionEnum.DOWNLOAD_ARTICLES;
+
+        }else{
+
+            return DownloadActionEnum.USE_ALREADY_DOWNLOADED_ARTICLES;
+
+        }
+    }
+
+
+    public static void downloadArticles(Context iContext){
+
+        boolean tUpdateHasBeenDone = false;
+        try{
+            SAXParserFactory tSAXParserFactory = SAXParserFactory.newInstance();
+            SAXParser tSAXParser = tSAXParserFactory.newSAXParser();
+
+            AtomFeedXmlHandlerM tAtomFeedXmlHandler = new AtomFeedXmlHandlerM(iContext);
+            tSAXParser.parse(ConstsU.ATOM_FEEL_URL, tAtomFeedXmlHandler);
+
+            tUpdateHasBeenDone = true;
+
+        }catch (TerminateSAXParsingException e1){
+            //Continuing, this exception does not indicate an error
+            tUpdateHasBeenDone = false;
+        }catch (Exception e2){
+            Log.e(ConstsU.TAG, e2.getMessage());
+        }
+
+        if(tUpdateHasBeenDone == true) {
+
+            //Writing the time of this db update to the preferences
+            SharedPreferences.Editor tEditor = iContext.getSharedPreferences(
+                    ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
+            tEditor.putLong(ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS_FEED_TZ,
+                    Calendar.getInstance().getTimeInMillis());
+            tEditor.commit();
+
+        }
+    }
 
 }

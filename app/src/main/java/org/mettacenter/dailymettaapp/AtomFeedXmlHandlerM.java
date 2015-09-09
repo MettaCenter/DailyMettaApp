@@ -156,7 +156,7 @@ public class AtomFeedXmlHandlerM
                 SharedPreferences tSharedPreferences = mrContext.getSharedPreferences(
                         ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
                 long tLastFeedUpdateInMsFeedTzLg = tSharedPreferences.getLong(
-                        ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS_TZ_FEED, ConstsU.DB_NEVER_UPDATED);
+                        ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS_FEED_TZ, ConstsU.DB_NEVER_UPDATED);
 
                 long tLastClientUpdateInMsFeedTzLg = getArticleTimeInMilliSeconds(iLocalNameSg);
 

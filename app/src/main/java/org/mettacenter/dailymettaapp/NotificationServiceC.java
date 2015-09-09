@@ -21,6 +21,8 @@ public class NotificationServiceC
 
     private static final String NOTIFICATION_TAG = "notification_tag";
     private static final int NOTIFICATION_ID = 0;
+    //-The same id is always used since we don't want to stack notifications
+    private static final int REQ_CODE = 0;
 
     private static final String TAG = "NotificationServiceC";
 
@@ -35,7 +37,7 @@ public class NotificationServiceC
         AlarmManager tAlarmManager = (AlarmManager)iContext.getSystemService(Context.ALARM_SERVICE);
 
         Intent tIntent = new Intent(iContext, NotificationServiceC.class);
-        PendingIntent tAlarmPendingIntent = PendingIntent.getService(iContext, 0, tIntent, 0);
+        PendingIntent tAlarmPendingIntent = PendingIntent.getService(iContext, REQ_CODE, tIntent, 0);
 
 
         SharedPreferences tSharedPrefs = iContext.getSharedPreferences(
@@ -68,7 +70,7 @@ public class NotificationServiceC
 
     @Override
     protected void onHandleIntent(Intent iIntent) {
-        Log.i(ConstsU.TAG, "Hello! You have reached NotificationServiceC.onHandleIntent");
+        Log.d(ConstsU.TAG, "You have reached NotificationServiceC.onHandleIntent");
 
 
 
@@ -100,5 +102,4 @@ public class NotificationServiceC
         NotificationManager tmpNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         tmpNotificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, tNotification);
     }
-
 }

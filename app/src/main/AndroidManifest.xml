@@ -8,9 +8,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/metta_center_wheel"
+        android:icon="@drawable/charka_wheel_small_2015"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <!--@mipmap/metta_center_wheel-->
 
         <receiver android:name=".BootReceiverC">
             <intent-filter>
@@ -19,6 +20,9 @@
         </receiver>
 
         <service android:name=".NotificationServiceC">
+        </service>
+
+        <service android:name=".BackgroundDownloadServiceC">
         </service>
 
         <activity
