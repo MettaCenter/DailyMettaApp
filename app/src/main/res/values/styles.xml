@@ -1,11 +1,21 @@
 <resources>
 
+    <!--
+    https://developer.android.com/training/basics/actionbar/styling.html
+    -->
+
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Base.Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="actionBarStyle">@style/CustomActionBar</item>
-        <item name="searchViewStyle">@style/CustomSearchView</item>
+        <!--<item name="searchViewStyle">@style/MySearchViewStyle</item>-->
     </style>
+
+    <!-- .Light.DarkActionBar -->
+
+    <!--
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    -->
 
     <style name="CustomActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
         <item name="background">@drawable/actionbar_bg</item>
@@ -13,26 +23,27 @@
     </style>
 
     <style name="CustomActionBarText" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">#FFFFFF</item>
+        <!-- <item name="android:textColor">#FFFFFF</item> -->
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
-    <!-- The lines below doesn't seem to have any effect -->
-    <style name="CustomSearchView" parent="@style/Widget.AppCompat.SearchView">
-        <item name="searchIcon">@drawable/actionbar_bg</item>
-        <item name="closeIcon">@drawable/actionbar_bg</item>
-        <item name="height">64dp</item>
-        <item name="android:iconifiedByDefault">true</item>
+
+    <style name="MySearchViewStyle" parent="Base.Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/abc_ic_search_api_mtrl_alpha</item>
+        <item name="queryBackground">@drawable/charka_wheel_small_2015</item>
+        <item name="closeIcon">@drawable/charka_wheel_small_2015</item>
     </style>
 
+
+    <!--Widget.AppCompat.SearchView-->
 
     <!--
         @android:style/
         .AppCompat.ActionBar.Solid
         -->
     <!--
-We may want to switch to a toolbar (which is the action bar replacement in api level __, but availalbe for all api levels because of its implementation
+We may want to switch to a toolbar (which is the action bar replacement in api level __, but available for all api levels because of its implementation
 http://android-developers.blogspot.it/2014/10/appcompat-v21-material-design-for-pre.html
 https://blog.xamarin.com/android-tips-hello-toolbar-goodbye-action-bar/
     -->

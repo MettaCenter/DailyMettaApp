@@ -9,7 +9,7 @@
     <string name="action_open_in_browser">Open in browser</string>
 
     <string name="title_search_activity">-</string>
-    <string name="search_hint">search hint</string>
+    <string name="search_hint">search for articles</string>
 
 
 </resources>

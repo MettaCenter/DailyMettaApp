@@ -6,19 +6,23 @@
     <item
         android:id="@+id/action_text_search"
         android:title="@string/action_text_search"
-        app:showAsAction="always"
+        app:showAsAction="always|collapseActionView"
         android:orderInCategory="1"
         android:icon="@android:drawable/ic_menu_search"
-        android:actionViewClass="android.widget.SearchView"
+        app:actionViewClass="android.support.v7.widget.SearchView"
         />
+        <!-- Please note:
+        * we need to use app:actionViewClass rather than android:actionViewClass
+        * actionViewClass needs to be from the support library, otherwise we will get dark gray search icons
+        -->
     <item android:id="@+id/action_choose_date"
         android:title="@string/action_choose_date"
         app:showAsAction="ifRoom"
         android:orderInCategory="2"
         android:icon="@android:drawable/ic_menu_today"
         />
-    <item android:id="@+id/action_favorites"
-        android:title="Favorites"
+    <item android:id="@+id/action_bookmarks"
+        android:title="Bookmarks"
         app:showAsAction="never"
         android:orderInCategory="50" />
     <item android:id="@+id/action_settings"

@@ -1,31 +1,28 @@
 package org.mettacenter.dailymettaapp;
 
-//Hi Emmanuel!
-
 import android.app.DialogFragment;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
-import android.provider.SyncStateContract;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Main activity for the application shown when the user starts the app
@@ -46,6 +43,13 @@ public class ArticleActivityC
         setContentView(R.layout.activity_article);
 
 
+
+
+
+/*
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        setSupportActionBar(toolbar);
+*/
     }
 
     @Override
@@ -205,15 +209,23 @@ public class ArticleActivityC
         //Inflating the menu (which will add items to the action bar)
         getMenuInflater().inflate(R.menu.menu_article, iMenu);
 
-/*
         SearchManager tSearchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
         SearchView tSearchView = (SearchView) iMenu.findItem(R.id.action_text_search).getActionView();
         ComponentName tComponentName = this.getComponentName(); //SearchResultsActivityC.class.getComponentType()
-        tComponentName.
         SearchableInfo tSearchableInfo = tSearchManager.getSearchableInfo(tComponentName);
         tSearchView.setSearchableInfo(tSearchableInfo);
         tSearchView.setIconifiedByDefault(false);
+
+
+
+        //tSearchView.set
+
+        /*
+        ImageView tImageView = (ImageView)findViewById(R.id.search_close_btn);
+        tImageView.setVisibility(View.GONE);
 */
+
+
         return true;
     }
 
@@ -225,7 +237,7 @@ public class ArticleActivityC
         switch(iMenuItem.getItemId()){
             case R.id.action_text_search:
                 //MenuItemCompat.expandActionView(iMenuItem);
-                onSearchRequested();
+                ///////////////////7onSearchRequested();
                 /*
                 -Android OS method which will ask the OS to show a search bar positioned over
                 the action bar
@@ -239,7 +251,7 @@ public class ArticleActivityC
                 Intent i = new Intent(this, SettingsActivityC.class);
                 startActivity(i);
                 return true;
-            case R.id.action_favorites:
+            case R.id.action_bookmarks:
                 startActivity(new Intent(this, FavoritesActivityC.class));
                 return true;
             case R.id.action_about:
