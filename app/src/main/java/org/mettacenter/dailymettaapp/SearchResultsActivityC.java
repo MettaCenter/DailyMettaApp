@@ -14,7 +14,9 @@ public class SearchResultsActivityC
         super.onCreate(iSavedInstanceState);
         setContentView(R.layout.activity_search_results);
         SearchResultsFragmentC tSearchResultsFragment = new SearchResultsFragmentC();
-        getFragmentManager().beginTransaction().replace(R.id.fragment_container, tSearchResultsFragment).commit();
+        getFragmentManager().beginTransaction().replace(
+                R.id.fragment_container, tSearchResultsFragment)
+                .commit();
     }
 
 }

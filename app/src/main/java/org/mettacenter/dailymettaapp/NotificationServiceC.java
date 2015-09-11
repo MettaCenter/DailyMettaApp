@@ -14,6 +14,7 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import java.util.Calendar;
+import java.util.Random;
 
 /**
  * Created by sunyata on 2015-09-08.
@@ -69,7 +70,7 @@ public class NotificationServiceC
 
     @Override
     protected void onHandleIntent(Intent iIntent) {
-        Log.d(ConstsU.TAG, "You have reached NotificationServiceC.onHandleIntent");
+        Log.d(ConstsU.APP_TAG, "You have reached NotificationServiceC.onHandleIntent");
 
 
 
@@ -105,10 +106,13 @@ public class NotificationServiceC
 
 
 
+        String[] tTickerStringAr = getResources().getStringArray(R.array.ticker_strings);
+        Random r = new Random();
+        int i = r.nextInt(tTickerStringAr.length);
 
         //Building the notification
         Notification tNotification = new NotificationCompat.Builder(this)
-                .setTicker("Read today's Daily Metta!")
+                .setTicker(tTickerStringAr[i])
                 .setSmallIcon(R.mipmap.metta_center_wheel)
                 .setContentTitle("Daily Metta")
                 .setContentText(tContentTextSg)

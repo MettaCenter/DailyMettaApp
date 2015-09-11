@@ -29,8 +29,8 @@ public class SearchResultsFragmentC
         extends ListFragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private SimpleCursorAdapter mAdapter = null;
-    private String mSearchStringSg = null; //-TODO: Verify that this is not null?
+    private SimpleCursorAdapter mAdapter;
+    private String mSearchStringSg = null;
     private static final int SEARCH_CONTEXT_CHARACTER_PADDING = 50;
 
     @Override
@@ -43,7 +43,10 @@ public class SearchResultsFragmentC
             mSearchStringSg = tIntent.getStringExtra(SearchManager.QUERY);
             //-this data will be used when the loader is initiated
 
-            Log.d(ConstsU.TAG, "mSearchStringSg = " + mSearchStringSg);
+            Log.d(ConstsU.APP_TAG, "mSearchStringSg = " + mSearchStringSg);
+        }
+        if(mSearchStringSg == null){
+            Log.wtf(ConstsU.APP_TAG, "Search string sent to SearchResultsFragmentC is empty");
         }
 
         getLoaderManager().initLoader(0, null, this);
@@ -61,44 +64,32 @@ public class SearchResultsFragmentC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        /*
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        */
 
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     public Loader<Cursor> onCreateLoader(int iIdUnused, Bundle iArgumentsUnused) {
-
         String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH, ArticleTableM.COLUMN_TEXT, ArticleTableM.COLUMN_INTERNAL_BOOKMARK};
-        String tSel = ArticleTableM.COLUMN_TEXT + " LIKE ?";
-        //-LIKE is case insensitive
+        String tSel = ArticleTableM.COLUMN_TEXT + " LIKE ?"; //-LIKE is case insensitive
         String[] tSelArgs = {"%"+ mSearchStringSg +"%"};
 
-        CursorLoader rLoader = new CursorLoader(getActivity(), ContentProviderM.ARTICLE_CONTENT_URI,
+        CursorLoader tLoader = new CursorLoader(getActivity(), ContentProviderM.ARTICLE_CONTENT_URI,
                 tProj, tSel, tSelArgs, ConstsU.SORT_ORDER);
 
-        return rLoader;
+        return tLoader;
     }
+
     @Override
     public void onLoadFinished(Loader<Cursor> iCursorLoader, Cursor iCursor) {
         mAdapter.swapCursor(iCursor);
     }
+
     @Override
     public void onLoaderReset(Loader<Cursor> iCursorUnused) {
         mAdapter.swapCursor(null);
     }
-
 
     /**
      * ViewBinder for showing the textual context (or preview) for each search hit
@@ -164,7 +155,7 @@ public class SearchResultsFragmentC
                 if(tFirstSpace != -1 && tLastSpace != -1){
                     tContextTextSubString = tContextTextSubString.substring(tFirstSpace + 1, tLastSpace);
                 }else{
-                    Log.w(ConstsU.TAG, "tFirstSpace = " + tFirstSpace + ", tLastSpace = " + tLastSpace);
+                    Log.w(ConstsU.APP_TAG, "tFirstSpace = " + tFirstSpace + ", tLastSpace = " + tLastSpace);
                 }
 
 
@@ -182,14 +173,9 @@ public class SearchResultsFragmentC
                 LinearLayout iLinearLayout = (LinearLayout)iView.getRootView().findViewById(R.id.search_row_layout);
 
                 if(tIsFavorite == true){
-
                     ((LinearLayout)iView).setBackgroundColor(Color.parseColor("#f2d7b9"));
-                    ///iLinearLayout.setBackgroundColor(Color.parseColor("#f2d7b9"));
-
                 }else{
                     ((LinearLayout)iView).setBackgroundColor(Color.parseColor("#ffffff"));
-                    ///iLinearLayout.setBackgroundColor(Color.parseColor("#ffffff"));
-
                 }
 
                 return true;
@@ -207,12 +193,9 @@ public class SearchResultsFragmentC
     public void onListItemClick(ListView iListView, View iView, int iPos, long iId){
         super.onListItemClick(iListView, iView, iPos, iId);
 
-        Log.d(ConstsU.TAG, "onListItemClick, iId = " + iId);
-
         //Starting a new article activity with the fragment for the chosen article
-        /////Uri tUri = Uri.parse(ContentProviderM.ARTICLE_CONTENT_URI + "/" + iId);
         Intent tIntent = new Intent(this.getActivity(), ArticleActivityC.class);
-        tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(getActivity(), iId)); /////iId temporarily used, removed "tUri.toString()"
+        tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(getActivity(), iId));
         this.getActivity().startActivityForResult(tIntent, 0);
     }
 

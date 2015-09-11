@@ -14,8 +14,11 @@
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#D65E28"
+            android:textColor="@color/orange"
             android:textStyle="bold" />
+
+
+        in program: detect beginning of text and give part of quote
 
         <LinearLayout
             android:orientation="horizontal"

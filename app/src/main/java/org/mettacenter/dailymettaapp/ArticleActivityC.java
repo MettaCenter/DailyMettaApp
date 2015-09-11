@@ -64,7 +64,7 @@ public class ArticleActivityC
                 finishSetup();
                 break;
             default:
-                Log.wtf(ConstsU.TAG, "Case not covered");
+                Log.wtf(ConstsU.APP_TAG, "Enum case not covered");
         }
 
         Button tManualDownloadBn = (Button)findViewById(R.id.manual_download_button);
@@ -89,7 +89,7 @@ public class ArticleActivityC
             mCursor = getContentResolver().query(
                     ContentProviderM.ARTICLE_CONTENT_URI, null, null, null, ConstsU.SORT_ORDER);
         }catch(Exception e){
-            Log.e(ConstsU.TAG, e.getMessage());
+            Log.e(ConstsU.APP_TAG, e.getMessage(), e);
         }
         mPagerAdapter = new PagerAdapterC(getSupportFragmentManager(), mCursor);
         mViewPager = (ViewPager)findViewById(R.id.pager);

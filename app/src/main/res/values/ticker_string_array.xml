@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="ticker_strings">
+        <item>Read today\'s Daily Metta!</item>
+        <item>Be inspired!</item>
+        <item>Experiment with nonviolence!</item>
+        <item>Read about nonviolence!</item>
+    </string-array>
+
+</resources>

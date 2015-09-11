@@ -33,10 +33,8 @@ public class TimePickerFragmentC
         return rTimePickerDialog;
     }
 
-
     @Override
     public void onTimeSet(TimePicker iView, int iHourOfDay, int iMinute) {
-
         //Writing the time for notifications to the preferences
         SharedPreferences.Editor tPrefEditor = getActivity().getSharedPreferences(
                 ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
@@ -44,9 +42,7 @@ public class TimePickerFragmentC
         tPrefEditor.putInt(ConstsU.PREF_NOTIFICATION_MINUTE, iMinute);
         tPrefEditor.commit();
 
-
         NotificationServiceC.start(getActivity());
-
 
         mrSettingsCallback.updateGui();
     }

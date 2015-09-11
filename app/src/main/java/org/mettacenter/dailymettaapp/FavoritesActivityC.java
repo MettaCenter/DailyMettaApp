@@ -18,7 +18,8 @@ public class FavoritesActivityC
         setContentView(R.layout.activity_favorites);
         FavoritesFragmentC tFavoritesFragment = new FavoritesFragmentC();
         getFragmentManager().beginTransaction().replace(
-                R.id.fragment_container_favorites, tFavoritesFragment).commit();
+                R.id.fragment_container_favorites, tFavoritesFragment)
+                .commit();
     }
 
 }

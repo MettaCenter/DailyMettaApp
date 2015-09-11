@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 1. Shows a calendar to the user for picking a date
@@ -29,6 +30,31 @@ public class DatePickerFragmentC
                 c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         rDatePickerDialog.getDatePicker().setCalendarViewShown(true);
         rDatePickerDialog.getDatePicker().setSpinnersShown(false);
+
+        /*
+        There is a bug in the CalendarView which slows it down very much if we have set the max date and scrolling to the end of the year:
+        http://stackoverflow.com/questions/18437702/date-picker-dialogue-app-crashes-when-i-set-max-and-min-date
+        Therefore we don't set the start date and end date
+
+        c.clear();
+        c.set(Calendar.YEAR, 2015);
+        c.set(Calendar.DAY_OF_YEAR, c.getMinimum(Calendar.DAY_OF_YEAR));
+        c.set(Calendar.HOUR_OF_DAY, c.getMinimum(Calendar.HOUR_OF_DAY));
+        c.set(Calendar.MINUTE, c.getMinimum(Calendar.MINUTE));
+        c.set(Calendar.SECOND, c.getMinimum(Calendar.SECOND));
+        c.set(Calendar.MILLISECOND, c.getMinimum(Calendar.MILLISECOND));
+        rDatePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
+
+        c.clear();
+        c.set(Calendar.YEAR, 2015);
+        c.set(Calendar.DAY_OF_YEAR, c.getMaximum(Calendar.DAY_OF_YEAR));
+        c.set(Calendar.HOUR_OF_DAY, c.getMaximum(Calendar.HOUR_OF_DAY));
+        c.set(Calendar.MINUTE, c.getMaximum(Calendar.MINUTE));
+        c.set(Calendar.SECOND, c.getMaximum(Calendar.SECOND));
+        c.set(Calendar.MILLISECOND, c.getMaximum(Calendar.MILLISECOND));
+        rDatePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+        */
+
         return rDatePickerDialog;
     }
 
@@ -39,13 +65,12 @@ public class DatePickerFragmentC
      * //Please note that we don't change the time zone here since we want to use the local time zone
      */
     @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-        long tPosLg = UtilitiesU.getArticleFragmentPositionFromDate(getActivity(), monthOfYear, dayOfMonth);
-        if(tPosLg != -1){
+    public void onDateSet(DatePicker iView, int iYear, int iMonthOfYear, int iDayOfMonth) {
+        long tPosLg = UtilitiesU.getArticleFragmentPositionFromDate(getActivity(), iMonthOfYear, iDayOfMonth);
+        if(tPosLg != ConstsU.NO_ARTICLE_POS){
             //Starting a new article activity with the fragment for the chosen article
             Intent tIntent = new Intent(getActivity(), ArticleActivityC.class);
-            tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, tPosLg); // - 1
+            tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, tPosLg);
             /*
             -One is subtracted here because the position in the ViewPager starts at zero
             while the SQLite db starts at 1. From the SQLite documentation:

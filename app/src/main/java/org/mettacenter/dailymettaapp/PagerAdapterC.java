@@ -29,6 +29,7 @@ public class PagerAdapterC
     @Override
     public Fragment getItem(int iPos) {
         Fragment tFragment = new ArticleFragmentC();
+        //-TODO: Change to newInstance? (Don't forget the arguments at the end of this method)
         Bundle tArgs = new Bundle();
 
         long tIdLg = -1;
@@ -48,7 +49,7 @@ public class PagerAdapterC
             tLinkSg = mrCursor.getString(tLinkIndex);
 
         }catch(Exception e){
-            Log.e(ConstsU.TAG, e.getMessage());
+            Log.e(ConstsU.APP_TAG, e.getMessage(), e);
         }
 
         tArgs.putLong(ArticleFragmentC.ARG_ID, tIdLg);

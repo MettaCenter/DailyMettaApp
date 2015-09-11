@@ -7,8 +7,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         >
         <LinearLayout
             android:orientation="horizontal"
@@ -22,11 +22,11 @@
                 android:layout_weight="1"
                 android:paddingTop="16dp"
                 android:paddingBottom="12dp"
-                android:textColor="#D65E28"
+                android:textColor="@color/orange"
                 android:textSize="28sp"
                 android:textStyle="normal"
                 />
-            <!-- TODO: We may need to find a way to right align the bookmark layout -->
+            <!-- Please note: This layout will solve the right-align problem since the above TextView has layout_width="match_parent" -->
             <RelativeLayout
                 android:id="@+id/article_bookmark_layout"
                 android:orientation="vertical"

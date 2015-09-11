@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="orange">#d05e06</color>
+    <color name="orange">#D65E28</color> <!-- #D65E28 #d05e06-->
     <color name="light_orange">#f2d7b9</color>
 
     <color name="light_gray">#f2f2f2</color>

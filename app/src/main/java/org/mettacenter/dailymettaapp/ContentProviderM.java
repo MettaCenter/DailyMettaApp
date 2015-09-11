@@ -19,7 +19,6 @@ public class ContentProviderM
     static final String AUTHORITY = "org.mettacenter.dailymettaapp";
     public static final Uri ARTICLE_CONTENT_URI =
             Uri.parse("content://" + AUTHORITY + "/" + ArticleTableM.TABLE_ARTICLE);
-    ///public static final Uri FAVORITE_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + FavoriteTableM.TABLE_FAVORITE);
 
     /**
      * When the first two arguments that is seen in the "addURI" method  below matches the input
@@ -28,8 +27,6 @@ public class ContentProviderM
      */
     private static final int ARTICLE = 11;
     private static final int ARTICLE_SINGLE_ROW = 12;
-    private static final int FAVORITE = 21;
-    private static final int FAVORITE_SINGLE_ROW = 22;
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static{
         sUriMatcher.addURI(AUTHORITY, ArticleTableM.TABLE_ARTICLE, ARTICLE);
@@ -47,7 +44,6 @@ public class ContentProviderM
     @Override
     public Cursor query(Uri iUri, String[] iProjectionAy, String iSelectionSg,
             String[] iSelectionArgsAy, String iSortOrderSg) {
-        //verifyColumns(iUri, iProjectionAy);
         SQLiteQueryBuilder tQueryBuilder = new SQLiteQueryBuilder();
         SQLiteDatabase tDb = mDbHelper.getWritableDatabase();
         String tTable = ConstsU.EMPTY_STRING;
@@ -110,7 +106,7 @@ public class ContentProviderM
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        //TODO
+        //Not implemented since we don't delete articles (rather, we updated them instead)
         return 0;
     }
 

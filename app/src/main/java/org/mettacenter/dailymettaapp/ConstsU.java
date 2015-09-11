@@ -4,7 +4,7 @@ package org.mettacenter.dailymettaapp;
  * Global constants for the entire application
  */
 public interface ConstsU {
-    String TAG = "daily_metta_app";
+    String APP_TAG = "dailymettaapp";
     String EMPTY_STRING = "";
     String EXTRA_ARTICLE_POS_ID = "ARTICLE_POS_ID";
     int LATEST_ARTICLE_VIEWPAGER_POSITION = 0;

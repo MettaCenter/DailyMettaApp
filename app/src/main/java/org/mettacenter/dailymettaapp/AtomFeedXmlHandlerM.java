@@ -46,7 +46,7 @@ public class AtomFeedXmlHandlerM
 
         if(ENTRY_XML_TAG.equalsIgnoreCase(iLocalNameSg)) {
             mIsContentEntryParsed = true;
-            Log.d(ConstsU.TAG, "========== START ENTRY TAG ==========");
+            Log.d(ConstsU.APP_TAG, "========== START ENTRY APP_TAG ==========");
         }
 
         mElementSb = new StringBuilder();
@@ -95,7 +95,7 @@ public class AtomFeedXmlHandlerM
                 String tWholeIdSg = mElementSb.toString();
 
                 long tId = Long.parseLong(tWholeIdSg.substring(tWholeIdSg.indexOf("=") + 1));
-                Log.d(ConstsU.TAG, "Article id: " + tId);
+                Log.d(ConstsU.APP_TAG, "Article id: " + tId);
                 mInsertValues.put(BaseColumns._ID, tId);
 
                 mInsertValues.put(ArticleTableM.COLUMN_LINK, tWholeIdSg);
@@ -122,7 +122,7 @@ public class AtomFeedXmlHandlerM
                 mInsertValues.put(ArticleTableM.COLUMN_TIME_DAYOFMONTH, tDayOfMonthServerTzIt);
             }else if(ENTRY_XML_TAG.equalsIgnoreCase(iLocalNameSg)) {
                 mIsContentEntryParsed = false;
-                Log.d(ConstsU.TAG, "========== END ENTRY TAG ==========");
+                Log.d(ConstsU.APP_TAG, "========== END ENTRY APP_TAG ==========");
 
                 long tFavoriteWithTimeLg = UtilitiesU.getFavoriteTime(mrContext, mInsertValues.getAsLong(BaseColumns._ID));
                 mInsertValues.put(ArticleTableM.COLUMN_INTERNAL_BOOKMARK, tFavoriteWithTimeLg);
@@ -153,13 +153,13 @@ public class AtomFeedXmlHandlerM
             //-This is a Java long, but there is no problem for SQLite because
             //it's Integer is variable in length and can be up to 8 bytes
         } catch (ParseException e) {
-            Log.e(ConstsU.TAG, e.getMessage());
+            Log.e(ConstsU.APP_TAG, e.getMessage(), e);
         }
 
-        Log.d(ConstsU.TAG, "tArticleTimeInMsLg = " + tArticleTimeInMsLg);
+        Log.d(ConstsU.APP_TAG, "tArticleTimeInMsLg = " + tArticleTimeInMsLg);
 
         if(tArticleTimeInMsLg == -1){
-            Log.wtf(ConstsU.TAG, "tArticleTimeInMsLg == -1");
+            Log.wtf(ConstsU.APP_TAG, "tArticleTimeInMsLg == -1");
         }
 
         return tArticleTimeInMsLg;
@@ -176,7 +176,7 @@ public class AtomFeedXmlHandlerM
             String rPartOfTitleSg = iTitleSg.substring(tFirstQuote + START_QUOTE.length(), tLastQuote);
             return rPartOfTitleSg;
         }else{
-            Log.w(ConstsU.TAG, "tFirstQuote = " + tFirstQuote + ", tLastQuote = " + tLastQuote);
+            Log.w(ConstsU.APP_TAG, "tFirstQuote = " + tFirstQuote + ", tLastQuote = " + tLastQuote);
             return iTitleSg;
         }
     }

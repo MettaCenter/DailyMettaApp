@@ -39,7 +39,7 @@ public class ArticleTableM {
 
     public static void createTable(SQLiteDatabase iDb){
         iDb.execSQL(CREATE_TABLE);
-        Log.i(ConstsU.TAG, "Table " + TABLE_ARTICLE + " created! Database version = "
+        Log.i(ConstsU.APP_TAG, "Table " + TABLE_ARTICLE + " created! Database version = "
                 + iDb.getVersion());
     }
 
@@ -47,7 +47,7 @@ public class ArticleTableM {
         if(false){
             //empty for now
         }else{
-            Log.w(ConstsU.TAG, "Upgrade removed the old table and created a new one, "
+            Log.w(ConstsU.APP_TAG, "Upgrade removed the old table and created a new one, "
                     + "all data in the old table was deleted");
             iDb.execSQL("DROP TABLE IF EXISTS " + TABLE_ARTICLE);
             createTable(iDb);

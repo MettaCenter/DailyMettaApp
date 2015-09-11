@@ -59,13 +59,10 @@ public class SettingsActivityC
             }
         });
 
-
-
         TextView tNotificationTimeTextView = (TextView)findViewById(R.id.notificationTimeTextView);
         tNotificationTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 DialogFragment tTimePickerFragment = TimePickerFragmentC.newInstance(SettingsActivityC.this);
                 tTimePickerFragment.show(
                         SettingsActivityC.this.getFragmentManager(),
@@ -74,7 +71,6 @@ public class SettingsActivityC
                 updateGui();
             }
         });
-
     }
 
     @Override
@@ -85,10 +81,7 @@ public class SettingsActivityC
     }
 
     public void updateGui(){
-
-
         ImageView tOnOffIv = (ImageView)findViewById(R.id.notificationOnOffImage);
-
 
         SharedPreferences tSharedPrefs = getSharedPreferences(
                 ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
@@ -102,9 +95,6 @@ public class SettingsActivityC
                 && tNotificationMinute != ConstsU.NOTIFICATION_NOT_SET){
             tOnOffIv.setImageResource(R.mipmap.ic_check_box_black_24dp);
 
-            ///tTextView.setEnabled(true);
-            ///tCheckBox.setChecked(true);
-
             Calendar c = Calendar.getInstance();
             c.set(Calendar.HOUR_OF_DAY, tNotificationHour);
             c.set(Calendar.MINUTE, tNotificationMinute);
@@ -115,23 +105,10 @@ public class SettingsActivityC
             }else{
                 tSimpleDateFormat = new SimpleDateFormat("hh:mm aa");
             }
-
             tTextView.setText(tSimpleDateFormat.format(c.getTime()));
-
         }else{
             tOnOffIv.setImageResource(R.mipmap.ic_check_box_outline_blank_black_24dp);
-
             tTextView.setText("--:--");
-            ///tTextView.setEnabled(false);
-            ///tCheckBox.setChecked(false);
-
         }
-
-
-
-
     }
-
-
-
 }

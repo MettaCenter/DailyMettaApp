@@ -40,28 +40,16 @@ public class FavoritesFragmentC
         mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.element_favorite_row, null, tFromColumnsSg, tToGuiIt, 0);
         mAdapter.setViewBinder(new FavoriteViewBinderM());
 
-        //..add it to the ListView contained within this activity
+        //..adding it to the ListView contained within this activity
         setListAdapter(mAdapter);
     }
 
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public boolean onOptionsItemSelected(MenuItem iItem) {
+        int iId = iItem.getItemId();
 
-        /*
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        */
-
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(iItem);
     }
-
 
     @Override
     public Loader<Cursor> onCreateLoader(int iIdUnused, Bundle iArgumentsUnused) {
@@ -83,7 +71,6 @@ public class FavoritesFragmentC
     public void onLoaderReset(Loader<Cursor> iCursorUnused) {
         mAdapter.swapCursor(null);
     }
-
 
     /**
      * ViewBinder for showing the textual context (or preview) for each search hit
@@ -136,12 +123,9 @@ public class FavoritesFragmentC
     public void onListItemClick(ListView iListView, View iView, int iPos, long iId){
         super.onListItemClick(iListView, iView, iPos, iId);
 
-        Log.d(ConstsU.TAG, "onListItemClick, iId = " + iId);
-
         //Starting a new article activity with the fragment for the chosen article
-        /////Uri tUri = Uri.parse(ContentProviderM.ARTICLE_CONTENT_URI + "/" + iId);
         Intent tIntent = new Intent(this.getActivity(), ArticleActivityC.class);
-        tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(getActivity(), iId)); /////iId temporarily used, removed "tUri.toString()"
+        tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(getActivity(), iId));
         this.getActivity().startActivityForResult(tIntent, 0);
     }
 

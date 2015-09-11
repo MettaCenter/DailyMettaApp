@@ -23,13 +23,13 @@ public class BackgroundDownloadServiceC
     }
 
     public static void start(Context iContext) {
-        Log.d(ConstsU.TAG, "BackgroundDownloadServiceC.start");
+        Log.d(ConstsU.APP_TAG, "BackgroundDownloadServiceC.start");
 
         Intent tIntent = new Intent(iContext, BackgroundDownloadServiceC.class);
         AlarmManager tAlarmManager = (AlarmManager)iContext.getSystemService(Context.ALARM_SERVICE);
         PendingIntent tAlarmPendingIntent = PendingIntent.getService(iContext, REQ_CODE, tIntent, 0);
         tAlarmManager.cancel(tAlarmPendingIntent);
-        tAlarmManager.setRepeating(
+        tAlarmManager.setInexactRepeating(
                 AlarmManager.RTC,
                 Calendar.getInstance().getTimeInMillis(),
                 AlarmManager.INTERVAL_FIFTEEN_MINUTES,
@@ -44,7 +44,7 @@ public class BackgroundDownloadServiceC
      */
     @Override
     protected void onHandleIntent(Intent iIntent) {
-        Log.d(ConstsU.TAG, "BackgroundDownloadServiceC.onHandleIntent");
+        Log.d(ConstsU.APP_TAG, "BackgroundDownloadServiceC.onHandleIntent");
 
         UtilitiesU.DownloadActionEnum tDownloadActionEnum = UtilitiesU.downloadLogic(this);
         if(tDownloadActionEnum == UtilitiesU.DownloadActionEnum.DOWNLOAD_ARTICLES){

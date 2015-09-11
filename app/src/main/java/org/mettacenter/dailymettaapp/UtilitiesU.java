@@ -22,10 +22,6 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class UtilitiesU {
 
-
-
-
-
     public static long getArticleFragmentPositionFromDate(Context iContext, int iMonthOfYear, int iDayOfMonth){
         long tPosLg = -1;
         String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
@@ -53,8 +49,6 @@ public class UtilitiesU {
         return tPosLg;
     }
 
-
-
     public static long getArticleFragmentPositionFromId(Context iContext, long iIdLg){
         long tPosLg = -1;
         String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
@@ -79,7 +73,6 @@ public class UtilitiesU {
 
         return tPosLg;
     }
-
 
     public enum DownloadActionEnum {
         DOWNLOAD_ARTICLES,
@@ -128,8 +121,7 @@ public class UtilitiesU {
         try {
             tNewVer = iContext.getPackageManager().getPackageInfo(iContext.getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.wtf(ConstsU.TAG, e.getMessage());
-            e.printStackTrace();
+            Log.wtf(ConstsU.APP_TAG, e.getMessage(), e);
         }
         if(tNewVer > tOldVer){
             //Writing the new version into the shared preferences
@@ -149,10 +141,10 @@ public class UtilitiesU {
         boolean tIsUpdateIntervalReachedBl =
                 c.getTimeInMillis() - tLastUpdateInMsFeedTzLg
                         >= tUpdateIntervalInMillisLg;
-        Log.d(ConstsU.TAG, "tIsUpdateIntervalReachedBl = " + tIsUpdateIntervalReachedBl);
-        Log.d(ConstsU.TAG, "tLastUpdateInMsFeedTzLg = " + tLastUpdateInMsFeedTzLg);
-        Log.d(ConstsU.TAG, "Calendar.getInstance().getTimeInMillis() = " + Calendar.getInstance().getTimeInMillis());
-        Log.d(ConstsU.TAG, "tUpdateIntervalInMillisLg = " + tUpdateIntervalInMillisLg);
+        Log.d(ConstsU.APP_TAG, "tIsUpdateIntervalReachedBl = " + tIsUpdateIntervalReachedBl);
+        Log.d(ConstsU.APP_TAG, "tLastUpdateInMsFeedTzLg = " + tLastUpdateInMsFeedTzLg);
+        Log.d(ConstsU.APP_TAG, "Calendar.getInstance().getTimeInMillis() = " + Calendar.getInstance().getTimeInMillis());
+        Log.d(ConstsU.APP_TAG, "tUpdateIntervalInMillisLg = " + tUpdateIntervalInMillisLg);
 
 
         //TODO: Do we want to do the update when a new app version is launched?
@@ -176,7 +168,6 @@ public class UtilitiesU {
         }
     }
 
-
     public static void downloadArticles(Context iContext){
 
         boolean tUpdateHasBeenDone = false;
@@ -193,7 +184,7 @@ public class UtilitiesU {
             //Continuing, *this exception does not indicate an error*
             tUpdateHasBeenDone = false;
         }catch (Exception e2){
-            Log.e(ConstsU.TAG, e2.getMessage());
+            Log.e(ConstsU.APP_TAG, e2.getMessage(), e2);
         }
 
         if(tUpdateHasBeenDone == true) {
@@ -233,4 +224,5 @@ public class UtilitiesU {
 
         return tFavoriteWithTimeLg;
     }
+
 }

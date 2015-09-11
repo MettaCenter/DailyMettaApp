@@ -1,13 +1,10 @@
 package org.mettacenter.dailymettaapp;
 
-import android.app.DialogFragment;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 /**
@@ -24,7 +21,7 @@ public class AboutActivityC
         try {
             tPackageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(ConstsU.TAG, e.getMessage());
+            Log.e(ConstsU.APP_TAG, "Cannot get package info", e);
         }
 
         if(tPackageInfo != null){
