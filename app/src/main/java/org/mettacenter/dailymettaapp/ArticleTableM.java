@@ -9,18 +9,17 @@ import android.util.Log;
  */
 public class ArticleTableM {
     public static final String TABLE_ARTICLE = "article";
-    ///public static final String COLUMN_ID = BaseColumns._ID;
-    //public static final String COLUMN_TIME = "time"; //-saved as an integer in unix time
+
     public static final String COLUMN_TIME_MONTH = "time_month";
     public static final String COLUMN_TIME_DAYOFMONTH = "time_dayofmonth";
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_TEXT = "text";
     public static final String COLUMN_LINK = "link";
-    public static final String COLUMN_INTERNAL_FAVORITE_WITH_TIME = "favorite_with_time";
+    public static final String COLUMN_INTERNAL_BOOKMARK = "bookmark";
 
     public static final String NO_TEXT = "";
     public static final int TIME_NOT_SET = -1;
-    public static final int NOT_FAVORITE = -1;
+    public static final int NOT_BOOKMARKED = -1;
 
     private static final String CREATE_TABLE = "CREATE TABLE "
             + TABLE_ARTICLE
@@ -30,14 +29,13 @@ public class ArticleTableM {
             + ", " + COLUMN_TEXT + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
             + ", " + COLUMN_TITLE + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
             + ", " + COLUMN_LINK + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
-            + ", " + COLUMN_INTERNAL_FAVORITE_WITH_TIME + " INTEGER NOT NULL DEFAULT '" + NOT_FAVORITE + "'"
+            + ", " + COLUMN_INTERNAL_BOOKMARK + " INTEGER NOT NULL DEFAULT '" + NOT_BOOKMARKED + "'"
             + ");";
     /*
     -Please note that AUTOINCREMENT is not used and this is not needed for CursorAdapter, see
     this page for details:
     http://stackoverflow.com/questions/27681391/what-is-the-use-of-basecolumnss-id-primary-key-in-android
      */
-
 
     public static void createTable(SQLiteDatabase iDb){
         iDb.execSQL(CREATE_TABLE);

@@ -3,16 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <!--
-    <android.support.v7.widget.Toolbar
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/my_awesome_toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
--->
-
     <LinearLayout
         android:id="@+id/empty_layout"
         android:visibility="gone"
@@ -20,22 +10,18 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center" >
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No internet connection, please try again once you are connected to the internet:"
             android:textSize="20sp" />
-
         <Button
             android:id="@+id/manual_download_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Download articles"
             android:textSize="20sp" />
-
     </LinearLayout>
-
 
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"

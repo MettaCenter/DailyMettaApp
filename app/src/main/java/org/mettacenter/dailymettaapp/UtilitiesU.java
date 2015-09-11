@@ -9,7 +9,6 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.view.View;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -23,22 +22,9 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class UtilitiesU {
 
-    private static final String START_QUOTE = "&#8220;";
-    private static final String END_QUOTE = "&#8221;";
 
-    public static String getPartOfTitleInsideQuotes(String iTitleSg){
-        //Example: <title type="html"><![CDATA[&#8220;Love of Humanity&#8221;- Daily Metta]]></title>
-        int tFirstQuote = iTitleSg.indexOf(START_QUOTE);
-        int tLastQuote = iTitleSg.lastIndexOf(END_QUOTE);
 
-        if(tFirstQuote != -1 && tLastQuote != -1){
-            String rPartOfTitleSg = iTitleSg.substring(tFirstQuote + START_QUOTE.length(), tLastQuote);
-            return rPartOfTitleSg;
-        }else{
-            Log.w(ConstsU.TAG, "tFirstQuote = " + tFirstQuote + ", tLastQuote = " + tLastQuote);
-            return iTitleSg;
-        }
-    }
+
 
     public static long getArticleFragmentPositionFromDate(Context iContext, int iMonthOfYear, int iDayOfMonth){
         long tPosLg = -1;
@@ -101,15 +87,39 @@ public class UtilitiesU {
         DISPLAY_MANUAL_DOWNLOAD_BUTTON;
     }
 
+    /**
+     *
+     * Input:
+     *
+     * nw access: yes/no
+     * tIsConnectedToInternet
+     *
+     * timer reached: yes/no
+     * tIsUpdateIntervalReachedBl
+     *
+     * articles downloaded: yes/no
+     * ConstsU.DB_NEVER_UPDATED
+     *
+     * app started AND new app version: yes/no
+     * ConstsU.APP_NEVER_STARTED, tOldVer, tNewVer
+     *
+     *
+     * Output:
+     *
+     * Download articles and write to db
+     *
+     * Display blank screen and show message to user
+     *
+     * Update ViewPager Adapter
+     *
+     */
     public static DownloadActionEnum downloadLogic(Context iContext){
-
 
         ConnectivityManager cm = (ConnectivityManager)iContext.getSystemService(
                 Context.CONNECTIVITY_SERVICE);
         NetworkInfo tActiveNetworkInfo = cm.getActiveNetworkInfo();
         boolean tIsConnectedToInternet = tActiveNetworkInfo != null
                 && tActiveNetworkInfo.isConnectedOrConnecting();
-
 
         //Checking if this is the first time the app is started or if we are running a new version
         int tOldVer = PreferenceManager.getDefaultSharedPreferences(iContext).getInt(
@@ -132,7 +142,7 @@ public class UtilitiesU {
         SharedPreferences tSharedPreferences = iContext.getSharedPreferences(
                 ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         long tLastUpdateInMsFeedTzLg = tSharedPreferences.getLong(
-                ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS_FEED_TZ, ConstsU.DB_NEVER_UPDATED);
+                ConstsU.PREF_LAST_CLIENT_UPDATE_TIME_IN_MS_FEED_TZ, ConstsU.DB_NEVER_UPDATED);
         long tUpdateIntervalInMillisLg = TimeUnit.HOURS.toMillis(ConstsU.UPDATE_INTERVAL_IN_HOURS);
         Calendar c = Calendar.getInstance();
         c.setTimeZone(TimeZone.getTimeZone(ConstsU.FEED_TIME_ZONE));
@@ -180,7 +190,7 @@ public class UtilitiesU {
             tUpdateHasBeenDone = true;
 
         }catch (TerminateSAXParsingException e1){
-            //Continuing, this exception does not indicate an error
+            //Continuing, *this exception does not indicate an error*
             tUpdateHasBeenDone = false;
         }catch (Exception e2){
             Log.e(ConstsU.TAG, e2.getMessage());
@@ -191,11 +201,36 @@ public class UtilitiesU {
             //Writing the time of this db update to the preferences
             SharedPreferences.Editor tEditor = iContext.getSharedPreferences(
                     ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
-            tEditor.putLong(ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS_FEED_TZ,
-                    Calendar.getInstance().getTimeInMillis());
+
+            Calendar c = Calendar.getInstance();
+            c.setTimeZone(TimeZone.getTimeZone(ConstsU.FEED_TIME_ZONE));
+
+            tEditor.putLong(ConstsU.PREF_LAST_CLIENT_UPDATE_TIME_IN_MS_FEED_TZ,
+                    c.getTimeInMillis());
             tEditor.commit();
+
+
 
         }
     }
 
+    public static long getFavoriteTime(Context iContext, long iDbIdLg){
+        long tFavoriteWithTimeLg = ArticleTableM.NOT_BOOKMARKED;
+
+        //Extract the favorite status and write it to the entry with the same id
+        String[] tProj = {ArticleTableM.COLUMN_INTERNAL_BOOKMARK};
+        String tSel = BaseColumns._ID + "=" + iDbIdLg;
+        Cursor tCr = iContext.getContentResolver().query(
+                ContentProviderM.ARTICLE_CONTENT_URI,
+                tProj, tSel, null, ConstsU.SORT_ORDER);
+        tCr.moveToFirst();
+        if(tCr != null && tCr.getCount() > 0){
+            int tColIndexIt = tCr.getColumnIndexOrThrow(ArticleTableM.COLUMN_INTERNAL_BOOKMARK);
+            tFavoriteWithTimeLg = tCr.getLong(tColIndexIt);
+        }
+        tCr.close();
+        tCr = null;
+
+        return tFavoriteWithTimeLg;
+    }
 }

@@ -14,23 +14,12 @@ public class BootReceiverC
 
     @Override
     public void onReceive(Context iContext, Intent iIntent) {
-
-
         if(iIntent.getAction().equalsIgnoreCase("android.intent.action.BOOT_COMPLETED")){
-
-
-
-            //Setting the alarm for..
-
+            //Setting the "repeating alarm" for..
             //..notifications
-
-            NotificationServiceC.setServiceNotification(iContext);
-
-
-
+            NotificationServiceC.start(iContext);
             //..feed updates
-            BackgroundDownloadServiceC.setService(iContext);
-
+            BackgroundDownloadServiceC.start(iContext);
         }
     }
 }

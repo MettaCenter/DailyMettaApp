@@ -90,12 +90,6 @@
             android:exported="true" >
         </provider>
 
-        <receiver android:name=".ConnectivityChangeReceiverC" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
     </application>
 
 </manifest>

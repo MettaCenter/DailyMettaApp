@@ -7,12 +7,14 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -47,8 +49,8 @@ public class SearchResultsFragmentC
         getLoaderManager().initLoader(0, null, this);
 
         //Setting up the adapter..
-        String[] tFromColumnsSg = new String[]{ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH, ArticleTableM.COLUMN_TEXT};
-        int[] tToGuiIt = new int[]{R.id.search_row_title, R.id.search_row_date_month, R.id.search_row_date_dayofmonth, R.id.search_row_text}; //-contained in the layout
+        String[] tFromColumnsSg = new String[]{ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH, ArticleTableM.COLUMN_TEXT, ArticleTableM.COLUMN_INTERNAL_BOOKMARK};
+        int[] tToGuiIt = new int[]{R.id.search_row_title, R.id.search_row_date_month, R.id.search_row_date_dayofmonth, R.id.search_row_text, R.id.search_row_layout}; //-contained in the layout
         mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.element_search_row, null, tFromColumnsSg, tToGuiIt, 0);
         mAdapter.setViewBinder(new SearchViewBinderM());
 
@@ -78,7 +80,7 @@ public class SearchResultsFragmentC
     @Override
     public Loader<Cursor> onCreateLoader(int iIdUnused, Bundle iArgumentsUnused) {
 
-        String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH, ArticleTableM.COLUMN_TEXT};
+        String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH, ArticleTableM.COLUMN_TEXT, ArticleTableM.COLUMN_INTERNAL_BOOKMARK};
         String tSel = ArticleTableM.COLUMN_TEXT + " LIKE ?";
         //-LIKE is case insensitive
         String[] tSelArgs = {"%"+ mSearchStringSg +"%"};
@@ -108,10 +110,11 @@ public class SearchResultsFragmentC
             int tTimeMonthColIndex = iCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_TIME_MONTH);
             int tTimeDayOfMonthColIndex = iCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_TIME_DAYOFMONTH);
             int tTextColIndex = iCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_TEXT);
+            int tFavoriteColIndex = iCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_INTERNAL_BOOKMARK);
 
             if(iColIndex == tTitleColIndex) {
                 TextView tTextView = (TextView)iView.findViewById(R.id.search_row_title);
-                String tTitleSg = UtilitiesU.getPartOfTitleInsideQuotes(iCursor.getString(tTitleColIndex));
+                String tTitleSg = iCursor.getString(tTitleColIndex);
                 tTextView.setText(Html.fromHtml(tTitleSg));
                 ///tTextView.setTypeface(null, Typeface.BOLD);
 
@@ -173,6 +176,23 @@ public class SearchResultsFragmentC
                 tTextView.setText(tContextTextSubString);
 
                 return true;
+            }else if(iColIndex == tFavoriteColIndex){
+                boolean tIsFavorite = iCursor.getLong(tFavoriteColIndex) != ArticleTableM.NOT_BOOKMARKED;
+
+                LinearLayout iLinearLayout = (LinearLayout)iView.getRootView().findViewById(R.id.search_row_layout);
+
+                if(tIsFavorite == true){
+
+                    ((LinearLayout)iView).setBackgroundColor(Color.parseColor("#f2d7b9"));
+                    ///iLinearLayout.setBackgroundColor(Color.parseColor("#f2d7b9"));
+
+                }else{
+                    ((LinearLayout)iView).setBackgroundColor(Color.parseColor("#ffffff"));
+                    ///iLinearLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+
+                }
+
+                return true;
             }
             return false; //-default
         }
@@ -192,7 +212,7 @@ public class SearchResultsFragmentC
         //Starting a new article activity with the fragment for the chosen article
         /////Uri tUri = Uri.parse(ContentProviderM.ARTICLE_CONTENT_URI + "/" + iId);
         Intent tIntent = new Intent(this.getActivity(), ArticleActivityC.class);
-        tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, iId); /////iId temporarily used, removed "tUri.toString()"
+        tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(getActivity(), iId)); /////iId temporarily used, removed "tUri.toString()"
         this.getActivity().startActivityForResult(tIntent, 0);
     }
 

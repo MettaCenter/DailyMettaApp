@@ -10,6 +10,7 @@ public interface ConstsU {
     int LATEST_ARTICLE_VIEWPAGER_POSITION = 0;
     String SORT_ORDER = ArticleTableM.COLUMN_TIME_MONTH + " DESC, "
             + ArticleTableM.COLUMN_TIME_DAYOFMONTH + " DESC";
+    long NO_ARTICLE_POS = -1;
 
     //Server
     String SERVER_TIMEZONE = "GMT-7";
@@ -20,7 +21,7 @@ public interface ConstsU {
 
     //Preferences
     String GLOBAL_SHARED_PREFERENCES = "preferences";
-    String PREF_LAST_UPDATE_TIME_IN_MILLIS_FEED_TZ = "last_update_time"; //-Local time zone
+    String PREF_LAST_CLIENT_UPDATE_TIME_IN_MS_FEED_TZ = "last_update_time"; //-Local time zone
     long DB_NEVER_UPDATED = -1;
     int UPDATE_INTERVAL_IN_HOURS = 12;
     String PREF_APP_VERSION_CODE = "app_version_code";

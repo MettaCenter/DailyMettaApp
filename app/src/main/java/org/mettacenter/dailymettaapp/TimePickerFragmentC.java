@@ -1,33 +1,35 @@
 package org.mettacenter.dailymettaapp;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
 
 /**
- * Created by sunyata on 2015-09-04.
+ * Created by sunyata on 2015-09-10.
  */
+
 public class TimePickerFragmentC
         extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener{
+
+    private static OnDateSetListenerI mrSettingsCallback;
+
+    public static TimePickerFragmentC newInstance(OnDateSetListenerI iSettingsCallback){
+        mrSettingsCallback = iSettingsCallback;
+        return new TimePickerFragmentC();
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle iSavedInstanceState) {
         final Calendar c = Calendar.getInstance();
         TimePickerDialog rTimePickerDialog = new TimePickerDialog(getActivity(), this,
-                c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), DateFormat.is24HourFormat(getActivity()));
+                c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), android.text.format.DateFormat.is24HourFormat(getActivity()));
         return rTimePickerDialog;
     }
 
@@ -43,7 +45,15 @@ public class TimePickerFragmentC
         tPrefEditor.commit();
 
 
-        NotificationServiceC.setServiceNotification(getActivity());
+        NotificationServiceC.start(getActivity());
 
+
+        mrSettingsCallback.updateGui();
     }
+
+    public interface OnDateSetListenerI {
+        void updateGui();
+    }
+
 }
+

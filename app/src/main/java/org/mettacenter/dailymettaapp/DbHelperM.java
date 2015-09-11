@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelperM
         extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
     public static final String DB_NAME = "articles.sqlite";
 
     private static DbHelperM sDbHelper;
@@ -34,20 +34,18 @@ public class DbHelperM
     @Override
     public void onCreate(SQLiteDatabase iDb){
         ArticleTableM.createTable(iDb);
-        ///FavoriteTableM.createTable(iDb);
     }
 
     /**
      * One way to upgrade the table is to simply drop it and then download all articles again
      */
     @Override
-    public void onUpgrade(SQLiteDatabase iDb, int iOldVer, int iNewVer) {
+    public void onUpgrade(SQLiteDatabase iDb, int iOldDbVer, int iNewDbVer) {
         if(false){
             //empty for now
         }else{
             //PLEASE NOTE: When we reach this else clause, we'll simply drop the tables
-            ArticleTableM.upgradeTable(iDb, iOldVer, iNewVer);
-            ///FavoriteTableM.upgradeTable(iDb, iOldVer, iNewVer);
+            ArticleTableM.upgradeTable(iDb, iOldDbVer, iNewDbVer);
         }
     }
 }

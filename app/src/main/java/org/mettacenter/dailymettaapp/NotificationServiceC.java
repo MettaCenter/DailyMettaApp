@@ -8,6 +8,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.provider.BaseColumns;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -30,25 +32,25 @@ public class NotificationServiceC
         super(TAG);
     }
 
-    public static void setServiceNotification(Context iContext){
-
-        boolean tIsNotificationActive = false;
-
+    public static void start(Context iContext){
         AlarmManager tAlarmManager = (AlarmManager)iContext.getSystemService(Context.ALARM_SERVICE);
 
         Intent tIntent = new Intent(iContext, NotificationServiceC.class);
         PendingIntent tAlarmPendingIntent = PendingIntent.getService(iContext, REQ_CODE, tIntent, 0);
-
 
         SharedPreferences tSharedPrefs = iContext.getSharedPreferences(
                 ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         int tNotificationHour = tSharedPrefs.getInt(ConstsU.PREF_NOTIFICATION_HOUR, ConstsU.NOTIFICATION_NOT_SET);
         int tNotificationMinute = tSharedPrefs.getInt(ConstsU.PREF_NOTIFICATION_MINUTE, ConstsU.NOTIFICATION_NOT_SET);
 
-        if(tNotificationHour == ConstsU.NOTIFICATION_NOT_SET
-                || tNotificationMinute == ConstsU.NOTIFICATION_NOT_SET){
-            tAlarmManager.cancel(tAlarmPendingIntent);
-        }else{
+
+        tAlarmManager.cancel(tAlarmPendingIntent);
+        //TODO: Do we want to cancel the pending intent as well?
+
+
+        if(tNotificationHour != ConstsU.NOTIFICATION_NOT_SET
+                && tNotificationMinute != ConstsU.NOTIFICATION_NOT_SET){
+
             Calendar c = Calendar.getInstance();
             int tPresentHour = c.get(Calendar.HOUR_OF_DAY);
             int tPresentMinute = c.get(Calendar.MINUTE);
@@ -60,11 +62,8 @@ public class NotificationServiceC
                 c.add(Calendar.DAY_OF_YEAR, 1); //-Please note "add"
             }
 
-            tAlarmManager.cancel(tAlarmPendingIntent);
             tAlarmManager.setRepeating(AlarmManager.RTC, c.getTimeInMillis(), AlarmManager.INTERVAL_DAY, tAlarmPendingIntent);
-            //-TODO: Exchange to setInexactRepeating (using setRepeating for testing purposes)
-
-            //TODO: Do we want to use this: tAlarmPendingIntent.cancel();
+            //-TODO: Exchange to setInexactRepeating (we are now using setRepeating for testing purposes)
         }
     }
 
@@ -77,10 +76,34 @@ public class NotificationServiceC
         //////////////////////////
 
 
+
+
+
+        String tContentTextSg = "Daily Metta";
+        long tArticleId = ConstsU.NO_ARTICLE_POS;
+        int tColIndexIt;
+
+        //Extract the favorite status and write it to the entry with the same id
+        String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE};
+        Cursor tCr = getContentResolver().query(
+                ContentProviderM.ARTICLE_CONTENT_URI,
+                tProj, null, null, ConstsU.SORT_ORDER);
+        tCr.moveToFirst();
+        if(tCr != null && tCr.getCount() > 0){
+            tColIndexIt = tCr.getColumnIndexOrThrow(ArticleTableM.COLUMN_TITLE);
+            tContentTextSg = tCr.getString(tColIndexIt);
+            tColIndexIt = tCr.getColumnIndexOrThrow(BaseColumns._ID);
+            tArticleId = tCr.getLong(tColIndexIt);
+        }
+        tCr.close();
+        tCr = null;
+
+
         Intent tArticleActivityIntent = new Intent(this, ArticleActivityC.class);
         tArticleActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //-TODO: Change how the activity is started?
-        // http://stackoverflow.com/questions/21833402/difference-between-intent-flag-activity-clear-task-and-intent-flag-activity-task
+        tArticleActivityIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(this, tArticleId));
+
+
 
 
         //Building the notification
@@ -88,6 +111,7 @@ public class NotificationServiceC
                 .setTicker("Read today's Daily Metta!")
                 .setSmallIcon(R.mipmap.metta_center_wheel)
                 .setContentTitle("Daily Metta")
+                .setContentText(tContentTextSg)
                 .setContentIntent(PendingIntent.getActivity(this, 0, tArticleActivityIntent, 0))
                 .setAutoCancel(true)
                 .build();

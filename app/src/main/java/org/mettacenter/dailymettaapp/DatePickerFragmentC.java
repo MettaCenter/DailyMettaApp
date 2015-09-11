@@ -20,6 +20,8 @@ public class DatePickerFragmentC
         extends DialogFragment
         implements DatePickerDialog.OnDateSetListener{
 
+    public static final String TAG = "DatePickerFragmentC";
+
     @Override
     public Dialog onCreateDialog(Bundle iSavedInstanceState) {
         final Calendar c = Calendar.getInstance();

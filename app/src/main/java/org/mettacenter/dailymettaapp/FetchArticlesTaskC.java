@@ -19,12 +19,12 @@ public class FetchArticlesTaskC
         extends AsyncTask<Void, Void, Void> {
 
     private Context mrContext;
-    private ArticleActivityC.AppSetupCallbackClass mArticleActivityCallback = null;
+    private OnAsyncTaskDoneListenerI mArticleActivityCallback = null;
     private ProgressDialog mProgressDialog;
     private static final String DIALOG_MESSAGE = "Downloading articles";
 
-    public FetchArticlesTaskC(Context irContext, ArticleActivityC.AppSetupCallbackClass iCallback){
-        mArticleActivityCallback = iCallback;
+    public FetchArticlesTaskC(Context irContext, OnAsyncTaskDoneListenerI iOnAsyncTaskDoneListener){
+        mArticleActivityCallback = iOnAsyncTaskDoneListener;
         mrContext = irContext;
         mProgressDialog = new ProgressDialog(irContext);
     }
@@ -52,9 +52,11 @@ public class FetchArticlesTaskC
         //Completing the setup
         //-(only works when FetchArticles has been called from ArticleActivityC)
         if(mArticleActivityCallback != null){
-            mArticleActivityCallback.setupCallback();
+            mArticleActivityCallback.finishSetup();
         }
     }
 
-
+    public interface OnAsyncTaskDoneListenerI{
+        void finishSetup();
+    }
 }

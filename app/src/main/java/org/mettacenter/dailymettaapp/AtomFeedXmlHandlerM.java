@@ -3,7 +3,6 @@ package org.mettacenter.dailymettaapp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -23,16 +22,15 @@ import java.util.TimeZone;
 public class AtomFeedXmlHandlerM
         extends DefaultHandler {
 
+    private static final String UPDATED_XML_TAG = "updated";
     private static final String ENTRY_XML_TAG = "entry";
     private static final String CONTENT_XML_TAG = "content"; //-Corresponds to COLUMN_TEXT
     private static final String TITLE_XML_TAG = "title"; //-Corresponds to COLUMN_TITLE
     private static final String ID_XML_TAG = "id"; //-Corresponds to COLUMN_LINK
-    private static final String PUBLISHED_XML_TAG = "published"; //-Corresponds to COLUMN_TIME
-    private static final String UPDATED_XML_TAG = "updated"; //-Corresponds to COLUMN_TIME
+    private static final String PUBLISHED_XML_TAG = "published";
 
     private boolean mIsElementParsed = false;
     private boolean mIsContentEntryParsed = false;
-    //private String mElementContent = null;
     private ContentValues mInsertValues = new ContentValues();
     private Context mrContext;
     private StringBuilder mElementSb = null;
@@ -46,23 +44,13 @@ public class AtomFeedXmlHandlerM
             org.xml.sax.Attributes iAttributes) throws SAXException {
         mIsElementParsed = true;
 
-
-
-
         if(ENTRY_XML_TAG.equalsIgnoreCase(iLocalNameSg)) {
-
             mIsContentEntryParsed = true;
             Log.d(ConstsU.TAG, "========== START ENTRY TAG ==========");
-
         }
-
-
-
 
         mElementSb = new StringBuilder();
     }
-
-    //public void characters(char[] ch, int start, int length) throws SAXException {
 
     /**
      * Surprisingly the characters method can be called several times by the SAX parser, we cannot
@@ -73,7 +61,7 @@ public class AtomFeedXmlHandlerM
     @Override
     public void characters(char[] iCharAy, int iStartIt, int iLengthIt) throws SAXException{
         if(mIsElementParsed == true){
-            //mElementContent = new String(iCharAy, iStartIt, iLengthIt); //iCharAy.length
+            ///mElementContent = new String(iCharAy, iStartIt, iLengthIt); //iCharAy.length
             if(mElementSb != null){
                 for(int i = iStartIt; i < iStartIt + iLengthIt; i++){
                     mElementSb.append(iCharAy[i]);
@@ -86,12 +74,22 @@ public class AtomFeedXmlHandlerM
     public void endElement(String iUriSg, String iLocalNameSg, String iQNameSg) throws SAXException{
         mIsElementParsed = false;
 
-        if(mIsContentEntryParsed == true){
+        if(mIsContentEntryParsed == false){ //Parsing the beginning of the xml feed, reading general information
+            if(UPDATED_XML_TAG.equalsIgnoreCase(iLocalNameSg)){
+                SharedPreferences tSharedPreferences = mrContext.getSharedPreferences(
+                        ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+                long tLastClientUpdateInMsFeedTzLg = tSharedPreferences.getLong(
+                        ConstsU.PREF_LAST_CLIENT_UPDATE_TIME_IN_MS_FEED_TZ, ConstsU.DB_NEVER_UPDATED);
 
+                if(getLastFeedUpdateTimeInMs() < tLastClientUpdateInMsFeedTzLg){
+                    throw new TerminateSAXParsingException();
+                }
+            }
+        }else{
             if(CONTENT_XML_TAG.equalsIgnoreCase(iLocalNameSg)){
                 mInsertValues.put(ArticleTableM.COLUMN_TEXT, mElementSb.toString());
             }else if(TITLE_XML_TAG.equalsIgnoreCase(iLocalNameSg)){
-                mInsertValues.put(ArticleTableM.COLUMN_TITLE, UtilitiesU.getPartOfTitleInsideQuotes(mElementSb.toString()));
+                mInsertValues.put(ArticleTableM.COLUMN_TITLE, getPartOfTitleInsideQuotes(mElementSb.toString()));
             }else if(ID_XML_TAG.equalsIgnoreCase(iLocalNameSg)){
 
                 String tWholeIdSg = mElementSb.toString();
@@ -123,23 +121,11 @@ public class AtomFeedXmlHandlerM
                 mInsertValues.put(ArticleTableM.COLUMN_TIME_MONTH, tMonthServerTzIt);
                 mInsertValues.put(ArticleTableM.COLUMN_TIME_DAYOFMONTH, tDayOfMonthServerTzIt);
             }else if(ENTRY_XML_TAG.equalsIgnoreCase(iLocalNameSg)) {
-
                 mIsContentEntryParsed = false;
                 Log.d(ConstsU.TAG, "========== END ENTRY TAG ==========");
 
-                //Extract the favorite status and write it to the entry with the same id
-                String[] tProj = {ArticleTableM.COLUMN_INTERNAL_FAVORITE_WITH_TIME};
-                String tSel = BaseColumns._ID + "=" + mInsertValues.getAsLong(BaseColumns._ID);
-                Cursor tCr = mrContext.getContentResolver().query(
-                        ContentProviderM.ARTICLE_CONTENT_URI,
-                        tProj, tSel, null, ConstsU.SORT_ORDER);
-                tCr.moveToFirst();
-                if(tCr != null && tCr.getCount() > 0){
-                    long tFavoriteWithTimeLg = tCr.getColumnIndexOrThrow(ArticleTableM.COLUMN_INTERNAL_FAVORITE_WITH_TIME);
-                    mInsertValues.put(ArticleTableM.COLUMN_INTERNAL_FAVORITE_WITH_TIME, tFavoriteWithTimeLg);
-                }
-                tCr.close();
-                tCr = null;
+                long tFavoriteWithTimeLg = UtilitiesU.getFavoriteTime(mrContext, mInsertValues.getAsLong(BaseColumns._ID));
+                mInsertValues.put(ArticleTableM.COLUMN_INTERNAL_BOOKMARK, tFavoriteWithTimeLg);
 
                 //Write what we have to the db
                 mrContext.getContentResolver().insert(
@@ -148,34 +134,13 @@ public class AtomFeedXmlHandlerM
                 //Clear the values so we can start anew on another row
                 mInsertValues.clear();
             }
-
-        }else{ //Parsing the beginning of the xml feed, reading general information (mIsContentEntryParsed == false)
-
-            if(UPDATED_XML_TAG.equalsIgnoreCase(iLocalNameSg)){
-
-                SharedPreferences tSharedPreferences = mrContext.getSharedPreferences(
-                        ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-                long tLastFeedUpdateInMsFeedTzLg = tSharedPreferences.getLong(
-                        ConstsU.PREF_LAST_UPDATE_TIME_IN_MILLIS_FEED_TZ, ConstsU.DB_NEVER_UPDATED);
-
-                long tLastClientUpdateInMsFeedTzLg = getArticleTimeInMilliSeconds(iLocalNameSg);
-
-                if(tLastClientUpdateInMsFeedTzLg > tLastFeedUpdateInMsFeedTzLg){
-                    //-Important to use > and not >= here because of the case when both are -1
-                    throw new TerminateSAXParsingException();
-                }
-
-            }
-
         }
-
     }
 
+    private long getLastFeedUpdateTimeInMs(){
+        long tArticleTimeInMsLg = -1;
 
-    private long getArticleTimeInMilliSeconds(String iRawArticleTimeSg){
-        long tArticleTimeInMilliSecondsLg = -1;
-
-        String tArticleTimeSg = iRawArticleTimeSg
+        String tArticleTimeSg = mElementSb.toString()
                 .replace("T", " ")
                 .replace("Z", "");
 
@@ -184,16 +149,35 @@ public class AtomFeedXmlHandlerM
         tAtomXmlDateFormat.setTimeZone(TimeZone.getTimeZone(ConstsU.FEED_TIME_ZONE));
         try {
             tDate = tAtomXmlDateFormat.parse(tArticleTimeSg);
-            tArticleTimeInMilliSecondsLg = tDate.getTime();
+            tArticleTimeInMsLg = tDate.getTime();
             //-This is a Java long, but there is no problem for SQLite because
             //it's Integer is variable in length and can be up to 8 bytes
         } catch (ParseException e) {
             Log.e(ConstsU.TAG, e.getMessage());
         }
 
-        Log.d(ConstsU.TAG, "tTimeInMilliSecondsLg = " + tArticleTimeInMilliSecondsLg);
+        Log.d(ConstsU.TAG, "tArticleTimeInMsLg = " + tArticleTimeInMsLg);
 
-        return tArticleTimeInMilliSecondsLg;
+        if(tArticleTimeInMsLg == -1){
+            Log.wtf(ConstsU.TAG, "tArticleTimeInMsLg == -1");
+        }
+
+        return tArticleTimeInMsLg;
     }
 
+    private static final String START_QUOTE = "&#8220;";
+    private static final String END_QUOTE = "&#8221;";
+    private String getPartOfTitleInsideQuotes(String iTitleSg){
+        //Example: <title type="html"><![CDATA[&#8220;Love of Humanity&#8221;- Daily Metta]]></title>
+        int tFirstQuote = iTitleSg.indexOf(START_QUOTE);
+        int tLastQuote = iTitleSg.lastIndexOf(END_QUOTE);
+
+        if(tFirstQuote != -1 && tLastQuote != -1){
+            String rPartOfTitleSg = iTitleSg.substring(tFirstQuote + START_QUOTE.length(), tLastQuote);
+            return rPartOfTitleSg;
+        }else{
+            Log.w(ConstsU.TAG, "tFirstQuote = " + tFirstQuote + ", tLastQuote = " + tLastQuote);
+            return iTitleSg;
+        }
+    }
 }

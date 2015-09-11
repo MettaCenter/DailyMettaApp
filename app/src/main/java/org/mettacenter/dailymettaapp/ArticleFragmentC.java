@@ -7,16 +7,18 @@ import android.database.DatabaseUtils;
 import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.Calendar;
-
 
 /**
  * Holds a Daily Metta article
@@ -26,7 +28,7 @@ public class ArticleFragmentC
 
     public static final String ARG_ID = "id";
     public static final String ARG_TITLE = "title";
-    public static final String ARG_TEXT = "html_text";
+    public static final String ARG_TEXT = "text";
     public static final String ARG_LINK = "link";
 
     private android.text.Spanned mTitleHtmlFormatted;
@@ -46,15 +48,14 @@ public class ArticleFragmentC
 
         //Main text
         TextView tArticleTv = (TextView)rRootView.findViewById(R.id.article_text);
-        android.text.Spanned tArticleHtmlFormatted = Html.fromHtml(tArgs.getString(ARG_TEXT)
-                .replaceAll("<img.+/(img)*>", ""));
+        android.text.Spanned tArticleHtmlFormatted = Html.fromHtml(
+                tArgs.getString(ARG_TEXT).replaceAll("<img.+/(img)*>", ""));
         tArticleTv.setText(tArticleHtmlFormatted);
+        tArticleTv.setMovementMethod(LinkMovementMethod.getInstance());
+        /*-Please note that we need to avoid using android:autoLink="web" here
+        which is for plain text links and not links inside <a> tags*/
 
         //Linking to the web
-        /*Please note that we need to avoid using android:autoLink="web" here
-        which is for plain text links and not links inside <a> tags*/
-        tArticleTv.setMovementMethod(LinkMovementMethod.getInstance());
-
         TextView tLinkTv = ((TextView) rRootView.findViewById(R.id.article_link));
         mLinkHtmlFormatted = Html.fromHtml(tArgs.getString(ARG_LINK));
         tLinkTv.setText(mLinkHtmlFormatted);
@@ -64,10 +65,10 @@ public class ArticleFragmentC
         ImageButton tShareImageButton = (ImageButton)rRootView.findViewById(R.id.share_button);
         tShareImageButton.setOnClickListener(new ShareOnClickListener());
 
-        //Favorite
-        ImageButton tFavoriteImageButton = (ImageButton)rRootView.findViewById(R.id.favorite_button);
-        tFavoriteImageButton.setOnClickListener(new FavoriteOnClickListener());
-
+        //Bookmark
+        RelativeLayout tBookmark = (RelativeLayout)rRootView.findViewById(R.id.article_bookmark_layout);
+        tBookmark.setOnClickListener(new FavoriteOnClickListener());
+        updateGuiBookmark(tBookmark);
 
         return rRootView;
     }
@@ -75,8 +76,6 @@ public class ArticleFragmentC
     private class ShareOnClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
-            ///Bundle tArgs = getArguments();
-
             Intent tShareIntent = new Intent();
             tShareIntent.setAction(Intent.ACTION_SEND);
             tShareIntent.setType("text/plain");
@@ -93,12 +92,11 @@ public class ArticleFragmentC
         public void onClick(View v) {
             ContentValues tContentValues = new ContentValues();
 
-            //String[] tProj = {ArticleTableM.COLUMN_INTERNAL_FAVORITE_WITH_TIME};
+            String[] tProj = {ArticleTableM.COLUMN_INTERNAL_BOOKMARK};
             String tSel = BaseColumns._ID + "=" + getArguments().getLong(ARG_ID);
             Cursor tCr = getActivity().getContentResolver().query(
                     ContentProviderM.ARTICLE_CONTENT_URI,
                     null, tSel, null, ConstsU.SORT_ORDER);
-
 
             if(tCr != null && tCr.getCount() > 0){
                 tCr.moveToFirst();
@@ -106,13 +104,38 @@ public class ArticleFragmentC
                 DatabaseUtils.cursorRowToContentValues(tCr, tContentValues);
                 //-ContentValues are updated
 
-                tContentValues.put(ArticleTableM.COLUMN_INTERNAL_FAVORITE_WITH_TIME,
-                        Calendar.getInstance().getTimeInMillis());
+                long tPrevFavoriteWithTimeLg = UtilitiesU.getFavoriteTime(getActivity(), getArguments().getLong(ARG_ID));
+                long tNewFavoriteWithTimeLg;
+
+                if(tPrevFavoriteWithTimeLg == ArticleTableM.NOT_BOOKMARKED){
+                    tNewFavoriteWithTimeLg = Calendar.getInstance().getTimeInMillis();
+                }else{
+                    tNewFavoriteWithTimeLg = ArticleTableM.NOT_BOOKMARKED;
+                }
+
+                tContentValues.put(ArticleTableM.COLUMN_INTERNAL_BOOKMARK,
+                        tNewFavoriteWithTimeLg);
                 getActivity().getContentResolver().update(
                         ContentProviderM.ARTICLE_CONTENT_URI,
                         tContentValues, tSel, null);
                 tCr.close();
             }
+            updateGuiBookmark((RelativeLayout)v);
         }
+    }
+
+    private void updateGuiBookmark(RelativeLayout iView){
+        long tFavoriteWithTimeLg = UtilitiesU.getFavoriteTime(getActivity(), getArguments().getLong(ARG_ID));
+        ImageView iBookmarkButtonIv = (ImageView)iView.findViewById(R.id.article_bookmark_button);
+        if(tFavoriteWithTimeLg != ArticleTableM.NOT_BOOKMARKED){
+            iView.setBackgroundResource(R.color.light_orange);
+            iBookmarkButtonIv.setImageResource(R.mipmap.ic_favorite_black_24dp);
+            iBookmarkButtonIv.setColorFilter(ContextCompat.getColor(getActivity(), R.color.orange));
+        }else{
+            iView.setBackgroundResource(R.color.light_gray);
+            iBookmarkButtonIv.setImageResource(R.mipmap.ic_favorite_border_black_24dp);
+            iBookmarkButtonIv.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white));
+        }
+        iView.invalidate();
     }
 }

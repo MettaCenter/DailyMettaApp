@@ -2,7 +2,6 @@ package org.mettacenter.dailymettaapp;
 
 import android.app.ListFragment;
 import android.app.LoaderManager;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -68,7 +67,7 @@ public class FavoritesFragmentC
     public Loader<Cursor> onCreateLoader(int iIdUnused, Bundle iArgumentsUnused) {
 
         String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
-        String tSel = ArticleTableM.COLUMN_INTERNAL_FAVORITE_WITH_TIME + " != " + ArticleTableM.NOT_FAVORITE;
+        String tSel = ArticleTableM.COLUMN_INTERNAL_BOOKMARK + " != " + ArticleTableM.NOT_BOOKMARKED;
 
         CursorLoader rLoader = new CursorLoader(getActivity(),
                 ContentProviderM.ARTICLE_CONTENT_URI,
@@ -98,7 +97,7 @@ public class FavoritesFragmentC
 
             if(iColIndex == tTitleColIndex) {
                 TextView tTextView = (TextView)iView.findViewById(R.id.favorite_row_title);
-                String tTitleSg = UtilitiesU.getPartOfTitleInsideQuotes(iCursor.getString(tTitleColIndex));
+                String tTitleSg = iCursor.getString(tTitleColIndex);
                 tTextView.setText(Html.fromHtml(tTitleSg));
                 ///tTextView.setTypeface(null, Typeface.BOLD);
 
@@ -142,7 +141,7 @@ public class FavoritesFragmentC
         //Starting a new article activity with the fragment for the chosen article
         /////Uri tUri = Uri.parse(ContentProviderM.ARTICLE_CONTENT_URI + "/" + iId);
         Intent tIntent = new Intent(this.getActivity(), ArticleActivityC.class);
-        tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, iId); /////iId temporarily used, removed "tUri.toString()"
+        tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(getActivity(), iId)); /////iId temporarily used, removed "tUri.toString()"
         this.getActivity().startActivityForResult(tIntent, 0);
     }
 

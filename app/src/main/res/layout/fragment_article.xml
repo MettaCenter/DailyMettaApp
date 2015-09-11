@@ -6,37 +6,57 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <!-- Using 'android:id="@android:id/text1"' below means that we will extend the existing text1 and therefore inherit the formatting from it -->
-        <TextView
-            android:id="@+id/article_title"
+        android:layout_height="match_parent"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        >
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="32dp"
-            android:textColor="#D65E28"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            />
-        <!--
-            android:shadowColor="#88000000"
-            android:shadowRadius="3.0"
-            android:shadowDx="2.0"
-            android:shadowDy="2.0"
-        -->
+            >
+            <TextView
+                android:id="@+id/article_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="16dp"
+                android:paddingBottom="12dp"
+                android:textColor="#D65E28"
+                android:textSize="28sp"
+                android:textStyle="normal"
+                />
+            <!-- TODO: We may need to find a way to right align the bookmark layout -->
+            <RelativeLayout
+                android:id="@+id/article_bookmark_layout"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                >
+                <ImageView
+                    android:id="@+id/article_bookmark_button"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:padding="8dp"
+                    android:src="@mipmap/ic_favorite_border_black_24dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    >
+                </ImageView>
+            </RelativeLayout>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/article_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="32dp"
-            android:paddingRight="32dp"
             />
         <TextView
             android:id="@+id/article_link"
             android:autoLink="web"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="32dp"
-            android:paddingRight="32dp"
             android:paddingBottom="32dp"
             android:paddingTop="0dp"
             />
@@ -52,14 +72,12 @@
                 android:layout_centerInParent="true"
                 >
             </ImageButton>
-            <ImageButton
-                android:id="@+id/favorite_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/star_big_on"
-                android:layout_alignParentRight="true"
-                >
-            </ImageButton>
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>
+<!--
+    android:shadowColor="#88000000"
+    android:shadowRadius="3.0"
+    android:shadowDx="2.0"
+    android:shadowDy="2.0"
+-->

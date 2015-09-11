@@ -34,8 +34,6 @@ public class ContentProviderM
     static{
         sUriMatcher.addURI(AUTHORITY, ArticleTableM.TABLE_ARTICLE, ARTICLE);
         sUriMatcher.addURI(AUTHORITY, ArticleTableM.TABLE_ARTICLE + "/#", ARTICLE_SINGLE_ROW);
-        ///sUriMatcher.addURI(AUTHORITY, FavoriteTableM.TABLE_FAVORITE, FAVORITE);
-        ///sUriMatcher.addURI(AUTHORITY, FavoriteTableM.TABLE_FAVORITE + "/#", FAVORITE_SINGLE_ROW);
     }
 
     private DbHelperM mDbHelper;
