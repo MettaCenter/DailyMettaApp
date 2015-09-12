@@ -1,8 +1,9 @@
 package org.mettacenter.dailymettaapp;
 
 /**
- * Created by sunyata on 2015-08-07.
+ * Created by sunyata o
  */
+
 import android.test.ActivityInstrumentationTestCase2;
 import com.robotium.solo.Solo;
 
