@@ -96,7 +96,7 @@ public class ArticleFragmentC
             String tSel = BaseColumns._ID + "=" + getArguments().getLong(ARG_ID);
             Cursor tCr = getActivity().getContentResolver().query(
                     ContentProviderM.ARTICLE_CONTENT_URI,
-                    null, tSel, null, ConstsU.SORT_ORDER);
+                    null, tSel, null, ConstsU.COMMON_SORT_ORDER);
 
             if(tCr != null && tCr.getCount() > 0){
                 tCr.moveToFirst();

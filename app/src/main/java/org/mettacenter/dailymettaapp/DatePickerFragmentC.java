@@ -70,6 +70,7 @@ public class DatePickerFragmentC
         if(tPosLg != ConstsU.NO_ARTICLE_POS){
             //Starting a new article activity with the fragment for the chosen article
             Intent tIntent = new Intent(getActivity(), ArticleActivityC.class);
+            tIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, tPosLg);
             /*
             -One is subtracted here because the position in the ViewPager starts at zero

@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -57,7 +58,7 @@ public class ArticleActivityC
                 findViewById(R.id.empty_layout).setVisibility(View.VISIBLE);
                 findViewById(R.id.pager).setVisibility(View.GONE);
                 break;
-            case DOWNLOAD_ARTICLES:
+            case START_DOWNLOAD_OF_ARTICLES:
                 downloadArticlesAndFinishSetup();
                 break;
             case USE_ALREADY_DOWNLOADED_ARTICLES:
@@ -87,7 +88,7 @@ public class ArticleActivityC
         //Setting up the cursor, adapter and pager
         try{
             mCursor = getContentResolver().query(
-                    ContentProviderM.ARTICLE_CONTENT_URI, null, null, null, ConstsU.SORT_ORDER);
+                    ContentProviderM.ARTICLE_CONTENT_URI, null, null, null, ConstsU.COMMON_SORT_ORDER);
         }catch(Exception e){
             Log.e(ConstsU.APP_TAG, e.getMessage(), e);
         }
@@ -119,8 +120,10 @@ public class ArticleActivityC
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        mCursor.close();
-        mCursor = null;
+        if(mCursor != null){
+            mCursor.close();
+            mCursor = null;
+        }
     }
 
     @Override
@@ -136,13 +139,27 @@ public class ArticleActivityC
         tSearchView.setSearchableInfo(tSearchableInfo);
         tSearchView.setIconifiedByDefault(false);
 
+        if(BuildConfig.DEBUG == false){
+            MenuItem tMenuItem = iMenu.findItem(R.id.action_debug_download);
+            tMenuItem.setVisible(false);
+        }
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem iMenuItem) {
         switch(iMenuItem.getItemId()){
+            case R.id.action_donate:
+                Intent tBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ConstsU.METTA_CENTER_DONATE_PAGE));
+                startActivity(tBrowserIntent);
+                return true;
             case R.id.action_text_search:
+                //Intentionally left empty, the search is taken care with the help of the system
+                return true;
+            case R.id.action_share_app:
+                Intent tGooglePlayIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ConstsU.GOOGLE_PLAY_APP_LINK));
+                startActivity(tGooglePlayIntent);
                 return true;
             case R.id.action_choose_date:
                 DialogFragment tDatePickerFragment = new DatePickerFragmentC();
@@ -156,6 +173,9 @@ public class ArticleActivityC
                 return true;
             case R.id.action_about:
                 startActivity(new Intent(this, AboutActivityC.class));
+                return true;
+            case R.id.action_debug_download:
+                downloadArticlesAndFinishSetup();
                 return true;
             default:
                 return super.onOptionsItemSelected(iMenuItem);

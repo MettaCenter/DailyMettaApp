@@ -8,8 +8,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.provider.BaseColumns;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -41,8 +39,8 @@ public class NotificationServiceC
 
         SharedPreferences tSharedPrefs = iContext.getSharedPreferences(
                 ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        int tNotificationHour = tSharedPrefs.getInt(ConstsU.PREF_NOTIFICATION_HOUR, ConstsU.NOTIFICATION_NOT_SET);
-        int tNotificationMinute = tSharedPrefs.getInt(ConstsU.PREF_NOTIFICATION_MINUTE, ConstsU.NOTIFICATION_NOT_SET);
+        int tNotificationHour = tSharedPrefs.getInt(ConstsU.PREF_INT_NOTIFICATION_HOUR, ConstsU.NOTIFICATION_NOT_SET);
+        int tNotificationMinute = tSharedPrefs.getInt(ConstsU.PREF_INT_NOTIFICATION_MINUTE, ConstsU.NOTIFICATION_NOT_SET);
 
 
         tAlarmManager.cancel(tAlarmPendingIntent);
@@ -72,51 +70,62 @@ public class NotificationServiceC
     protected void onHandleIntent(Intent iIntent) {
         Log.d(ConstsU.APP_TAG, "You have reached NotificationServiceC.onHandleIntent");
 
+        showNotification(this);
+
+    }
+
+    public static void showNotification(Context iContext){
 
 
-        //////////////////////////
 
-
-
-
-
-        String tContentTextSg = "Daily Metta";
-        long tArticleId = ConstsU.NO_ARTICLE_POS;
-        int tColIndexIt;
-
-        //Extract the favorite status and write it to the entry with the same id
-        String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE};
-        Cursor tCr = getContentResolver().query(
-                ContentProviderM.ARTICLE_CONTENT_URI,
-                tProj, null, null, ConstsU.SORT_ORDER);
-        tCr.moveToFirst();
-        if(tCr != null && tCr.getCount() > 0){
-            tColIndexIt = tCr.getColumnIndexOrThrow(ArticleTableM.COLUMN_TITLE);
-            tContentTextSg = tCr.getString(tColIndexIt);
-            tColIndexIt = tCr.getColumnIndexOrThrow(BaseColumns._ID);
-            tArticleId = tCr.getLong(tColIndexIt);
+        //Check to see if notifications are enabled..
+        SharedPreferences tSharedPreferences = iContext.getSharedPreferences(
+                ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        long tHour = tSharedPreferences.getInt(ConstsU.PREF_INT_NOTIFICATION_HOUR, ConstsU.NOTIFICATION_NOT_SET);
+        long tMinute = tSharedPreferences.getInt(ConstsU.PREF_INT_NOTIFICATION_MINUTE, ConstsU.NOTIFICATION_NOT_SET);
+        if(tHour == ConstsU.NOTIFICATION_NOT_SET || tMinute == ConstsU.NOTIFICATION_NOT_SET){
+            //..exit
+            return;
+        }else{
+            //..continue
         }
-        tCr.close();
-        tCr = null;
-
-
-        Intent tArticleActivityIntent = new Intent(this, ArticleActivityC.class);
-        tArticleActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        tArticleActivityIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(this, tArticleId));
 
 
 
-        String[] tTickerStringAr = getResources().getStringArray(R.array.ticker_strings);
+
+        String tContentTextSg = "";
+
+
+        Intent tArticleActivityIntent = new Intent(iContext, ArticleActivityC.class);
+        tArticleActivityIntent.setFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+        /*
+        From the documentation for Intent.FLAG_ACTIVITY_CLEAR_TOP:
+        "
+        This launch mode can also be used to good effect in conjunction with
+        FLAG_ACTIVITY_NEW_TASK: if used to start the root activity of a task, it will bring any
+        currently running instance of that task to the foreground, and then clear it to its root
+        state. This is especially useful, for example, when launching an activity from the
+        notification manager.
+        "
+         */
+        //-Reference: http://developer.android.com/guide/components/tasks-and-back-stack.html
+
+
+
+        String[] tTickerStringAr = iContext.getResources().getStringArray(R.array.ticker_strings);
         Random r = new Random();
         int i = r.nextInt(tTickerStringAr.length);
 
         //Building the notification
-        Notification tNotification = new NotificationCompat.Builder(this)
+        Notification tNotification = new NotificationCompat.Builder(iContext)
                 .setTicker(tTickerStringAr[i])
                 .setSmallIcon(R.mipmap.metta_center_wheel)
                 .setContentTitle("Daily Metta")
                 .setContentText(tContentTextSg)
-                .setContentIntent(PendingIntent.getActivity(this, 0, tArticleActivityIntent, 0))
+                .setContentIntent(PendingIntent.getActivity(iContext, 0, tArticleActivityIntent, 0))
                 .setAutoCancel(true)
                 .build();
         //-An additional feature that would be easy to add would be to show the title of the
@@ -127,7 +136,8 @@ public class NotificationServiceC
         ///.setContentText("Latest: ___________")
 
         //Displaying the notification
-        NotificationManager tmpNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager tmpNotificationManager = (NotificationManager)iContext.getSystemService(NOTIFICATION_SERVICE);
         tmpNotificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, tNotification);
+
     }
 }

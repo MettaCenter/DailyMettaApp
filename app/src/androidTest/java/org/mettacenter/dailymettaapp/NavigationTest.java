@@ -29,9 +29,14 @@ public class NavigationTest extends ActivityInstrumentationTestCase2{
 
     //Unfinished
     public void testChangeAcitivity (){
-        nRobotium.assertCurrentActivity("Running correct class", ArticleActivityC.class);
-        nRobotium.clickOnButton("Calendar");
+        /*
+        nRobotium.clickOnActionBarItem(R.id.action_choose_date);
+        nRobotium.waitForDialogToOpen();
+        nRobotium.waitForDialogToClose();
+        */
 
+        nRobotium.clickOnMenuItem("About");
+        nRobotium.sleep(2000);
     }
 
 }

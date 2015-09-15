@@ -59,7 +59,7 @@ public class FavoritesFragmentC
 
         CursorLoader rLoader = new CursorLoader(getActivity(),
                 ContentProviderM.ARTICLE_CONTENT_URI,
-                tProj, tSel, null, ConstsU.SORT_ORDER);
+                tProj, tSel, null, ConstsU.BOOKMARK_SORT_ORDER);
 
         return rLoader;
     }
@@ -125,6 +125,7 @@ public class FavoritesFragmentC
 
         //Starting a new article activity with the fragment for the chosen article
         Intent tIntent = new Intent(this.getActivity(), ArticleActivityC.class);
+        tIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(getActivity(), iId));
         this.getActivity().startActivityForResult(tIntent, 0);
     }

@@ -78,7 +78,7 @@ public class ContentProviderM
 
     @Override
     public Uri insert(Uri iUri, ContentValues iContentValues) {
-        long tInsertRowIdLg = 0; //-the row numer where the inserted data is placed
+        long tInsertRowIdLg = 0; //-the row number where the inserted data is placed
         Uri rUriSg = null;
         SQLiteDatabase tDb = mDbHelper.getWritableDatabase();
         String tTable = ConstsU.EMPTY_STRING;
@@ -95,7 +95,7 @@ public class ContentProviderM
         }
 
         if(tTable.equals(ConstsU.EMPTY_STRING) == false && tContentUri != null){
-            tInsertRowIdLg = tDb.insert(tTable, null, iContentValues);
+            tInsertRowIdLg = tDb.replace(tTable, null, iContentValues); //-Please note that we use replace here which means that the previous row (with matching id) will be deleted first
             rUriSg = Uri.parse(tContentUri + "/" + tInsertRowIdLg);
         }
 
@@ -106,8 +106,8 @@ public class ContentProviderM
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        //Not implemented since we don't delete articles (rather, we updated them instead)
-        return 0;
+        throw new UnsupportedOperationException();
+        ///return 0;
     }
 
     @Override

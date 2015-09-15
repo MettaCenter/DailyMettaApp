@@ -38,8 +38,8 @@ public class TimePickerFragmentC
         //Writing the time for notifications to the preferences
         SharedPreferences.Editor tPrefEditor = getActivity().getSharedPreferences(
                 ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
-        tPrefEditor.putInt(ConstsU.PREF_NOTIFICATION_HOUR, iHourOfDay);
-        tPrefEditor.putInt(ConstsU.PREF_NOTIFICATION_MINUTE, iMinute);
+        tPrefEditor.putInt(ConstsU.PREF_INT_NOTIFICATION_HOUR, iHourOfDay);
+        tPrefEditor.putInt(ConstsU.PREF_INT_NOTIFICATION_MINUTE, iMinute);
         tPrefEditor.commit();
 
         NotificationServiceC.start(getActivity());

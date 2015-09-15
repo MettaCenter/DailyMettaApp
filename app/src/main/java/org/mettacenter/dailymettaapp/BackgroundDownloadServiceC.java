@@ -47,7 +47,7 @@ public class BackgroundDownloadServiceC
         Log.d(ConstsU.APP_TAG, "BackgroundDownloadServiceC.onHandleIntent");
 
         UtilitiesU.DownloadActionEnum tDownloadActionEnum = UtilitiesU.downloadLogic(this);
-        if(tDownloadActionEnum == UtilitiesU.DownloadActionEnum.DOWNLOAD_ARTICLES){
+        if(tDownloadActionEnum == UtilitiesU.DownloadActionEnum.START_DOWNLOAD_OF_ARTICLES){
             UtilitiesU.downloadArticles(this);
         }
     }

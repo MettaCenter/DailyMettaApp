@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 /**
@@ -27,6 +28,11 @@ public class AboutActivityC
         if(tPackageInfo != null){
             TextView tVersionTv = (TextView)findViewById(R.id.version);
             tVersionTv.setText("App version: " + tPackageInfo.versionName);
+        }
+
+        if(BuildConfig.DEBUG == false){
+            TextView tDebugTv = (TextView)findViewById(R.id.debug_build);
+            tDebugTv.setVisibility(View.GONE);
         }
     }
 }

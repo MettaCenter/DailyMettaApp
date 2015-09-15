@@ -10,16 +10,20 @@ import android.util.Log;
 public class ArticleTableM {
     public static final String TABLE_ARTICLE = "article";
 
-    public static final String COLUMN_TIME_MONTH = "time_month";
-    public static final String COLUMN_TIME_DAYOFMONTH = "time_dayofmonth";
+    //http://stackoverflow.com/questions/1043239/best-way-to-save-only-day-and-month-in-database
+    public static final String COLUMN_TIME_MONTH = "time_month"; //0-11
+    public static final String COLUMN_TIME_DAYOFMONTH = "time_dayofmonth"; //1-31
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_TEXT = "text";
     public static final String COLUMN_LINK = "link";
-    public static final String COLUMN_INTERNAL_BOOKMARK = "bookmark";
+    public static final String COLUMN_INTERNAL_BOOKMARK = "bookmark"; //-TODO: Rename
+    public static final String COLUMN_TEMPORARY_ADVANCED_SORT_ORDER = "advanced_sort_order"; //-TODO: Rename
+
 
     public static final String NO_TEXT = "";
     public static final int TIME_NOT_SET = -1;
     public static final int NOT_BOOKMARKED = -1;
+    public static final int NO_RELEVANCE_ASSIGNED = -1;
 
     private static final String CREATE_TABLE = "CREATE TABLE "
             + TABLE_ARTICLE
@@ -30,6 +34,7 @@ public class ArticleTableM {
             + ", " + COLUMN_TITLE + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
             + ", " + COLUMN_LINK + " TEXT NOT NULL DEFAULT '" + NO_TEXT + "'"
             + ", " + COLUMN_INTERNAL_BOOKMARK + " INTEGER NOT NULL DEFAULT '" + NOT_BOOKMARKED + "'"
+            + ", " + COLUMN_TEMPORARY_ADVANCED_SORT_ORDER + " INTEGER NOT NULL DEFAULT '" + NO_RELEVANCE_ASSIGNED + "'"
             + ");";
     /*
     -Please note that AUTOINCREMENT is not used and this is not needed for CursorAdapter, see

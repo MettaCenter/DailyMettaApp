@@ -3,6 +3,8 @@ package org.mettacenter.dailymettaapp;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.app.SearchManager;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -20,6 +22,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import java.text.DateFormatSymbols;
+import java.util.Random;
 
 /**
  * Fragment for displaying the list of search results
@@ -69,14 +72,84 @@ public class SearchResultsFragmentC
         return super.onOptionsItemSelected(item);
     }
 
+    //TODO: Code review needed
     @Override
     public Loader<Cursor> onCreateLoader(int iIdUnused, Bundle iArgumentsUnused) {
-        String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH, ArticleTableM.COLUMN_TEXT, ArticleTableM.COLUMN_INTERNAL_BOOKMARK};
-        String tSel = ArticleTableM.COLUMN_TEXT + " LIKE ?"; //-LIKE is case insensitive
-        String[] tSelArgs = {"%"+ mSearchStringSg +"%"};
 
+        String tSharedSel = "";
+
+        String[] tSearchWordsSgAr = mSearchStringSg.split(ConstsU.SEARCH_DELIMETER);
+
+        for(int i = 0; i < tSearchWordsSgAr.length; i++){
+            if(i != 0) {
+                tSharedSel = tSharedSel + " AND ";
+            }
+            tSharedSel = tSharedSel + ArticleTableM.COLUMN_TEXT + " LIKE " + "'" + "%" + tSearchWordsSgAr[i] + "%" + "'" + " "; //-LIKE is case insensitive
+            //-TODO: Remove trailing s (plural)
+        }
+
+
+
+        String[] tSortProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TEXT, ArticleTableM.COLUMN_TEMPORARY_ADVANCED_SORT_ORDER};
+
+        Cursor tSortCr = getActivity().getContentResolver().query(ContentProviderM.ARTICLE_CONTENT_URI, tSortProj, tSharedSel, null, null);
+
+
+        ContentValues tContentValues = new ContentValues();
+
+        long tIdLg;
+        String tArticleTextSg;
+        String tArticleTitleSg;
+        int tRelevanceIt;
+        String tLowerCaseSearchStringSg;
+
+        if(tSortCr != null && tSortCr.getCount() > 0){
+            tSortCr.moveToFirst();
+            do{
+                tRelevanceIt = 0;
+                tIdLg = tSortCr.getLong(
+                        tSortCr.getColumnIndexOrThrow(BaseColumns._ID)
+                );
+                tArticleTextSg = tSortCr.getString(
+                        tSortCr.getColumnIndexOrThrow(ArticleTableM.COLUMN_TEXT)
+                );
+                tArticleTitleSg = tSortCr.getString(
+                        tSortCr.getColumnIndexOrThrow(ArticleTableM.COLUMN_TITLE)
+                );
+
+
+                for(int i = 0; i < tSearchWordsSgAr.length; i++){
+                    tLowerCaseSearchStringSg = tSearchWordsSgAr[i].toLowerCase();
+
+                    tRelevanceIt = tRelevanceIt +
+                        org.apache.commons.lang3.StringUtils.countMatches(
+                                tArticleTextSg.toLowerCase(), tLowerCaseSearchStringSg)
+                        +
+                        10 *
+                        org.apache.commons.lang3.StringUtils.countMatches(
+                            tArticleTitleSg.toLowerCase(), tLowerCaseSearchStringSg);
+                    tContentValues.put(ArticleTableM.COLUMN_TEMPORARY_ADVANCED_SORT_ORDER, tRelevanceIt);
+                }
+
+                getActivity().getContentResolver().update(ContentProviderM.ARTICLE_CONTENT_URI,tContentValues, BaseColumns._ID + "=" + tIdLg, null);
+            }while(tSortCr.moveToNext());
+        }
+
+
+        tSortCr.close();
+        tSortCr = null;
+
+
+
+
+        ///updateSortOrderColumn(getActivity(), tSearchWordsSgAr);
+        String tSortOrder = ArticleTableM.COLUMN_TEMPORARY_ADVANCED_SORT_ORDER + " DESC";
+
+
+        String[] tLoaderProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH, ArticleTableM.COLUMN_TEXT, ArticleTableM.COLUMN_INTERNAL_BOOKMARK};
         CursorLoader tLoader = new CursorLoader(getActivity(), ContentProviderM.ARTICLE_CONTENT_URI,
-                tProj, tSel, tSelArgs, ConstsU.SORT_ORDER);
+                tLoaderProj, tSharedSel, null, tSortOrder);
+
 
         return tLoader;
     }
@@ -135,28 +208,35 @@ public class SearchResultsFragmentC
 
                 String tArticleTextSg = iCursor.getString(tTextColIndex);
 
-                //Finding the first instance of the searched for string
+                //Finding the first instance of the first searched for string
+
+                String tFirstSearchStringSg;
+
+                if(mSearchStringSg.contains(ConstsU.SEARCH_DELIMETER)){
+                    tFirstSearchStringSg = mSearchStringSg.split(ConstsU.SEARCH_DELIMETER)[0];
+                }else{
+                    tFirstSearchStringSg = mSearchStringSg;
+                }
 
                 int tFirstMatchingPosition = tArticleTextSg.toLowerCase().indexOf(
-                        mSearchStringSg.toLowerCase(), 0);
+                        tFirstSearchStringSg.toLowerCase(), 0);
                 //-TODO: Do we want to change the index where the search is started (now set to 0 which includes some html)?
                 //-Please note that we need to use toLowerCase() for both Strings to show the correct position in cases where there is a difference between character cases
 
                 int tCharStart = tFirstMatchingPosition - SEARCH_CONTEXT_CHARACTER_PADDING;
                 if(tCharStart < 0){tCharStart = 0;}
-                int tCharEnd = tFirstMatchingPosition + mSearchStringSg.length() + SEARCH_CONTEXT_CHARACTER_PADDING;
+                int tCharEnd = tFirstMatchingPosition + tFirstSearchStringSg.length() + SEARCH_CONTEXT_CHARACTER_PADDING;
                 if(tCharEnd > tArticleTextSg.length()){tCharEnd = tArticleTextSg.length();}
 
-                String tContextTextSubString = iCursor.getString(tTextColIndex).substring(tCharStart, tCharEnd);
+                String tContextTextSg = iCursor.getString(tTextColIndex).substring(tCharStart, tCharEnd);
 
-                int tFirstSpace = tContextTextSubString.indexOf(" ");
-                int tLastSpace = tContextTextSubString.lastIndexOf(" ");
+                int tFirstSpace = tContextTextSg.indexOf(" ");
+                if(tFirstSpace == -1){tFirstSpace = 0;}
+                int tLastSpace = tContextTextSg.lastIndexOf(" ");
+                if(tLastSpace == -1){tLastSpace = tContextTextSg.length() - 1;}
 
-                if(tFirstSpace != -1 && tLastSpace != -1){
-                    tContextTextSubString = tContextTextSubString.substring(tFirstSpace + 1, tLastSpace);
-                }else{
-                    Log.w(ConstsU.APP_TAG, "tFirstSpace = " + tFirstSpace + ", tLastSpace = " + tLastSpace);
-                }
+                String tContextTextFurtherCutToSpaces = tContextTextSg.substring(tFirstSpace + 1, tLastSpace);
+
 
 
                 /*
@@ -164,7 +244,7 @@ public class SearchResultsFragmentC
                 http://stackoverflow.com/questions/14371092/how-to-make-a-specific-text-on-textview-bold
                  */
 
-                tTextView.setText(tContextTextSubString);
+                tTextView.setText(tContextTextFurtherCutToSpaces);
 
                 return true;
             }else if(iColIndex == tFavoriteColIndex){
@@ -195,6 +275,7 @@ public class SearchResultsFragmentC
 
         //Starting a new article activity with the fragment for the chosen article
         Intent tIntent = new Intent(this.getActivity(), ArticleActivityC.class);
+        tIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(getActivity(), iId));
         this.getActivity().startActivityForResult(tIntent, 0);
     }

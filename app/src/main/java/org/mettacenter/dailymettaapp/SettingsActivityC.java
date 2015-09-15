@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,8 +32,8 @@ public class SettingsActivityC
 
                 SharedPreferences tSharedPrefs = getSharedPreferences(
                         ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-                int tNotificationHour = tSharedPrefs.getInt(ConstsU.PREF_NOTIFICATION_HOUR, ConstsU.NOTIFICATION_NOT_SET);
-                int tNotificationMinute = tSharedPrefs.getInt(ConstsU.PREF_NOTIFICATION_MINUTE, ConstsU.NOTIFICATION_NOT_SET);
+                int tNotificationHour = tSharedPrefs.getInt(ConstsU.PREF_INT_NOTIFICATION_HOUR, ConstsU.NOTIFICATION_NOT_SET);
+                int tNotificationMinute = tSharedPrefs.getInt(ConstsU.PREF_INT_NOTIFICATION_MINUTE, ConstsU.NOTIFICATION_NOT_SET);
 
 
                 if(tNotificationHour != ConstsU.NOTIFICATION_NOT_SET
@@ -42,8 +41,8 @@ public class SettingsActivityC
 
                     SharedPreferences.Editor tPrefEditor = getSharedPreferences(
                             ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
-                    tPrefEditor.putInt(ConstsU.PREF_NOTIFICATION_HOUR, ConstsU.NOTIFICATION_NOT_SET);
-                    tPrefEditor.putInt(ConstsU.PREF_NOTIFICATION_MINUTE, ConstsU.NOTIFICATION_NOT_SET);
+                    tPrefEditor.putInt(ConstsU.PREF_INT_NOTIFICATION_HOUR, ConstsU.NOTIFICATION_NOT_SET);
+                    tPrefEditor.putInt(ConstsU.PREF_INT_NOTIFICATION_MINUTE, ConstsU.NOTIFICATION_NOT_SET);
                     tPrefEditor.commit();
 
                 }else{
@@ -85,8 +84,8 @@ public class SettingsActivityC
 
         SharedPreferences tSharedPrefs = getSharedPreferences(
                 ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        int tNotificationHour = tSharedPrefs.getInt(ConstsU.PREF_NOTIFICATION_HOUR, ConstsU.NOTIFICATION_NOT_SET);
-        int tNotificationMinute = tSharedPrefs.getInt(ConstsU.PREF_NOTIFICATION_MINUTE, ConstsU.NOTIFICATION_NOT_SET);
+        int tNotificationHour = tSharedPrefs.getInt(ConstsU.PREF_INT_NOTIFICATION_HOUR, ConstsU.NOTIFICATION_NOT_SET);
+        int tNotificationMinute = tSharedPrefs.getInt(ConstsU.PREF_INT_NOTIFICATION_MINUTE, ConstsU.NOTIFICATION_NOT_SET);
 
         TextView tTextView = (TextView)findViewById(R.id.notificationTimeTextView);
         LinearLayout tLayout = (LinearLayout)findViewById(R.id.notificationOnOffLayout);

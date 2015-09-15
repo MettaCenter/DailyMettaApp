@@ -79,9 +79,9 @@ public class AtomFeedXmlHandlerM
                 SharedPreferences tSharedPreferences = mrContext.getSharedPreferences(
                         ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
                 long tLastClientUpdateInMsFeedTzLg = tSharedPreferences.getLong(
-                        ConstsU.PREF_LAST_CLIENT_UPDATE_TIME_IN_MS_FEED_TZ, ConstsU.DB_NEVER_UPDATED);
+                        ConstsU.PREF_LONG_LAST_CLIENT_UPDATE_TIME_IN_MS_FEED_TZ, ConstsU.DB_NEVER_UPDATED);
 
-                if(getLastFeedUpdateTimeInMs() < tLastClientUpdateInMsFeedTzLg){
+                if(BuildConfig.DEBUG == false && getLastFeedUpdateTimeInMs() < tLastClientUpdateInMsFeedTzLg){
                     throw new TerminateSAXParsingException();
                 }
             }
@@ -116,13 +116,12 @@ public class AtomFeedXmlHandlerM
                 tCalServerTz.setTimeZone(TimeZone.getTimeZone(ConstsU.SERVER_TIMEZONE));
                 tCalServerTz.setTime(tArticleTimeFeedTzDe);
 
-                int tMonthServerTzIt = tCalServerTz.get(Calendar.MONTH);
-                int tDayOfMonthServerTzIt = tCalServerTz.get(Calendar.DAY_OF_MONTH);
+                int tMonthServerTzIt = tCalServerTz.get(Calendar.MONTH); //-Zero-based
+                int tDayOfMonthServerTzIt = tCalServerTz.get(Calendar.DAY_OF_MONTH); //Starts at one
                 mInsertValues.put(ArticleTableM.COLUMN_TIME_MONTH, tMonthServerTzIt);
                 mInsertValues.put(ArticleTableM.COLUMN_TIME_DAYOFMONTH, tDayOfMonthServerTzIt);
             }else if(ENTRY_XML_TAG.equalsIgnoreCase(iLocalNameSg)) {
                 mIsContentEntryParsed = false;
-                Log.d(ConstsU.APP_TAG, "========== END ENTRY APP_TAG ==========");
 
                 long tFavoriteWithTimeLg = UtilitiesU.getFavoriteTime(mrContext, mInsertValues.getAsLong(BaseColumns._ID));
                 mInsertValues.put(ArticleTableM.COLUMN_INTERNAL_BOOKMARK, tFavoriteWithTimeLg);
@@ -133,6 +132,8 @@ public class AtomFeedXmlHandlerM
                         mInsertValues);
                 //Clear the values so we can start anew on another row
                 mInsertValues.clear();
+
+                Log.d(ConstsU.APP_TAG, "========== END ENTRY APP_TAG ==========");
             }
         }
     }

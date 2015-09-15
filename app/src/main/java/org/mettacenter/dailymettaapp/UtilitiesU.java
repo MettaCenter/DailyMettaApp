@@ -27,7 +27,7 @@ public class UtilitiesU {
         String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
 
         Cursor tCursor = iContext.getContentResolver().query(
-                ContentProviderM.ARTICLE_CONTENT_URI, tProj, null, null, ConstsU.SORT_ORDER);
+                ContentProviderM.ARTICLE_CONTENT_URI, tProj, null, null, ConstsU.COMMON_SORT_ORDER);
         if(tCursor != null && tCursor.getCount() > 0) {
             tCursor.moveToFirst();
             int i=0;
@@ -41,10 +41,10 @@ public class UtilitiesU {
                 }
                 i++;
             }while(tCursor.moveToNext() == true);
-        }
 
-        tCursor.close();
-        tCursor = null;
+            tCursor.close();
+            tCursor = null;
+        }
 
         return tPosLg;
     }
@@ -54,7 +54,7 @@ public class UtilitiesU {
         String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
 
         Cursor tCursor = iContext.getContentResolver().query(
-                ContentProviderM.ARTICLE_CONTENT_URI, tProj, null, null, ConstsU.SORT_ORDER);
+                ContentProviderM.ARTICLE_CONTENT_URI, tProj, null, null, ConstsU.COMMON_SORT_ORDER);
         if(tCursor != null && tCursor.getCount() > 0) {
             tCursor.moveToFirst();
             int i=0;
@@ -75,7 +75,7 @@ public class UtilitiesU {
     }
 
     public enum DownloadActionEnum {
-        DOWNLOAD_ARTICLES,
+        START_DOWNLOAD_OF_ARTICLES,
         USE_ALREADY_DOWNLOADED_ARTICLES,
         DISPLAY_MANUAL_DOWNLOAD_BUTTON;
     }
@@ -111,8 +111,12 @@ public class UtilitiesU {
         ConnectivityManager cm = (ConnectivityManager)iContext.getSystemService(
                 Context.CONNECTIVITY_SERVICE);
         NetworkInfo tActiveNetworkInfo = cm.getActiveNetworkInfo();
-        boolean tIsConnectedToInternet = tActiveNetworkInfo != null
+        boolean tIsConnectedToInternetBl = tActiveNetworkInfo != null
                 && tActiveNetworkInfo.isConnectedOrConnecting();
+
+
+
+
 
         //Checking if this is the first time the app is started or if we are running a new version
         int tOldVer = PreferenceManager.getDefaultSharedPreferences(iContext).getInt(
@@ -131,41 +135,47 @@ public class UtilitiesU {
                     .commit();
         }
 
+
+
+
+
+
         SharedPreferences tSharedPreferences = iContext.getSharedPreferences(
                 ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        long tLastUpdateInMsFeedTzLg = tSharedPreferences.getLong(
-                ConstsU.PREF_LAST_CLIENT_UPDATE_TIME_IN_MS_FEED_TZ, ConstsU.DB_NEVER_UPDATED);
+        long tLastClientUpdateInMsFeedTzLg = tSharedPreferences.getLong(
+                ConstsU.PREF_LONG_LAST_CLIENT_UPDATE_TIME_IN_MS_FEED_TZ, ConstsU.DB_NEVER_UPDATED);
         long tUpdateIntervalInMillisLg = TimeUnit.HOURS.toMillis(ConstsU.UPDATE_INTERVAL_IN_HOURS);
         Calendar c = Calendar.getInstance();
         c.setTimeZone(TimeZone.getTimeZone(ConstsU.FEED_TIME_ZONE));
         boolean tIsUpdateIntervalReachedBl =
-                c.getTimeInMillis() - tLastUpdateInMsFeedTzLg
+                c.getTimeInMillis() - tLastClientUpdateInMsFeedTzLg
                         >= tUpdateIntervalInMillisLg;
         Log.d(ConstsU.APP_TAG, "tIsUpdateIntervalReachedBl = " + tIsUpdateIntervalReachedBl);
-        Log.d(ConstsU.APP_TAG, "tLastUpdateInMsFeedTzLg = " + tLastUpdateInMsFeedTzLg);
+        Log.d(ConstsU.APP_TAG, "tLastClientUpdateInMsFeedTzLg = " + tLastClientUpdateInMsFeedTzLg);
         Log.d(ConstsU.APP_TAG, "Calendar.getInstance().getTimeInMillis() = " + Calendar.getInstance().getTimeInMillis());
         Log.d(ConstsU.APP_TAG, "tUpdateIntervalInMillisLg = " + tUpdateIntervalInMillisLg);
 
 
-        //TODO: Do we want to do the update when a new app version is launched?
 
+        if(tIsUpdateIntervalReachedBl == true) {
 
-        if(tIsConnectedToInternet == false
-                && (tLastUpdateInMsFeedTzLg == ConstsU.DB_NEVER_UPDATED || tNewVer > tOldVer)){
+            if (tIsConnectedToInternetBl == true) {
 
-            return DownloadActionEnum.DISPLAY_MANUAL_DOWNLOAD_BUTTON;
+                return DownloadActionEnum.START_DOWNLOAD_OF_ARTICLES;
 
-        }else if(tIsUpdateIntervalReachedBl == true
-                || tLastUpdateInMsFeedTzLg == ConstsU.DB_NEVER_UPDATED
-                || tNewVer > tOldVer){
+            }else{
 
-            return DownloadActionEnum.DOWNLOAD_ARTICLES;
+                return DownloadActionEnum.DISPLAY_MANUAL_DOWNLOAD_BUTTON;
+
+            }
 
         }else{
 
             return DownloadActionEnum.USE_ALREADY_DOWNLOADED_ARTICLES;
 
         }
+
+
     }
 
     public static void downloadArticles(Context iContext){
@@ -181,7 +191,7 @@ public class UtilitiesU {
             tUpdateHasBeenDone = true;
 
         }catch (TerminateSAXParsingException e1){
-            //Continuing, *this exception does not indicate an error*
+            //Continuing, *this exception does not indicate an error* but just that we don't need to update our local db
             tUpdateHasBeenDone = false;
         }catch (Exception e2){
             Log.e(ConstsU.APP_TAG, e2.getMessage(), e2);
@@ -190,18 +200,19 @@ public class UtilitiesU {
         if(tUpdateHasBeenDone == true) {
 
             //Writing the time of this db update to the preferences
-            SharedPreferences.Editor tEditor = iContext.getSharedPreferences(
-                    ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
 
             Calendar c = Calendar.getInstance();
             c.setTimeZone(TimeZone.getTimeZone(ConstsU.FEED_TIME_ZONE));
 
-            tEditor.putLong(ConstsU.PREF_LAST_CLIENT_UPDATE_TIME_IN_MS_FEED_TZ,
+            SharedPreferences.Editor tEditor = iContext.getSharedPreferences(
+                    ConstsU.GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
+            tEditor.putLong(ConstsU.PREF_LONG_LAST_CLIENT_UPDATE_TIME_IN_MS_FEED_TZ,
                     c.getTimeInMillis());
             tEditor.commit();
 
 
-
+            //Show a new notification (or overwrite)
+            NotificationServiceC.showNotification(iContext);
         }
     }
 
@@ -213,14 +224,14 @@ public class UtilitiesU {
         String tSel = BaseColumns._ID + "=" + iDbIdLg;
         Cursor tCr = iContext.getContentResolver().query(
                 ContentProviderM.ARTICLE_CONTENT_URI,
-                tProj, tSel, null, ConstsU.SORT_ORDER);
+                tProj, tSel, null, ConstsU.COMMON_SORT_ORDER);
         tCr.moveToFirst();
         if(tCr != null && tCr.getCount() > 0){
             int tColIndexIt = tCr.getColumnIndexOrThrow(ArticleTableM.COLUMN_INTERNAL_BOOKMARK);
             tFavoriteWithTimeLg = tCr.getLong(tColIndexIt);
+            tCr.close();
+            tCr = null;
         }
-        tCr.close();
-        tCr = null;
 
         return tFavoriteWithTimeLg;
     }

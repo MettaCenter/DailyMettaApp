@@ -41,4 +41,13 @@
         android:text="Find out more about the Metta Center for Nonviolence: http://mettacenter.org/"
         />
 
+    <TextView
+        android:id="@+id/debug_build"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:textStyle="bold"
+        android:text="This is a debug build"
+        />
+
 </LinearLayout>
