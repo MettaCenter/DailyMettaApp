@@ -42,6 +42,13 @@
         />
 
     <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:text="If you want to reach us to give feedback or ask a question: metta.center.software@gmail.com"
+        />
+
+    <TextView
         android:id="@+id/debug_build"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

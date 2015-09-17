@@ -7,13 +7,13 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
         >
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             >
             <TextView
                 android:id="@+id/article_title"
@@ -53,28 +53,133 @@
             android:layout_height="match_parent"
             android:textSize="15sp"
             android:lineSpacingExtra="1sp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             />
-        <TextView
-            android:id="@+id/article_link"
-            android:autoLink="web"
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="32dp"
-            android:paddingTop="0dp"
+            android:background="@color/orange"
+            >
+
+            <TextView
+                android:id="@+id/article_experiment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="15sp"
+                android:lineSpacingExtra="1sp"
+                android:textColor="@color/white"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/article_backlink"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="15sp"
+            android:lineSpacingExtra="1sp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             />
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ImageButton
-                android:id="@+id/share_button"
-                android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@drawable/actionbar_bg"
+            >
+
+            <RelativeLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_share"
-                android:layout_centerInParent="true"
+                android:layout_weight="0.15"
                 >
-            </ImageButton>
-        </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="0.70"
+                >
+                <!-- android:layout_centerVertical="true" -->
+
+                <RelativeLayout
+                    android:id="@+id/share_sms_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/share_button_normal"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_textsms_black_24dp"
+                        android:layout_centerInParent="true"
+                        >
+                    </ImageView>
+
+                </RelativeLayout>
+                <!-- "@mipmap/ic_email_black_24dp" -->
+
+                <RelativeLayout
+                    android:id="@+id/share_custom_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/share_button_normal"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_share_black_24dp"
+                        android:layout_centerInParent="true"
+                        >
+                    </ImageView>
+
+                </RelativeLayout>
+
+
+
+                <RelativeLayout
+                    android:id="@+id/share_email_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/share_button_normal"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@mipmap/ic_email_black_24dp"
+                        >
+                    </ImageView>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.15"
+                >
+            </RelativeLayout>
+
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
 <!--

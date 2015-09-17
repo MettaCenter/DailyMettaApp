@@ -169,7 +169,7 @@ public class ArticleActivityC
                 startActivity(new Intent(this, SettingsActivityC.class));
                 return true;
             case R.id.action_bookmarks:
-                startActivity(new Intent(this, FavoritesActivityC.class));
+                startActivity(new Intent(this, BookmarksActivityC.class));
                 return true;
             case R.id.action_about:
                 startActivity(new Intent(this, AboutActivityC.class));

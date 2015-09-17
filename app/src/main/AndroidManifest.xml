@@ -38,8 +38,17 @@
         </activity>
 
         <activity
+            android:name=".BookmarksActivityC"
+            android:label="Bookmarks"
+            android:parentActivityName=".ArticleActivityC">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ArticleActivityC"/>
+        </activity>
+
+        <activity
             android:name=".SearchResultsActivityC"
-            android:label="TestingLabel"
+            android:label="Search Results for ___"
             android:parentActivityName=".ArticleActivityC">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -55,15 +64,6 @@
         <activity
             android:name=".SettingsActivityC"
             android:label="Settings"
-            android:parentActivityName=".ArticleActivityC">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ArticleActivityC"/>
-        </activity>
-
-        <activity
-            android:name=".FavoritesActivityC"
-            android:label="Favorites"
             android:parentActivityName=".ArticleActivityC">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

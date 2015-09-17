@@ -1,5 +1,6 @@
 package org.mettacenter.dailymettaapp;
 
+import android.app.SearchManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -17,6 +18,8 @@ public class SearchResultsActivityC
         getFragmentManager().beginTransaction().replace(
                 R.id.fragment_container, tSearchResultsFragment)
                 .commit();
+
+        getSupportActionBar().setSubtitle(getIntent().getStringExtra(SearchManager.QUERY));
     }
 
 }

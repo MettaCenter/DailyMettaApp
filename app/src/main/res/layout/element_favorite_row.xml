@@ -3,11 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:minHeight="48dp"
+    >
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <TextView
             android:id="@+id/favorite_row_title"
@@ -16,9 +19,6 @@
             android:layout_height="wrap_content"
             android:textColor="@color/orange"
             android:textStyle="bold" />
-
-
-        in program: detect beginning of text and give part of quote
 
         <LinearLayout
             android:orientation="horizontal"
@@ -37,6 +37,14 @@
                 android:textStyle="italic" />
 
         </LinearLayout>
+
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/favorite_row_quote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="normal"
+        android:text="Testing" />
 
 </LinearLayout>

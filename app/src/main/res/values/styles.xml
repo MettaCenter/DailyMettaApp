@@ -4,6 +4,14 @@
     https://developer.android.com/training/basics/actionbar/styling.html
     -->
 
+
+    <!-- TODO: Things we want to add to themes or styles
+
+    android:minHeight="48dp"
+
+    -->
+
+
     <!-- Themes -->
     <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarStyle">@style/CustomActionBarTheme</item>
@@ -13,7 +21,7 @@
         <item name="titleTextStyle">@style/CustomActionBarTextTheme</item>
     </style>
     <style name="CustomActionBarTextTheme" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textSize">24sp</item>
+        <!-- <item name="android:textSize">24sp</item> -->
         <item name="android:textStyle">normal</item>
     </style>
 

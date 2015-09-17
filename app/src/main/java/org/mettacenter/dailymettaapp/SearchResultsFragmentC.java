@@ -275,7 +275,7 @@ public class SearchResultsFragmentC
 
         //Starting a new article activity with the fragment for the chosen article
         Intent tIntent = new Intent(this.getActivity(), ArticleActivityC.class);
-        tIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        ///tIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(getActivity(), iId));
         this.getActivity().startActivityForResult(tIntent, 0);
     }

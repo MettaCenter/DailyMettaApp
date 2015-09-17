@@ -8,6 +8,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.provider.BaseColumns;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -93,9 +95,6 @@ public class NotificationServiceC
 
 
 
-        String tContentTextSg = "";
-
-
         Intent tArticleActivityIntent = new Intent(iContext, ArticleActivityC.class);
         tArticleActivityIntent.setFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK
@@ -115,6 +114,30 @@ public class NotificationServiceC
 
 
 
+
+        String tContentTextSg = "";
+        long tArticleId = ConstsU.NO_ARTICLE_POS;
+        int tColIndexIt;
+//Extract the favorite status and write it to the entry with the same id
+                String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE};
+        Cursor tCr = iContext.getContentResolver().query(
+                ContentProviderM.ARTICLE_CONTENT_URI,
+                tProj, null, null, null);
+        if(tCr != null && tCr.getCount() > 0){
+            tCr.moveToLast();
+            tColIndexIt = tCr.getColumnIndexOrThrow(ArticleTableM.COLUMN_TITLE);
+            tContentTextSg = tCr.getString(tColIndexIt);
+            /*
+            tColIndexIt = tCr.getColumnIndexOrThrow(BaseColumns._ID);
+            tArticleId = tCr.getLong(tColIndexIt);
+            */
+        }
+        tCr.close();
+        tCr = null;
+
+
+
+
         String[] tTickerStringAr = iContext.getResources().getStringArray(R.array.ticker_strings);
         Random r = new Random();
         int i = r.nextInt(tTickerStringAr.length);
@@ -122,7 +145,7 @@ public class NotificationServiceC
         //Building the notification
         Notification tNotification = new NotificationCompat.Builder(iContext)
                 .setTicker(tTickerStringAr[i])
-                .setSmallIcon(R.mipmap.metta_center_wheel)
+                .setSmallIcon(R.drawable.charka_wheel_small_2015)
                 .setContentTitle("Daily Metta")
                 .setContentText(tContentTextSg)
                 .setContentIntent(PendingIntent.getActivity(iContext, 0, tArticleActivityIntent, 0))

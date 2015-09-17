@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.text.Html;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -22,7 +21,7 @@ import java.text.DateFormatSymbols;
  * Fragment for displaying the list of search results
  * The actual search query takes place in the onCreateLoader method
  */
-public class FavoritesFragmentC
+public class BookmarksFragmentC
         extends ListFragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -35,8 +34,8 @@ public class FavoritesFragmentC
         getLoaderManager().initLoader(0, null, this);
 
         //Setting up the adapter..
-        String[] tFromColumnsSg = new String[]{ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
-        int[] tToGuiIt = new int[]{R.id.favorite_row_title, R.id.favorite_row_date_month, R.id.favorite_row_date_dayofmonth}; //-contained in the layout
+        String[] tFromColumnsSg = new String[]{ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TEXT, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
+        int[] tToGuiIt = new int[]{R.id.favorite_row_title, R.id.favorite_row_quote, R.id.favorite_row_date_month, R.id.favorite_row_date_dayofmonth}; //-contained in the layout
         mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.element_favorite_row, null, tFromColumnsSg, tToGuiIt, 0);
         mAdapter.setViewBinder(new FavoriteViewBinderM());
 
@@ -54,7 +53,7 @@ public class FavoritesFragmentC
     @Override
     public Loader<Cursor> onCreateLoader(int iIdUnused, Bundle iArgumentsUnused) {
 
-        String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
+        String[] tProj = {BaseColumns._ID, ArticleTableM.COLUMN_TITLE, ArticleTableM.COLUMN_TEXT, ArticleTableM.COLUMN_TIME_MONTH, ArticleTableM.COLUMN_TIME_DAYOFMONTH};
         String tSel = ArticleTableM.COLUMN_INTERNAL_BOOKMARK + " != " + ArticleTableM.NOT_BOOKMARKED;
 
         CursorLoader rLoader = new CursorLoader(getActivity(),
@@ -79,8 +78,10 @@ public class FavoritesFragmentC
             implements SimpleCursorAdapter.ViewBinder{
         public boolean setViewValue(View iView, Cursor iCursor, int iColIndex){
             int tTitleColIndex = iCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_TITLE);
+            int tTextColIndex = iCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_TEXT);
             int tTimeMonthColIndex = iCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_TIME_MONTH);
             int tTimeDayOfMonthColIndex = iCursor.getColumnIndexOrThrow(ArticleTableM.COLUMN_TIME_DAYOFMONTH);
+
 
             if(iColIndex == tTitleColIndex) {
                 TextView tTextView = (TextView)iView.findViewById(R.id.favorite_row_title);
@@ -89,6 +90,16 @@ public class FavoritesFragmentC
                 ///tTextView.setTypeface(null, Typeface.BOLD);
 
                 return true;
+
+            }else if(iColIndex == tTextColIndex){
+
+                TextView tTextView = (TextView)iView.findViewById(R.id.favorite_row_quote);
+
+                tTextView.setText(ArticleC.extractQuote(
+                        iCursor.getString(tTextColIndex)));
+
+                return true;
+
             }else if(iColIndex == tTimeMonthColIndex){
                 TextView tTextView = (TextView)iView.findViewById(R.id.favorite_row_date_month);
 
@@ -125,7 +136,7 @@ public class FavoritesFragmentC
 
         //Starting a new article activity with the fragment for the chosen article
         Intent tIntent = new Intent(this.getActivity(), ArticleActivityC.class);
-        tIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        ///tIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         tIntent.putExtra(ConstsU.EXTRA_ARTICLE_POS_ID, UtilitiesU.getArticleFragmentPositionFromId(getActivity(), iId));
         this.getActivity().startActivityForResult(tIntent, 0);
     }
