@@ -145,7 +145,7 @@ public class NotificationServiceC
         //Building the notification
         Notification tNotification = new NotificationCompat.Builder(iContext)
                 .setTicker(tTickerStringAr[i])
-                .setSmallIcon(R.drawable.charka_wheel_small_2015)
+                .setSmallIcon(R.mipmap.peace_sign_white)
                 .setContentTitle("Daily Metta")
                 .setContentText(tContentTextSg)
                 .setContentIntent(PendingIntent.getActivity(iContext, 0, tArticleActivityIntent, 0))

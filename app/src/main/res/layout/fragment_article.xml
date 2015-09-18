@@ -90,7 +90,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="72dp"
             android:background="@drawable/actionbar_bg"
             >
 
@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
-                    android:background="@drawable/share_button_normal"
+                    android:background="@drawable/share_button"
                     >
 
                     <ImageView
@@ -127,7 +127,6 @@
                     </ImageView>
 
                 </RelativeLayout>
-                <!-- "@mipmap/ic_email_black_24dp" -->
 
                 <RelativeLayout
                     android:id="@+id/share_custom_button"
@@ -135,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:background="@drawable/share_button_normal"
+                    android:background="@drawable/share_button"
                     >
 
                     <ImageView
@@ -148,15 +147,13 @@
 
                 </RelativeLayout>
 
-
-
                 <RelativeLayout
                     android:id="@+id/share_email_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/share_button_normal"
+                    android:background="@drawable/share_button"
                     >
                     <ImageView
                         android:layout_width="wrap_content"

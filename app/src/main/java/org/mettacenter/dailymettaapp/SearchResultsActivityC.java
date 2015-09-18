@@ -16,7 +16,7 @@ public class SearchResultsActivityC
         setContentView(R.layout.activity_search_results);
         SearchResultsFragmentC tSearchResultsFragment = new SearchResultsFragmentC();
         getFragmentManager().beginTransaction().replace(
-                R.id.fragment_container, tSearchResultsFragment)
+                R.id.fragment_container_search_results, tSearchResultsFragment)
                 .commit();
 
         getSupportActionBar().setSubtitle(getIntent().getStringExtra(SearchManager.QUERY));
