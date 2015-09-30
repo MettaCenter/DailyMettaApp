@@ -6,13 +6,17 @@ import android.util.Log;
  * Created by sunyata on 2015-09-16.
  */
 public class ArticleC {
+
     public static final String REGEX_HTML_TAG_IMG = "<img.+/(img)*>";
     public static final String REGEX_HTML_TAG_A = "<a.+/(a)*>";
-    public static final String REGEX_HTML_TAG_SPAN = "<span.+/(span)*>";
-    public static final String HTML_START_EXPERIMENT = "<strong>Experiment in Nonviolence:";
-    public static final String HTML_END_EXPERIMENT = "</span>";
-    public static final String HTML_START_QUOTE = "<h3><b>";
-    public static final String HTML_END_QUOTE = "</b></h3>";
+
+    public static final String HTML_NBSP_IN_P = "<p>&nbsp;</p>";
+
+    public static final String HTML_START_EXPERIMENT = "<div id=\"dm-experiment\">";
+    public static final String HTML_END_EXPERIMENT = "</div>";
+
+    public static final String HTML_START_QUOTE = "<span id=\"dm-quote\">";///"<h3><b>";
+    public static final String HTML_END_QUOTE = "</span>";
 
     private String mRawArticleSg;
 
@@ -28,8 +32,16 @@ public class ArticleC {
     public String getDateAndQuoteAndMainTextHtml(){
         String tDateAndQuoteAndMainTextSg = "ERROR";
         try{
-            tDateAndQuoteAndMainTextSg = mRawArticleSg.substring(0, mRawArticleSg.lastIndexOf(HTML_START_EXPERIMENT));
-            tDateAndQuoteAndMainTextSg = tDateAndQuoteAndMainTextSg.replaceAll(ArticleC.REGEX_HTML_TAG_IMG, "");
+            int tEndIndexIt = mRawArticleSg.indexOf(HTML_START_EXPERIMENT);
+            if(tEndIndexIt == -1){
+                throw new Exception();
+            }
+
+            tDateAndQuoteAndMainTextSg = mRawArticleSg.substring(0, tEndIndexIt);
+            tDateAndQuoteAndMainTextSg = tDateAndQuoteAndMainTextSg
+                    .replaceAll(ArticleC.REGEX_HTML_TAG_IMG, "")
+                    .replaceAll(ArticleC.HTML_NBSP_IN_P, "")
+                    .trim();
         }catch (Exception e){
             Log.e(ConstsU.APP_TAG, e.getMessage(), e);
         }finally {
@@ -40,7 +52,13 @@ public class ArticleC {
     public String getExperimentHtml(){
         String tExperimentSg = "ERROR";
         try{
-            tExperimentSg = mRawArticleSg.substring(mRawArticleSg.lastIndexOf(HTML_START_EXPERIMENT), mRawArticleSg.lastIndexOf(HTML_END_EXPERIMENT) + HTML_END_EXPERIMENT.length());
+            int tStartIndexIt = mRawArticleSg.lastIndexOf(HTML_START_EXPERIMENT);
+            int tEndIndexIt = mRawArticleSg.lastIndexOf(HTML_END_EXPERIMENT);
+            if(tStartIndexIt == -1 || tEndIndexIt == -1){
+                throw new Exception();
+            }
+            tExperimentSg = mRawArticleSg.substring(
+                    tStartIndexIt + HTML_START_EXPERIMENT.length(), tEndIndexIt);
         }catch (Exception e){
             Log.e(ConstsU.APP_TAG, e.getMessage(), e);
         }finally {
@@ -51,7 +69,11 @@ public class ArticleC {
     public String getBacklinkTextHtml(){
         String tBackLinkTextSg = "ERROR";
         try{
-            tBackLinkTextSg = mRawArticleSg.substring(mRawArticleSg.lastIndexOf(HTML_END_EXPERIMENT) + HTML_END_EXPERIMENT.length());
+            int tStartIndexIt = mRawArticleSg.lastIndexOf(HTML_END_EXPERIMENT);
+            if(tStartIndexIt == -1){
+                throw new Exception();
+            }
+            tBackLinkTextSg = mRawArticleSg.substring(tStartIndexIt + HTML_END_EXPERIMENT.length());
         }catch (Exception e){
             Log.e(ConstsU.APP_TAG, e.getMessage(), e);
         }finally {
@@ -60,10 +82,16 @@ public class ArticleC {
     }
 
 
+    //Please note that this is a static method and that it works a bit differently than the other methods above in this class
     public static String extractQuote(String iArticleSg){
         String tQuoteSg = "ERROR";
         try{
-            tQuoteSg = iArticleSg.substring(iArticleSg.indexOf(HTML_START_QUOTE) + HTML_START_QUOTE.length(), iArticleSg.indexOf(HTML_END_QUOTE));
+            int tStartIndexIt = iArticleSg.indexOf(HTML_START_QUOTE);
+            int tEndIndexIt = iArticleSg.indexOf(HTML_END_QUOTE, tStartIndexIt);
+            if(tStartIndexIt == -1 || tEndIndexIt == -1){
+                throw new Exception();
+            }
+            tQuoteSg = iArticleSg.substring(tStartIndexIt + HTML_START_QUOTE.length(), tEndIndexIt);
             tQuoteSg = tQuoteSg.replaceAll(REGEX_HTML_TAG_A, "");
         }catch (Exception e){
             Log.e(ConstsU.APP_TAG, e.getMessage(), e);
@@ -71,8 +99,5 @@ public class ArticleC {
             return tQuoteSg;
         }
     }
-
-
-
 
 }

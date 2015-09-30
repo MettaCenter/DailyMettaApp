@@ -52,6 +52,14 @@ public class SearchResultsFragmentC
             Log.wtf(ConstsU.APP_TAG, "Search string sent to SearchResultsFragmentC is empty");
         }
 
+
+
+
+        getListView().setEmptyView(getActivity().findViewById(R.id.empty_search_results_layout));
+
+
+
+
         getLoaderManager().initLoader(0, null, this);
 
         //Setting up the adapter..

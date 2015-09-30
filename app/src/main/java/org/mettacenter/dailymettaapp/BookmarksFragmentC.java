@@ -31,6 +31,8 @@ public class BookmarksFragmentC
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getListView().setEmptyView(getActivity().findViewById(R.id.empty_bookmarks_layout));
+
         getLoaderManager().initLoader(0, null, this);
 
         //Setting up the adapter..

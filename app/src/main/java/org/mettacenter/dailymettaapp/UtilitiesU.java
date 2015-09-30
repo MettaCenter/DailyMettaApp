@@ -229,6 +229,8 @@ public class UtilitiesU {
         if(tCr != null && tCr.getCount() > 0){
             int tColIndexIt = tCr.getColumnIndexOrThrow(ArticleTableM.COLUMN_INTERNAL_BOOKMARK);
             tFavoriteWithTimeLg = tCr.getLong(tColIndexIt);
+        }
+        if(tCr != null){
             tCr.close();
             tCr = null;
         }
